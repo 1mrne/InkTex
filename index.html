@@ -337,7 +337,9 @@
     .theme-notebook .reader-content h1,
     .theme-notebook .reader-content h2,
     .theme-notebook .reader-content h3,
-    .theme-notebook .reader-content h4 {
+    .theme-notebook .reader-content h4,
+    .theme-notebook .reader-content h5,
+    .theme-notebook .reader-content h6 {
       color: var(--nb-title-color);
       text-decoration: underline;
       text-decoration-color: var(--nb-title-color);
@@ -605,10 +607,31 @@
       line-height: 1.4;
     }
 
+    .reader-content h5 {
+      color: var(--text-heading);
+      font-size: 0.98em;
+      font-weight: 600;
+      margin-top: 1em;
+      margin-bottom: 0.4em;
+      line-height: 1.45;
+    }
+
+    .reader-content h6 {
+      color: var(--text-muted);
+      font-size: 0.92em;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      margin-top: 0.95em;
+      margin-bottom: 0.35em;
+      line-height: 1.45;
+    }
+
     .reader-content h1:first-child,
     .reader-content h2:first-child,
     .reader-content h3:first-child,
-    .reader-content h4:first-child {
+    .reader-content h4:first-child,
+    .reader-content h5:first-child,
+    .reader-content h6:first-child {
       margin-top: 0.15em;
     }
 
@@ -789,7 +812,7 @@
       border-radius: 0 0.55rem 0.55rem 0;
       margin: 1em 0;
     }
-    .reader-content blockquote p:last-child {
+    .reader-content blockquote > :last-child {
       margin-bottom: 0;
     }
 
@@ -809,7 +832,7 @@
       align-items: center;
       gap: 0.4rem;
     }
-    .inktex-callout-body p:last-child {
+    .inktex-callout-body > :last-child {
       margin-bottom: 0;
     }
     .callout-clinical {
@@ -871,7 +894,9 @@
     .active-recall-on .reader-content .ink-encadre-bleu,
     .active-recall-on .reader-content .hl-jaune,
     .active-recall-on .reader-content .hl-vert,
-    .active-recall-on .reader-content .hl-rose {
+    .active-recall-on .reader-content .hl-rose,
+    .active-recall-on .reader-content .hl-bleu,
+    .active-recall-on .reader-content .hl-orange {
       filter: blur(5.5px);
       cursor: pointer;
       transition: filter 0.18s ease;
@@ -880,6 +905,15 @@
     .active-recall-on .reader-content .recall-revealed {
       filter: blur(0) !important;
       user-select: auto;
+    }
+
+    .reader-content img.inktex-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.65rem;
+      margin: 0.85em auto;
+      display: block;
+      border: 1px solid var(--border-divider);
     }
 
     /* Citation Pill Badges */
@@ -962,7 +996,7 @@
     .reader-content {
       min-width: 0;
       overflow-wrap: break-word;
-      word-break: break-word;
+      overflow-wrap: anywhere;
     }
     .reader-content .katex-display,
     .inktex-table-wrap,
@@ -2423,7 +2457,7 @@ flowchart TD
 
     readerOutput.addEventListener('mousedown', (e) => {
       let node = e.target;
-      while (node && node !== readerOutput && !['P', 'H1', 'H2', 'H3', 'H4', 'LI', 'BLOCKQUOTE'].includes(node.tagName)) {
+      while (node && node !== readerOutput && !['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(node.tagName)) {
         node = node.parentElement;
       }
       if (node && node !== readerOutput) {
@@ -2683,11 +2717,11 @@ flowchart TD
 
       // 1. Extract Fenced Code Blocks & Mermaid Diagrams BEFORE math & markdown parsing
       const codeStash = [];
-      normalized = normalized.replace(/```([a-zA-Z0-9_-]*)\r?\n([\s\S]*?)```/g, (_, lang, codeBody) => {
+      normalized = normalized.replace(/```([a-zA-Z0-9_-]*)[ \t]*\r?\n([\s\S]*?)```/g, (_, lang, codeBody) => {
         const idx = codeStash.length;
         const cleanLang = (lang || '').trim().toLowerCase();
         codeStash.push({ lang: cleanLang, code: codeBody.replace(/\n$/, '') });
-        return `\n@@CODE_BLOCK_${idx}@@\n`;
+        return `\n@@CODEBLOCK-${idx}@@\n`;
       });
 
       // 2. AI LaTeX Sanitizer Plugin
@@ -2698,8 +2732,9 @@ flowchart TD
           .replace(/\\{2,}\[/g, '\\[')
           .replace(/\\{2,}\]/g, '\\]');
 
-        // Convert standalone ChatGPT-style [ \frac{a}{b} ] math blocks into $$...$$
+        // Convert standalone ChatGPT-style [ \frac{a}{b} ] math blocks (single or multi-line) into $$...$$
         normalized = normalized.replace(/^\[\s*([^\n]*\\[a-zA-Z]+[^\n]*)\s*\]$/gm, (_, inner) => `$$${inner}$$`);
+        normalized = normalized.replace(/^\[\r?\n([^\[\]]*\\[a-zA-Z]+[^\[\]]*)\r?\n\]$/gm, (_, inner) => `$$${inner.trim()}$$`);
       }
 
       // Support \begin{equation} / \begin{align*} / \begin{gather*}
@@ -2711,7 +2746,7 @@ flowchart TD
       });
 
       // Preserve escaped literal dollars \$
-      normalized = normalized.replace(/\\\$/g, '@@ESCAPED_DOLLAR@@');
+      normalized = normalized.replace(/\\\$/g, '@@ESCAPEDDOLLAR@@');
 
       // 3. Extract Math Blocks into KaTeX tokens
       const mathStash = [];
@@ -2719,7 +2754,7 @@ flowchart TD
       const useMhchem = window.InkTeX.isPluginEnabled('mhchem');
 
       function storeMath(expr, displayMode) {
-        const id = `@@KATEX_TOKEN_${mathStash.length}@@`;
+        const id = `@@KATEXTOKEN-${mathStash.length}@@`;
         let cleaned = cleanInnerMath(expr);
         if (!useMhchem && /\\ce\{/.test(cleaned)) {
           cleaned = cleaned.replace(/\\ce\{([^}]+)\}/g, '\\text{$1}');
@@ -2745,8 +2780,16 @@ flowchart TD
 
       normalized = normalized.replace(/\$\$([\s\S]*?)\$\$/g, (_, m) => storeMath(m, true));
       normalized = normalized.replace(/\\\[([\s\S]*?)\\\]/g, (_, m) => storeMath(m, true));
+
+      // Auto-wrap bare \begin{cases|aligned|pmatrix|bmatrix|vmatrix|Bmatrix|matrix} outside $$...$$
+      normalized = normalized.replace(/\\begin\{(cases|aligned|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)\}([\s\S]*?)\\end\{\1\}/g, (full) => storeMath(full, true));
+
       normalized = normalized.replace(/\\\(([\s\S]*?)\\\)/g, (_, m) => storeMath(m, false));
-      normalized = normalized.replace(/\$(?!\$)([^\$\n]+?)\$/g, (_, m) => storeMath(m, false));
+      normalized = normalized.replace(/\$(?!\$)([^\$\n]+?)\$/g, (full, m) => {
+        // Avoid treating prose between two currency amounts (e.g., "$15 and $30") as inline math
+        if (/^\d+(?:[.,]\d+)?\s[\s\S]*\s$/.test(m)) return full;
+        return storeMath(m, false);
+      });
 
       // Auto-render bare \ce{...} / \pu{...} outside math delimiters when mhchem + ai-fixer active
       if (useMhchem && window.InkTeX.isPluginEnabled('ai-fixer')) {
@@ -2762,31 +2805,78 @@ flowchart TD
 
       // 4. Inline Formatter (runs on HTML-escaped text)
       function formatInlineMarkdown(lineText) {
-        let safe = escapeHtml(lineText).replace(/@@ESCAPED_DOLLAR@@/g, '$');
+        let safe = escapeHtml(lineText).replace(/@@ESCAPEDDOLLAR@@/g, '$');
 
-        // LaTeX text commands outside math
-        safe = safe.replace(/\\textbf\{([^}]+)\}/g, '<strong>$1</strong>');
-        safe = safe.replace(/\\(textit|emph)\{([^}]+)\}/g, '<em>$2</em>');
-        safe = safe.replace(/\\underline\{([^}]+)\}/g, '<span class="ink-underline">$1</span>');
-
-        // Inline code `...` (protect before bold/italic)
+        // Inline code `...` (protect first before LaTeX text, escaped chars, links, bold/italic)
         const inlineCodes = [];
         safe = safe.replace(/`([^`]+?)`/g, (_, code) => {
-          const tok = `@@INLINE_CODE_${inlineCodes.length}@@`;
+          const tok = `@@INLINECODE-${inlineCodes.length}@@`;
           inlineCodes.push(`<code class="inktex-code-inline">${code}</code>`);
           return tok;
         });
 
-        // Safe Markdown Links [label](https://...)
-        safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="inktex-link">$1</a>');
+        // LaTeX text commands outside math (multi-pass for nested \textbf{...\textit{...}})
+        const texColorMap = {
+          red: 'ink-rouge', rouge: 'ink-rouge',
+          blue: 'ink-bleu', bleu: 'ink-bleu',
+          green: 'ink-vert', teal: 'ink-vert', vert: 'ink-vert',
+          purple: 'ink-violet', violet: 'ink-violet',
+          orange: 'ink-orange', black: 'ink-noir', noir: 'ink-noir'
+        };
+        let prevTex;
+        let texPass = 0;
+        do {
+          prevTex = safe;
+          safe = safe.replace(/\\textbf\{([^{}]+)\}/g, '<strong>$1</strong>');
+          safe = safe.replace(/\\(textit|emph)\{([^{}]+)\}/g, '<em>$2</em>');
+          safe = safe.replace(/\\underline\{([^{}]+)\}/g, '<span class="ink-underline">$1</span>');
+          safe = safe.replace(/\\texttt\{([^{}]+)\}/g, (_, c) => {
+            const tok = `@@INLINECODE-${inlineCodes.length}@@`;
+            inlineCodes.push(`<code class="inktex-code-inline">${c}</code>`);
+            return tok;
+          });
+          safe = safe.replace(/\\textcolor\{([a-zA-Z]+)\}\{([^{}]+)\}/g, (_, col, inner) => {
+            const cls = texColorMap[col.toLowerCase()] || 'ink-rouge';
+            return `<span class="${cls}">${inner}</span>`;
+          });
+          texPass++;
+        } while (safe !== prevTex && texPass < 6);
+
+        // Escaped Markdown punctuation (\*, \_, \#, \|, \[, \], \~, \=, \^)
+        const escapedChars = [];
+        safe = safe.replace(/\\([*_#~|[\]=^`])/g, (_, ch) => {
+          const tok = `@@ESCCHAR-${escapedChars.length}@@`;
+          escapedChars.push(ch);
+          return tok;
+        });
+
+        // Safe Markdown Images ![alt](https://...) & Links [label](https://...) with URL stashed
+        const safeUrls = [];
+        safe = safe.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g, (_, alt, url) => {
+          const urlTok = `@@SAFEURL-${safeUrls.length}@@`;
+          safeUrls.push(url);
+          return `<img src="${urlTok}" alt="${alt}" class="inktex-img" loading="lazy" />`;
+        });
+        safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) => {
+          const urlTok = `@@SAFEURL-${safeUrls.length}@@`;
+          safeUrls.push(url);
+          return `<a href="${urlTok}" target="_blank" rel="noopener noreferrer" class="inktex-link">${label}</a>`;
+        });
 
         // Obsidian/Markdown Highlight ==...== and Strikethrough ~~...~~
         safe = safe.replace(/==([^=]+?)==/g, '<span class="hl-jaune">$1</span>');
         safe = safe.replace(/~~([^~]+?)~~/g, '<span class="ink-strike">$1</span>');
 
-        // Bold **...** and Italic *...*
+        // Subscript ~sub~ and Superscript ^sup^ (outside math/code)
+        safe = safe.replace(/(?<!~)~([^~\s]+?)~(?!~)/g, '<sub>$1</sub>');
+        safe = safe.replace(/\^([^^\s]+?)\^/g, '<sup>$1</sup>');
+
+        // Bold-italic ***...***, Bold **...** / __...__, and Italic *...* / _..._
+        safe = safe.replace(/\*\*\*([^*]+?)\*\*\*/g, '<strong><em>$1</em></strong>');
         safe = safe.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+        safe = safe.replace(/(?<![\w\\])__([^_\n]+?)__(?!\w)/g, '<strong>$1</strong>');
         safe = safe.replace(/\*([^*]+?)\*/g, '<em>$1</em>');
+        safe = safe.replace(/(?<![\w\\])_([^_\n]+?)_(?!\w)/g, '<em>$1</em>');
 
         // Process {size:XX} and {tag}...{/tag} in any nesting order
         const sizePattern = /\{size:(\d+(?:\.\d+)?)\}([\s\S]*?)\{\/size\}/gi;
@@ -2810,34 +2900,21 @@ flowchart TD
         // Citation Badges [1], [2]
         safe = safe.replace(/\[(\d{1,3})\]/g, '<span class="citation-badge">$1</span>');
 
-        // Restore inline code
-        safe = safe.replace(/@@INLINE_CODE_(\d+)@@/g, (_, idx) => inlineCodes[Number(idx)]);
+        // Restore stashed URLs, escaped punctuation, and inline code
+        safe = safe.replace(/@@SAFEURL-(\d+)@@/g, (_, idx) => safeUrls[Number(idx)] || '');
+        safe = safe.replace(/@@ESCCHAR-(\d+)@@/g, (_, idx) => escapedChars[Number(idx)] || '');
+        safe = safe.replace(/@@INLINECODE-(\d+)@@/g, (_, idx) => inlineCodes[Number(idx)] || '');
         return safe;
       }
 
-      // 5. Block Parser (Tables, Code/Mermaid, Callouts, Multiline Blockquotes, Ordered/Unordered/Checklist Lists, Headings)
-      const lines = normalized.split(/\r?\n/);
-      const htmlOutput = [];
-      const listStack = []; // Array of { tag: 'ul' | 'ol', level: number }
-
-      function closeListsTo(targetLevel) {
-        while (listStack.length > 0 && listStack[listStack.length - 1].level >= targetLevel) {
-          const popped = listStack.pop();
-          htmlOutput.push(`</${popped.tag}>`);
-        }
-      }
-
-      function closeAllLists() {
-        while (listStack.length > 0) {
-          htmlOutput.push(`</${listStack.pop().tag}>`);
-        }
-      }
+      // 5. Block Parser (Tables, Code/Mermaid, Callouts, Blockquotes, Lists, Checklists, Headings)
+      let taskCounter = 0;
 
       function parseTableCells(rowLine) {
         let s = rowLine.trim();
         if (s.startsWith('|')) s = s.slice(1);
-        if (s.endsWith('|')) s = s.slice(0, -1);
-        return s.split('|').map(c => c.trim());
+        if (s.endsWith('|') && !s.endsWith('\\|')) s = s.slice(0, -1);
+        return s.split(/(?<!\\)\|/).map(c => c.trim().replace(/\\\|/g, '|'));
       }
 
       function isTableSeparator(rowLine) {
@@ -2857,199 +2934,233 @@ flowchart TD
         IMPORTANT: { cls: 'callout-clinical', icon: '❗', label: 'Important' }
       };
 
-      for (let i = 0; i < lines.length; i++) {
-        const rawLine = lines[i];
-        let trimmed = rawLine.trim();
+      function parseBlockLines(blockLines, depth = 0) {
+        const blockHtml = [];
+        const listStack = []; // Array of { tag: 'ul' | 'ol', level: number }
+        let latexListMode = null; // 'ul' | 'ol' when inside \begin{itemize|enumerate}
 
-        if (!trimmed) {
-          closeAllLists();
-          continue;
-        }
-
-        // Fenced Code or Mermaid Placeholder
-        const codeMatch = trimmed.match(/^@@CODE_BLOCK_(\d+)@@$/);
-        if (codeMatch) {
-          closeAllLists();
-          const block = codeStash[Number(codeMatch[1])];
-          if (block.lang === 'mermaid' && window.InkTeX.isPluginEnabled('mermaid')) {
-            const mIdx = localMermaidQueue.length;
-            localMermaidQueue.push(block.code);
-            htmlOutput.push(`<div class="inktex-mermaid-wrap" data-mermaid-idx="${mIdx}"><span class="text-xs opacity-60">Rendu du schéma Mermaid...</span></div>`);
-          } else {
-            const langLabel = block.lang ? escapeHtml(block.lang) : 'code';
-            htmlOutput.push(
-              `<div class="inktex-code-wrap"><div class="inktex-code-header"><span>${langLabel}</span><button type="button" class="inktex-copy-code-btn">Copier</button></div><pre><code data-lang="${langLabel}" class="${block.lang ? 'language-' + escapeHtml(block.lang) : ''}">${escapeHtml(block.code)}</code></pre></div>`
-            );
+        function closeAllLists() {
+          while (listStack.length > 0) {
+            blockHtml.push(`</${listStack.pop().tag}>`);
           }
-          continue;
         }
 
-        // Markdown Table Detection
-        if (trimmed.includes('|') && i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
-          closeAllLists();
-          const headers = parseTableCells(trimmed);
-          const aligns = parseTableCells(lines[i + 1]).map(sep => {
-            if (sep.startsWith(':') && sep.endsWith(':')) return 'center';
-            if (sep.endsWith(':')) return 'right';
-            return 'left';
-          });
-          i += 2;
-          let tableHtml = `<div class="inktex-table-wrap"><table class="inktex-table"><thead><tr>`;
-          headers.forEach((h, cIdx) => {
-            const al = aligns[cIdx] || 'left';
-            tableHtml += `<th style="text-align:${al};">${formatInlineMarkdown(h)}</th>`;
-          });
-          tableHtml += `</tr></thead><tbody>`;
-          while (i < lines.length && lines[i].trim().includes('|') && lines[i].trim() !== '') {
-            const rowCells = parseTableCells(lines[i]);
-            tableHtml += `<tr>`;
-            headers.forEach((_, cIdx) => {
-              const al = aligns[cIdx] || 'left';
-              tableHtml += `<td style="text-align:${al};">${formatInlineMarkdown(rowCells[cIdx] || '')}</td>`;
+        for (let i = 0; i < blockLines.length; i++) {
+          const rawLine = blockLines[i];
+          let trimmed = rawLine.trim();
+
+          if (!trimmed) {
+            closeAllLists();
+            continue;
+          }
+
+          // Handle LaTeX \begin{itemize|enumerate} and \end{itemize|enumerate} wrappers cleanly
+          if (/^\\begin\{(itemize|enumerate)\}$/.test(trimmed)) {
+            latexListMode = trimmed.includes('enumerate') ? 'ol' : 'ul';
+            continue;
+          }
+          if (/^\\end\{(itemize|enumerate)\}$/.test(trimmed)) {
+            latexListMode = null;
+            closeAllLists();
+            continue;
+          }
+
+          // Fenced Code or Mermaid Placeholder
+          const codeMatch = trimmed.match(/^@@CODEBLOCK-(\d+)@@$/);
+          if (codeMatch) {
+            closeAllLists();
+            const block = codeStash[Number(codeMatch[1])];
+            if (block.lang === 'mermaid' && window.InkTeX.isPluginEnabled('mermaid')) {
+              const mIdx = localMermaidQueue.length;
+              localMermaidQueue.push(block.code);
+              blockHtml.push(`<div class="inktex-mermaid-wrap" data-mermaid-idx="${mIdx}"><span class="text-xs opacity-60">Rendu du schéma Mermaid...</span></div>`);
+            } else {
+              const langLabel = block.lang ? escapeHtml(block.lang) : 'code';
+              blockHtml.push(
+                `<div class="inktex-code-wrap"><div class="inktex-code-header"><span>${langLabel}</span><button type="button" class="inktex-copy-code-btn">Copier</button></div><pre><code data-lang="${langLabel}" class="${block.lang ? 'language-' + escapeHtml(block.lang) : ''}">${escapeHtml(block.code)}</code></pre></div>`
+              );
+            }
+            continue;
+          }
+
+          // Markdown Table Detection
+          if (trimmed.includes('|') && i + 1 < blockLines.length && isTableSeparator(blockLines[i + 1])) {
+            closeAllLists();
+            const headers = parseTableCells(trimmed);
+            const aligns = parseTableCells(blockLines[i + 1]).map(sep => {
+              if (sep.startsWith(':') && sep.endsWith(':')) return 'center';
+              if (sep.endsWith(':')) return 'right';
+              return 'left';
             });
-            tableHtml += `</tr>`;
-            i++;
+            i += 2;
+            let tableHtml = `<div class="inktex-table-wrap"><table class="inktex-table"><thead><tr>`;
+            headers.forEach((h, cIdx) => {
+              const al = aligns[cIdx] || 'left';
+              tableHtml += `<th style="text-align:${al};">${formatInlineMarkdown(h)}</th>`;
+            });
+            tableHtml += `</tr></thead><tbody>`;
+            while (i < blockLines.length && blockLines[i].trim().includes('|') && blockLines[i].trim() !== '') {
+              const rowCells = parseTableCells(blockLines[i]);
+              tableHtml += `<tr>`;
+              headers.forEach((_, cIdx) => {
+                const al = aligns[cIdx] || 'left';
+                tableHtml += `<td style="text-align:${al};">${formatInlineMarkdown(rowCells[cIdx] || '')}</td>`;
+              });
+              tableHtml += `</tr>`;
+              i++;
+            }
+            i--;
+            tableHtml += `</tbody></table></div>`;
+            blockHtml.push(tableHtml);
+            continue;
           }
-          i--;
-          tableHtml += `</tbody></table></div>`;
-          htmlOutput.push(tableHtml);
-          continue;
-        }
 
-        // Optional alignment prefix {align:left|center|right}
-        let alignAttr = '';
-        const alignMatch = trimmed.match(/^\{align:(left|center|right)\}\s*(.*)$/i);
-        if (alignMatch) {
-          alignAttr = ` style="text-align:${alignMatch[1].toLowerCase()};"`;
-          trimmed = alignMatch[2];
-        }
-
-        // Horizontal Rule
-        if (/^([-*_]){3,}$/.test(trimmed)) {
-          closeAllLists();
-          htmlOutput.push('<hr />');
-          continue;
-        }
-
-        // Headings h1..h4
-        const headingMatch =
-          trimmed.match(/^(#{1,4})\s+(.+)$/) ||
-          trimmed.match(/^\\(section|subsection|subsubsection)\*?\{([^}]+)\}$/);
-        if (headingMatch) {
-          closeAllLists();
-          let level = 1;
-          let headingText = '';
-          if (headingMatch[1].startsWith('#')) {
-            level = headingMatch[1].length;
-            headingText = headingMatch[2];
-          } else {
-            level = headingMatch[1] === 'section' ? 1 : (headingMatch[1] === 'subsection' ? 2 : 3);
-            headingText = headingMatch[2];
+          // Optional alignment prefix {align:left|center|right}
+          let alignAttr = '';
+          const alignMatch = trimmed.match(/^\{align:(left|center|right)\}\s*(.*)$/i);
+          if (alignMatch) {
+            alignAttr = ` style="text-align:${alignMatch[1].toLowerCase()};"`;
+            trimmed = alignMatch[2];
           }
-          const headingId = `sec-${localOutline.length}`;
-          localOutline.push({ id: headingId, level, text: headingText.replace(/\{[^}]+\}/g, '').replace(/\*\*/g, '') });
-          htmlOutput.push(`<h${level} id="${headingId}"${alignAttr}>${formatInlineMarkdown(headingText)}</h${level}>`);
-          continue;
-        }
 
-        // Callouts & Multiline Blockquotes
-        if (trimmed.startsWith('>')) {
-          closeAllLists();
-          const quoteLines = [];
-          while (i < lines.length && lines[i].trim().startsWith('>')) {
-            quoteLines.push(lines[i].trim().replace(/^>\s?/, ''));
-            i++;
+          // Horizontal Rule
+          if (/^([-*_]){3,}$/.test(trimmed)) {
+            closeAllLists();
+            blockHtml.push('<hr />');
+            continue;
           }
-          i--;
-          const firstLine = quoteLines[0] || '';
-          const calloutHeader = firstLine.match(/^\[!([A-Z]+)\]\s*(.*)$/i);
-          if (calloutHeader && window.InkTeX.isPluginEnabled('callouts')) {
-            const key = calloutHeader[1].toUpperCase();
-            const meta = CALLOUT_META[key] || { cls: 'callout-def', icon: '📌', label: key };
-            const titleText = calloutHeader[2] ? formatInlineMarkdown(calloutHeader[2]) : meta.label;
-            const bodyLines = quoteLines.slice(1).map(l => `<p>${formatInlineMarkdown(l)}</p>`).join('');
-            htmlOutput.push(
-              `<div class="inktex-callout ${meta.cls}"><div class="inktex-callout-title"><span>${meta.icon}</span><span>${titleText}</span></div><div class="inktex-callout-body">${bodyLines}</div></div>`
+
+          // Headings h1..h6
+          const headingMatch =
+            trimmed.match(/^(#{1,6})\s+(.+)$/) ||
+            trimmed.match(/^\\(section|subsection|subsubsection|paragraph|subparagraph)\*?\{([^}]+)\}$/);
+          if (headingMatch) {
+            closeAllLists();
+            let level = 1;
+            let headingText = '';
+            if (headingMatch[1].startsWith('#')) {
+              level = headingMatch[1].length;
+              headingText = headingMatch[2];
+            } else {
+              const latexLevelMap = { section: 1, subsection: 2, subsubsection: 3, paragraph: 4, subparagraph: 5 };
+              level = latexLevelMap[headingMatch[1]] || 3;
+              headingText = headingMatch[2];
+            }
+            const headingId = `sec-${localOutline.length}`;
+            if (depth === 0) {
+              localOutline.push({ id: headingId, level, text: headingText.replace(/\{[^}]+\}/g, '').replace(/\*\*/g, '') });
+            }
+            blockHtml.push(`<h${level} id="${headingId}"${alignAttr}>${formatInlineMarkdown(headingText)}</h${level}>`);
+            continue;
+          }
+
+          // Callouts & Multiline Blockquotes
+          if (trimmed.startsWith('>')) {
+            closeAllLists();
+            const quoteLines = [];
+            while (i < blockLines.length && blockLines[i].trim().startsWith('>')) {
+              quoteLines.push(blockLines[i].trim().replace(/^>\s?/, ''));
+              i++;
+            }
+            i--;
+            const firstLine = quoteLines[0] || '';
+            const calloutHeader = firstLine.match(/^\[!([A-Z]+)\]\s*(.*)$/i);
+            if (calloutHeader && window.InkTeX.isPluginEnabled('callouts')) {
+              const key = calloutHeader[1].toUpperCase();
+              const meta = CALLOUT_META[key] || { cls: 'callout-def', icon: '📌', label: key };
+              const titleText = calloutHeader[2] ? formatInlineMarkdown(calloutHeader[2]) : meta.label;
+              const bodyHtml = depth < 3
+                ? parseBlockLines(quoteLines.slice(1), depth + 1)
+                : quoteLines.slice(1).map(l => `<p>${formatInlineMarkdown(l)}</p>`).join('');
+              blockHtml.push(
+                `<div class="inktex-callout ${meta.cls}"><div class="inktex-callout-title"><span>${meta.icon}</span><span>${titleText}</span></div><div class="inktex-callout-body">${bodyHtml}</div></div>`
+              );
+            } else {
+              const innerHtml = depth < 3
+                ? parseBlockLines(quoteLines, depth + 1)
+                : quoteLines.map(l => `<p>${formatInlineMarkdown(l)}</p>`).join('');
+              blockHtml.push(`<blockquote${alignAttr}>${innerHtml}</blockquote>`);
+            }
+            continue;
+          }
+
+          // Task Checklists (- [ ] or - [x])
+          const taskMatch = rawLine.match(/^(\s*)[-*•]\s+\[([ xX])\]\s+(.+)$/);
+          if (taskMatch) {
+            const indentSpaces = taskMatch[1].replace(/\t/g, '  ').length;
+            const level = indentSpaces >= 2 ? 2 : 1;
+            const isChecked = taskMatch[2].toLowerCase() === 'x';
+            while (listStack.length > 0 && (listStack[listStack.length - 1].level > level || (listStack[listStack.length - 1].level === level && listStack[listStack.length - 1].tag !== 'ul'))) {
+              blockHtml.push(`</${listStack.pop().tag}>`);
+            }
+            if (listStack.length === 0 || listStack[listStack.length - 1].level < level) {
+              blockHtml.push('<ul>');
+              listStack.push({ tag: 'ul', level });
+            }
+            blockHtml.push(
+              `<li class="inktex-task-item"><input type="checkbox" class="inktex-task-checkbox" data-task-idx="${taskCounter++}" ${isChecked ? 'checked' : ''} /><span class="${isChecked ? 'inktex-task-done' : ''}">${formatInlineMarkdown(taskMatch[3])}</span></li>`
             );
-          } else {
-            const innerP = quoteLines.map(l => `<p>${formatInlineMarkdown(l)}</p>`).join('');
-            htmlOutput.push(`<blockquote${alignAttr}>${innerP}</blockquote>`);
+            continue;
           }
-          continue;
+
+          // Unordered or Ordered Lists
+          const itemMatch = rawLine.match(/^(\s*)\\item\s+(.+)$/);
+          const ulMatch = !itemMatch ? rawLine.match(/^(\s*)[-*•]\s+(.+)$/) : null;
+          const olMatch = (!itemMatch && !ulMatch) ? rawLine.match(/^(\s*)(\d+)\.\s+(.+)$/) : null;
+          if (itemMatch || ulMatch || olMatch) {
+            const listTag = olMatch ? 'ol' : (itemMatch ? (latexListMode || 'ul') : 'ul');
+            const indentStr = itemMatch ? itemMatch[1] : (ulMatch ? ulMatch[1] : olMatch[1]);
+            const olStart = olMatch ? (parseInt(olMatch[2], 10) || 1) : 1;
+            let content = itemMatch ? itemMatch[2] : (ulMatch ? ulMatch[2] : olMatch[3]);
+            const indentSpaces = indentStr.replace(/\t/g, '  ').length;
+            const desiredLevel = indentSpaces >= 4 ? 3 : (indentSpaces >= 2 ? 2 : 1);
+            let liAlignAttr = '';
+            const liAlignMatch = content.match(/^\{align:(left|center|right)\}\s*(.*)$/i);
+            if (liAlignMatch) {
+              liAlignAttr = ` style="text-align:${liAlignMatch[1].toLowerCase()};"`;
+              content = liAlignMatch[2];
+            }
+
+            while (listStack.length > 0 && (listStack[listStack.length - 1].level > desiredLevel || (listStack[listStack.length - 1].level === desiredLevel && listStack[listStack.length - 1].tag !== listTag))) {
+              blockHtml.push(`</${listStack.pop().tag}>`);
+            }
+            if (listStack.length === 0 || listStack[listStack.length - 1].level < desiredLevel) {
+              const startAttr = listTag === 'ol' && olStart !== 1 ? ` start="${olStart}"` : '';
+              blockHtml.push(`<${listTag}${startAttr}>`);
+              listStack.push({ tag: listTag, level: desiredLevel });
+            }
+
+            blockHtml.push(`<li${liAlignAttr}>${formatInlineMarkdown(content)}</li>`);
+            continue;
+          }
+
+          // Standalone display math wrapper
+          closeAllLists();
+          if (/^@@KATEXTOKEN-\d+@@$/.test(trimmed)) {
+            blockHtml.push(`<div class="math-block"${alignAttr}>${trimmed}</div>`);
+            continue;
+          }
+
+          // Standard Paragraph
+          blockHtml.push(`<p${alignAttr}>${formatInlineMarkdown(trimmed)}</p>`);
         }
 
-        // Task Checklists (- [ ] or - [x])
-        const taskMatch = rawLine.match(/^(\s*)[-*•]\s+\[([ xX])\]\s+(.+)$/);
-        if (taskMatch) {
-          const indentSpaces = taskMatch[1].replace(/\t/g, '  ').length;
-          const level = indentSpaces >= 2 ? 2 : 1;
-          const isChecked = taskMatch[2].toLowerCase() === 'x';
-          while (listStack.length > 0 && (listStack[listStack.length - 1].level > level || (listStack[listStack.length - 1].level === level && listStack[listStack.length - 1].tag !== 'ul'))) {
-            htmlOutput.push(`</${listStack.pop().tag}>`);
-          }
-          if (listStack.length === 0 || listStack[listStack.length - 1].level < level) {
-            htmlOutput.push('<ul>');
-            listStack.push({ tag: 'ul', level });
-          }
-          htmlOutput.push(
-            `<li class="inktex-task-item"><input type="checkbox" class="inktex-task-checkbox" data-line-idx="${i}" ${isChecked ? 'checked' : ''} /><span class="${isChecked ? 'inktex-task-done' : ''}">${formatInlineMarkdown(taskMatch[3])}</span></li>`
-          );
-          continue;
-        }
-
-        // Unordered or Ordered Lists
-        const ulMatch = rawLine.match(/^(\s*)(?:[-*•]|\\item)\s+(.+)$/);
-        const olMatch = !ulMatch ? rawLine.match(/^(\s*)\d+\.\s+(.+)$/) : null;
-        if (ulMatch || olMatch) {
-          const m = ulMatch || olMatch;
-          const listTag = ulMatch ? 'ul' : 'ol';
-          const indentSpaces = m[1].replace(/\t/g, '  ').length;
-          const desiredLevel = indentSpaces >= 4 ? 3 : (indentSpaces >= 2 ? 2 : 1);
-          let content = m[2];
-          let liAlignAttr = '';
-          const liAlignMatch = content.match(/^\{align:(left|center|right)\}\s*(.*)$/i);
-          if (liAlignMatch) {
-            liAlignAttr = ` style="text-align:${liAlignMatch[1].toLowerCase()};"`;
-            content = liAlignMatch[2];
-          }
-
-          while (listStack.length > 0 && (listStack[listStack.length - 1].level > desiredLevel || (listStack[listStack.length - 1].level === desiredLevel && listStack[listStack.length - 1].tag !== listTag))) {
-            htmlOutput.push(`</${listStack.pop().tag}>`);
-          }
-          if (listStack.length === 0 || listStack[listStack.length - 1].level < desiredLevel) {
-            htmlOutput.push(`<${listTag}>`);
-            listStack.push({ tag: listTag, level: desiredLevel });
-          }
-
-          htmlOutput.push(`<li${liAlignAttr}>${formatInlineMarkdown(content)}</li>`);
-          continue;
-        }
-
-        // Standalone display math wrapper
         closeAllLists();
-        if (/^@@KATEX_TOKEN_\d+@@$/.test(trimmed)) {
-          htmlOutput.push(`<div class="math-block"${alignAttr}>${trimmed}</div>`);
-          continue;
-        }
-
-        // Standard Paragraph
-        htmlOutput.push(`<p${alignAttr}>${formatInlineMarkdown(trimmed)}</p>`);
+        return blockHtml.join('\n');
       }
 
-      closeAllLists();
-
-      let finalHtml = htmlOutput.join('\n');
+      let finalHtml = parseBlockLines(normalized.split(/\r?\n/), 0);
 
       // Sanitize Markdown HTML via DOMPurify BEFORE restoring KaTeX tokens
       if (window.DOMPurify) {
         finalHtml = window.DOMPurify.sanitize(finalHtml, {
           USE_PROFILES: { html: true },
-          ADD_ATTR: ['style', 'class', 'data-pt-size', 'data-line-idx', 'data-mermaid-idx', 'data-lang', 'target', 'rel', 'type', 'checked']
+          ADD_ATTR: ['style', 'class', 'data-pt-size', 'data-line-idx', 'data-task-idx', 'data-mermaid-idx', 'data-lang', 'target', 'rel', 'type', 'checked', 'start', 'src', 'alt', 'loading']
         });
       }
 
       // Restore KaTeX tokens
-      finalHtml = finalHtml.replace(/@@KATEX_TOKEN_(\d+)@@/g, (_, idx) => mathStash[Number(idx)] || '');
+      finalHtml = finalHtml.replace(/@@KATEXTOKEN-(\d+)@@/g, (_, idx) => mathStash[Number(idx)] || '');
 
       return finalHtml;
     }
@@ -3060,11 +3171,19 @@ flowchart TD
     function renderOutlineDrawer() {
       if (!outlineList) return;
       if (currentOutline.length === 0) {
-        outlineList.innerHTML = `<div class="p-3 text-zinc-500 italic">Ajoutez des titres (#, ##, ###) pour générer le sommaire.</div>`;
+        outlineList.innerHTML = `<div class="p-3 text-zinc-500 italic">Ajoutez des titres (# à ######) pour générer le sommaire.</div>`;
         return;
       }
+      const outlinePadMap = {
+        1: 'pl-2 font-semibold text-zinc-100',
+        2: 'pl-4 text-zinc-200',
+        3: 'pl-6 text-zinc-300',
+        4: 'pl-8 text-zinc-400',
+        5: 'pl-10 text-zinc-400 text-[11px]',
+        6: 'pl-12 text-zinc-500 text-[11px]'
+      };
       outlineList.innerHTML = currentOutline.map(h => {
-        const pad = h.level === 1 ? 'pl-2 font-semibold text-zinc-100' : (h.level === 2 ? 'pl-5 text-zinc-300' : 'pl-8 text-zinc-400');
+        const pad = outlinePadMap[h.level] || 'pl-8 text-zinc-400';
         return `<button type="button" data-jump="${h.id}" class="outline-jump-btn w-full text-left py-1.5 pr-2 rounded-lg hover:bg-sky-500/15 hover:text-sky-300 truncate transition cursor-pointer ${pad}">${escapeHtml(h.text)}</button>`;
       }).join('');
 
@@ -3098,24 +3217,37 @@ flowchart TD
         });
       });
 
-      // 2. Interactive Task Checkboxes (updates rawInput cleanly)
+      // 2. Interactive Task Checkboxes (tracks task order outside fenced code blocks)
       readerOutput.querySelectorAll('.inktex-task-checkbox').forEach(cb => {
         cb.addEventListener('change', (e) => {
-          const lineIdx = parseInt(e.target.getAttribute('data-line-idx'), 10);
+          const targetIdx = parseInt(e.target.getAttribute('data-task-idx'), 10);
+          if (isNaN(targetIdx)) return;
           const lines = rawInput.value.split(/\r?\n/);
-          if (!isNaN(lineIdx) && lines[lineIdx] !== undefined) {
-            lines[lineIdx] = e.target.checked
-              ? lines[lineIdx].replace(/\[[ ]\]/, '[x]')
-              : lines[lineIdx].replace(/\[[xX]\]/, '[ ]');
-            rawInput.value = lines.join('\n');
-            updateReader(true);
+          let seen = 0;
+          let inFence = false;
+          for (let li = 0; li < lines.length; li++) {
+            if (/^\s*```/.test(lines[li])) {
+              inFence = !inFence;
+              continue;
+            }
+            if (!inFence && /^\s*(?:>\s*)*[-*•]\s+\[([ xX])\]\s+/.test(lines[li])) {
+              if (seen === targetIdx) {
+                lines[li] = e.target.checked
+                  ? lines[li].replace(/\[[ ]\]/, '[x]')
+                  : lines[li].replace(/\[[xX]\]/, '[ ]');
+                rawInput.value = lines.join('\n');
+                updateReader(true);
+                break;
+              }
+              seen++;
+            }
           }
         });
       });
 
       // 3. Active Recall Click-to-Reveal
       if (activeRecallMode) {
-        readerOutput.querySelectorAll('strong, .ink-encadre, .ink-encadre-vert, .ink-encadre-bleu, .hl-jaune, .hl-vert, .hl-rose').forEach(el => {
+        readerOutput.querySelectorAll('strong, .ink-encadre, .ink-encadre-vert, .ink-encadre-bleu, .hl-jaune, .hl-vert, .hl-rose, .hl-bleu, .hl-orange').forEach(el => {
           el.addEventListener('click', () => el.classList.toggle('recall-revealed'));
         });
       }
@@ -3322,9 +3454,38 @@ flowchart TD
         findMatchLabel.textContent = '0';
         return 0;
       }
-      const count = rawInput.value.split(q).length - 1;
+      const raw = rawInput.value;
+      let count = raw.split(q).length - 1;
+      if (count === 0) {
+        count = raw.toLowerCase().split(q.toLowerCase()).length - 1;
+      }
       findMatchLabel.textContent = `${count} occ.`;
       return count;
+    }
+
+    function runFindStep(backwards = false) {
+      const q = findInput.value;
+      if (!q) return;
+      const raw = rawInput.value;
+      const hay = raw.includes(q) ? raw : raw.toLowerCase();
+      const needle = raw.includes(q) ? q : q.toLowerCase();
+      let idx = -1;
+      if (backwards) {
+        const beforePos = Math.max(0, (rawInput.selectionStart || 0) - 1);
+        idx = hay.lastIndexOf(needle, beforePos);
+        if (idx === -1) idx = hay.lastIndexOf(needle);
+      } else {
+        const startFrom = rawInput.selectionEnd || 0;
+        idx = hay.indexOf(needle, startFrom);
+        if (idx === -1) idx = hay.indexOf(needle, 0);
+      }
+      if (idx !== -1) {
+        rawInput.focus();
+        rawInput.setSelectionRange(idx, idx + q.length);
+        const linesBefore = raw.slice(0, idx).split('\n').length;
+        rawInput.scrollTop = Math.max(0, (linesBefore - 4) * 21);
+      }
+      updateFindMatches();
     }
 
     document.getElementById('btnToggleFind')?.addEventListener('click', () => {
@@ -3333,19 +3494,20 @@ flowchart TD
     });
     document.getElementById('btnCloseFind')?.addEventListener('click', () => findReplaceBar.classList.add('hidden'));
     findInput?.addEventListener('input', updateFindMatches);
-
-    document.getElementById('btnFindNext')?.addEventListener('click', () => {
-      const q = findInput.value;
-      if (!q) return;
-      const startFrom = rawInput.selectionEnd || 0;
-      let idx = rawInput.value.indexOf(q, startFrom);
-      if (idx === -1) idx = rawInput.value.indexOf(q, 0);
-      if (idx !== -1) {
-        rawInput.focus();
-        rawInput.setSelectionRange(idx, idx + q.length);
+    findInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        runFindStep(e.shiftKey);
       }
-      updateFindMatches();
     });
+    replaceInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('btnReplaceOne')?.click();
+      }
+    });
+
+    document.getElementById('btnFindNext')?.addEventListener('click', () => runFindStep(false));
 
     document.getElementById('btnReplaceOne')?.addEventListener('click', () => {
       const q = findInput.value;
@@ -3641,6 +3803,9 @@ flowchart TD
     }, { passive: true });
 
     window.addEventListener('scroll', () => {
+      if (floatingPenPopup && !floatingPenPopup.classList.contains('hidden')) {
+        floatingPenPopup.classList.add('hidden');
+      }
       if (currentTheme !== 'theme-notebook') return;
       if ((window.scrollY || document.documentElement.scrollTop) <= 12) {
         expandManuscriptRibbon(false);
@@ -3778,17 +3943,35 @@ flowchart TD
 
     function findPhraseBoundsInRaw(plainPhrase) {
       if (!plainPhrase) return null;
-      const idx = rawInput.value.indexOf(plainPhrase);
-      if (idx === -1) return null;
-
+      const raw = rawInput.value;
+      let idx = raw.indexOf(plainPhrase);
       let start = idx;
-      let end = idx + plainPhrase.length;
+      let end = idx !== -1 ? idx + plainPhrase.length : -1;
+
+      // Fallback: match phrase even when raw markdown has inline markers (**, *, ==, ~~, {tag}) inside it
+      if (idx === -1 && plainPhrase.length >= 2 && plainPhrase.length <= 240) {
+        try {
+          const escToken = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const inlineGap = `(?:\\*\\*\\*|\\*\\*|\\*|__|_|==|~~|\\{(?:\\/?(?:${ALL_CUSTOM_TAG_NAMES}|size(?::\\d+(?:\\.\\d+)?)?))\\}|\\s)*`;
+          const words = plainPhrase.trim().split(/\s+/).filter(Boolean);
+          if (words.length > 1) {
+            const pattern = words.map(escToken).join(inlineGap);
+            const m = new RegExp(pattern).exec(raw);
+            if (m) {
+              start = m.index;
+              end = m.index + m[0].length;
+            }
+          }
+        } catch (e) {}
+      }
+
+      if (start === -1 || end === -1) return null;
 
       let expanded = true;
       while (expanded) {
         expanded = false;
-        const before = rawInput.value.slice(0, start);
-        const after = rawInput.value.slice(end);
+        const before = raw.slice(0, start);
+        const after = raw.slice(end);
 
         const openSizeMatch = before.match(/\{size:(\d+(?:\.\d+)?)\}$/i);
         const closeSizeMatch = after.match(/^\{\/size\}/i);
@@ -3811,14 +3994,17 @@ flowchart TD
           }
         }
 
-        if (before.endsWith('**') && after.startsWith('**')) {
+        if (before.endsWith('***') && after.startsWith('***')) {
+          start -= 3; end += 3; expanded = true; continue;
+        }
+        if ((before.endsWith('**') && after.startsWith('**')) || (before.endsWith('__') && after.startsWith('__')) || (before.endsWith('==') && after.startsWith('==')) || (before.endsWith('~~') && after.startsWith('~~'))) {
           start -= 2; end += 2; expanded = true; continue;
         }
-        if (before.endsWith('*') && after.startsWith('*') && !before.endsWith('**')) {
+        if ((before.endsWith('*') && after.startsWith('*') && !before.endsWith('**')) || (before.endsWith('_') && after.startsWith('_') && !before.endsWith('__'))) {
           start -= 1; end += 1; expanded = true; continue;
         }
       }
-      return { start, end, fullSegment: rawInput.value.slice(start, end) };
+      return { start, end, fullSegment: raw.slice(start, end) };
     }
 
     function applyPhraseSize(targetSizePtOrDelta, isDelta = false) {
@@ -3998,7 +4184,15 @@ flowchart TD
       if (typeof start === 'number' && typeof end === 'number' && segment) {
         let cleaned = segment, prev;
         do { prev = cleaned; cleaned = cleaned.replace(stripTagsRegex, '$1'); } while (cleaned !== prev);
-        cleaned = cleaned.replace(/\*\*([^*]+?)\*\*/g, '$1').replace(/\*([^*]+?)\*/g, '$1');
+        cleaned = cleaned
+          .replace(/\*\*\*([^*]+?)\*\*\*/g, '$1')
+          .replace(/\*\*([^*]+?)\*\*/g, '$1')
+          .replace(/__([^_]+?)__/g, '$1')
+          .replace(/==([^=]+?)==/g, '$1')
+          .replace(/~~([^~]+?)~~/g, '$1')
+          .replace(/\*([^*]+?)\*/g, '$1')
+          .replace(/(?<![\w\\])_([^_\n]+?)_(?!\w)/g, '$1')
+          .replace(/\\(?:textbf|textit|emph|underline|texttt)\{([^{}]+)\}/g, '$1');
         rawInput.value = rawInput.value.substring(0, start) + cleaned + rawInput.value.substring(end);
         updateReader(false);
         pushHistoryState();
@@ -4042,15 +4236,28 @@ flowchart TD
       }
 
       if (typeof start === 'number' && typeof end === 'number') {
-        let updatedSegment = segment;
-        if (INK_COLOR_TAGS.includes(tag)) {
-          updatedSegment = updatedSegment.replace(new RegExp(`\\{(?:${INK_COLOR_TAGS.join('|')})\\}([\\s\\S]*?)\\{\\/(?:${INK_COLOR_TAGS.join('|')})\\}`, 'gi'), '$1');
-        } else if (HIGHLIGHT_TAGS.includes(tag)) {
-          updatedSegment = updatedSegment.replace(new RegExp(`\\{(?:${HIGHLIGHT_TAGS.join('|')})\\}([\\s\\S]*?)\\{\\/(?:${HIGHLIGHT_TAGS.join('|')})\\}`, 'gi'), '$1');
-        } else if (BOX_TAGS.includes(tag)) {
-          updatedSegment = updatedSegment.replace(new RegExp(`\\{(?:${BOX_TAGS.join('|')})\\}([\\s\\S]*?)\\{\\/(?:${BOX_TAGS.join('|')})\\}`, 'gi'), '$1');
+        const sameTagRegex = new RegExp(`^\\{${tag}\\}([\\s\\S]*?)\\{\\/${tag}\\}$`, 'i');
+        const sameMatch = segment.match(sameTagRegex);
+        let replacement;
+        let isRemoved = false;
+
+        if (sameMatch) {
+          replacement = sameMatch[1];
+          isRemoved = true;
+        } else {
+          let updatedSegment = segment;
+          if (INK_COLOR_TAGS.includes(tag)) {
+            updatedSegment = updatedSegment.replace(new RegExp(`\\{(?:${INK_COLOR_TAGS.join('|')})\\}([\\s\\S]*?)\\{\\/(?:${INK_COLOR_TAGS.join('|')})\\}`, 'gi'), '$1');
+          } else if (HIGHLIGHT_TAGS.includes(tag)) {
+            updatedSegment = updatedSegment.replace(new RegExp(`\\{(?:${HIGHLIGHT_TAGS.join('|')})\\}([\\s\\S]*?)\\{\\/(?:${HIGHLIGHT_TAGS.join('|')})\\}`, 'gi'), '$1');
+          } else if (BOX_TAGS.includes(tag)) {
+            updatedSegment = updatedSegment.replace(new RegExp(`\\{(?:${BOX_TAGS.join('|')})\\}([\\s\\S]*?)\\{\\/(?:${BOX_TAGS.join('|')})\\}`, 'gi'), '$1');
+          } else {
+            updatedSegment = updatedSegment.replace(new RegExp(`\\{${tag}\\}([\\s\\S]*?)\\{\\/${tag}\\}`, 'gi'), '$1');
+          }
+          replacement = `{${tag}}${updatedSegment}{/${tag}}`;
         }
-        const replacement = `{${tag}}${updatedSegment}{/${tag}}`;
+
         rawInput.value = rawInput.value.substring(0, start) + replacement + rawInput.value.substring(end);
         updateReader(false);
         pushHistoryState();
@@ -4059,7 +4266,7 @@ flowchart TD
         savedSelectionState.editorEnd = start + replacement.length;
         if (document.activeElement === rawInput) rawInput.setSelectionRange(start, start + replacement.length);
         floatingPenPopup.classList.add('hidden');
-        showToast(`Style {${tag}} appliqué !`);
+        showToast(isRemoved ? `Style {${tag}} retiré !` : `Style {${tag}} appliqué !`);
         return;
       }
 
@@ -4186,7 +4393,7 @@ flowchart TD
       updateReader(false);
     });
     document.getElementById('btnRevealAllRecall')?.addEventListener('click', () => {
-      readerOutput.querySelectorAll('strong, .ink-encadre, .ink-encadre-vert, .ink-encadre-bleu, .hl-jaune, .hl-vert, .hl-rose').forEach(el => el.classList.add('recall-revealed'));
+      readerOutput.querySelectorAll('strong, .ink-encadre, .ink-encadre-vert, .ink-encadre-bleu, .hl-jaune, .hl-vert, .hl-rose, .hl-bleu, .hl-orange').forEach(el => el.classList.add('recall-revealed'));
     });
     document.getElementById('btnResetRecall')?.addEventListener('click', () => {
       readerOutput.querySelectorAll('.recall-revealed').forEach(el => el.classList.remove('recall-revealed'));
@@ -4657,8 +4864,10 @@ flowchart TD
 
     document.getElementById('btnCopyHtml')?.addEventListener('click', async () => {
       try {
-        const htmlContent = readerOutput.innerHTML;
-        const plainContent = readerOutput.innerText || rawInput.value;
+        const clonedOutput = readerOutput.cloneNode(true);
+        clonedOutput.querySelectorAll('.inktex-copy-code-btn').forEach(b => b.remove());
+        const htmlContent = clonedOutput.innerHTML;
+        const plainContent = Array.from(clonedOutput.children).map(el => (el.textContent || '').trim()).filter(Boolean).join('\n\n') || clonedOutput.textContent || rawInput.value;
         if (navigator.clipboard && window.ClipboardItem) {
           await navigator.clipboard.write([
             new ClipboardItem({
@@ -4740,7 +4949,7 @@ flowchart TD
       showToast('Fichier Markdown (.md) téléchargé !');
     });
 
-    // 7. Compilable LaTeX Export (.tex) with mhchem & tables support
+    // 7. Compilable LaTeX Export (.tex) with mhchem, tables, callouts, checklists & code support
     document.getElementById('btnExportTex').addEventListener('click', () => {
       let src = rawInput.value
         .replace(/\\{2,}\(/g, '\\(').replace(/\\{2,}\)/g, '\\)')
@@ -4749,20 +4958,34 @@ flowchart TD
 
       const lines = src.split(/\r?\n/);
       const texLines = [];
-      let inList = false;
+      let activeListEnv = null; // 'itemize' | 'enumerate'
+
+      function closeTexList() {
+        if (activeListEnv) {
+          texLines.push(`\\end{${activeListEnv}}`);
+          activeListEnv = null;
+        }
+      }
 
       function formatInlineToLatex(text) {
         let t = text;
         t = t.replace(/\{rouge\}([\s\S]*?)\{\/rouge\}/gi, '\\textcolor{red}{$1}');
         t = t.replace(/\{bleu\}([\s\S]*?)\{\/bleu\}/gi, '\\textcolor{blue}{$1}');
         t = t.replace(/\{vert\}([\s\S]*?)\{\/vert\}/gi, '\\textcolor{teal}{$1}');
+        t = t.replace(/\{violet\}([\s\S]*?)\{\/violet\}/gi, '\\textcolor{violet}{$1}');
+        t = t.replace(/\{orange\}([\s\S]*?)\{\/orange\}/gi, '\\textcolor{orange}{$1}');
+        t = t.replace(/\{souligne\}([\s\S]*?)\{\/souligne\}/gi, '\\underline{$1}');
+        t = t.replace(/\{underline\}([\s\S]*?)\{\/underline\}/gi, '\\underline{$1}');
         t = t.replace(/\{encadre(?:-vert|-bleu)?\}([\s\S]*?)\{\/encadre(?:-vert|-bleu)?\}/gi, '\\fbox{$1}');
         const cleanOtherTags = new RegExp(`\\{(?:${ALL_CUSTOM_TAG_NAMES}|size:\\d+(?:\\.\\d+)?)\\}([\\s\\S]*?)\\{\\/(?:${ALL_CUSTOM_TAG_NAMES}|size)\\}`, 'gi');
         let prev;
         do { prev = t; t = t.replace(cleanOtherTags, '$1'); } while (t !== prev);
         t = t.replace(/==([^=]+?)==/g, '\\textbf{$1}');
+        t = t.replace(/\*\*\*([^*]+?)\*\*\*/g, '\\textbf{\\textit{$1}}');
         t = t.replace(/\*\*([^*]+?)\*\*/g, '\\textbf{$1}');
+        t = t.replace(/__([^_]+?)__/g, '\\textbf{$1}');
         t = t.replace(/\*([^*]+?)\*/g, '\\textit{$1}');
+        t = t.replace(/`([^`]+?)`/g, '\\texttt{$1}');
         return t;
       }
 
@@ -4770,12 +4993,45 @@ flowchart TD
         const rawLine = lines[i];
         const trimmed = rawLine.trim().replace(/^\{align:(left|center|right)\}\s*/i, '');
         if (!trimmed) {
-          if (inList) { texLines.push('\\end{itemize}'); inList = false; }
+          closeTexList();
           texLines.push('');
           continue;
         }
+        // Fenced code / Mermaid blocks -> verbatim so &, _, #, <, > never break Overleaf
+        if (/^```/.test(trimmed)) {
+          closeTexList();
+          texLines.push('\\begin{verbatim}');
+          i++;
+          while (i < lines.length && !/^```/.test(lines[i].trim())) {
+            texLines.push(lines[i].replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'));
+            i++;
+          }
+          texLines.push('\\end{verbatim}');
+          continue;
+        }
+        // Callouts & Blockquotes
+        if (trimmed.startsWith('>')) {
+          closeTexList();
+          const qLines = [];
+          while (i < lines.length && lines[i].trim().startsWith('>')) {
+            qLines.push(lines[i].trim().replace(/^>\s?/, ''));
+            i++;
+          }
+          i--;
+          texLines.push('\\begin{quote}');
+          const headerM = (qLines[0] || '').match(/^\[!([A-Z]+)\]\s*(.*)$/i);
+          if (headerM) {
+            const title = headerM[2] ? formatInlineToLatex(headerM[2]) : headerM[1].toUpperCase();
+            texLines.push(`\\textbf{${title}}\\par`);
+            qLines.slice(1).forEach(ql => texLines.push(formatInlineToLatex(ql.replace(/^[-*•]\s+/, '\\textbullet\\ '))));
+          } else {
+            qLines.forEach(ql => texLines.push(formatInlineToLatex(ql)));
+          }
+          texLines.push('\\end{quote}');
+          continue;
+        }
         if (trimmed.includes('|') && i + 1 < lines.length && /^[:|\-\s]+$/.test(lines[i + 1].trim())) {
-          if (inList) { texLines.push('\\end{itemize}'); inList = false; }
+          closeTexList();
           const cols = trimmed.replace(/^\||\|$/g, '').split('|').map(c => formatInlineToLatex(c.trim()));
           const colSpec = 'l'.repeat(cols.length);
           texLines.push(`\\begin{center}\\begin{tabular}{|${colSpec.split('').join('|')}|}\\hline`);
@@ -4791,26 +5047,58 @@ flowchart TD
           continue;
         }
         if (/^([-*_]){3,}$/.test(trimmed)) {
-          if (inList) { texLines.push('\\end{itemize}'); inList = false; }
+          closeTexList();
           texLines.push('\\noindent\\rule{\\textwidth}{0.4pt}');
           continue;
         }
-        const h1 = trimmed.match(/^#\s+(.+)$/);
-        if (h1) { if (inList) { texLines.push('\\end{itemize}'); inList = false; } texLines.push(`\\section*{${formatInlineToLatex(h1[1])}}`); continue; }
-        const h2 = trimmed.match(/^##\s+(.+)$/);
-        if (h2) { if (inList) { texLines.push('\\end{itemize}'); inList = false; } texLines.push(`\\subsection*{${formatInlineToLatex(h2[1])}}`); continue; }
-        const h3 = trimmed.match(/^###\s+(.+)$/);
-        if (h3) { if (inList) { texLines.push('\\end{itemize}'); inList = false; } texLines.push(`\\subsubsection*{${formatInlineToLatex(h3[1])}}`); continue; }
+        const texHeading = trimmed.match(/^(#{1,6})\s+(.+)$/);
+        if (texHeading) {
+          closeTexList();
+          const texCmdMap = { 1: 'section*', 2: 'subsection*', 3: 'subsubsection*', 4: 'paragraph*', 5: 'subparagraph*', 6: 'subparagraph*' };
+          const cmd = texCmdMap[texHeading[1].length] || 'subsubsection*';
+          texLines.push(`\\${cmd}{${formatInlineToLatex(texHeading[2])}}`);
+          continue;
+        }
+        const taskM = rawLine.match(/^(\s*)[-*•]\s+\[([ xX])\]\s+(.+)$/);
+        if (taskM) {
+          if (activeListEnv !== 'itemize') {
+            closeTexList();
+            texLines.push('\\begin{itemize}');
+            activeListEnv = 'itemize';
+          }
+          const boxSym = taskM[2].toLowerCase() === 'x' ? '$\\boxtimes$' : '$\\square$';
+          texLines.push(`  \\item[${boxSym}] ${formatInlineToLatex(taskM[3])}`);
+          continue;
+        }
         const bullet = rawLine.match(/^(\s*)(?:[-*•]|\\item)\s+(.+)$/);
         if (bullet) {
-          if (!inList) { texLines.push('\\begin{itemize}'); inList = true; }
+          if (activeListEnv !== 'itemize') {
+            closeTexList();
+            texLines.push('\\begin{itemize}');
+            activeListEnv = 'itemize';
+          }
           texLines.push(`  \\item ${formatInlineToLatex(bullet[2])}`);
           continue;
         }
-        if (inList) { texLines.push('\\end{itemize}'); inList = false; }
+        const numbered = rawLine.match(/^(\s*)\d+\.\s+(.+)$/);
+        if (numbered) {
+          if (activeListEnv !== 'enumerate') {
+            closeTexList();
+            texLines.push('\\begin{enumerate}');
+            activeListEnv = 'enumerate';
+          }
+          texLines.push(`  \\item ${formatInlineToLatex(numbered[2])}`);
+          continue;
+        }
+        closeTexList();
         texLines.push(formatInlineToLatex(trimmed));
       }
-      if (inList) texLines.push('\\end{itemize}');
+      closeTexList();
+
+      const customMacroDefs = Object.entries(parseCustomMacros()).map(([cmd, exp]) => {
+        const hasArg = exp.includes('#1');
+        return `\\providecommand{${cmd}}${hasArg ? '[1]' : ''}{${exp}}`;
+      }).join('\n');
 
       const fullTex = `\\documentclass[12pt,a4paper]{article}
 \\usepackage[utf8]{inputenc}
@@ -4822,7 +5110,7 @@ flowchart TD
 \\usepackage[margin=1.8cm]{geometry}
 \\setlength{\\parskip}{0.5em}
 \\setlength{\\parindent}{0pt}
-
+${customMacroDefs ? customMacroDefs + '\n' : ''}
 \\begin{document}
 
 ${texLines.join('\n')}
