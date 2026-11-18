@@ -531,7 +531,7 @@
     #workspaceGrid {
       transition: padding-top 0.26s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    @media (min-width: 1024px) {
+    @media (min-width: 1280px) {
       #workspaceGrid.notebook-mode-spacing {
         padding-top: 6.85rem;
       }
@@ -539,7 +539,7 @@
         padding-top: 2.35rem;
       }
     }
-    @media (max-width: 1023px) {
+    @media (max-width: 1279px) {
       #notebookCustomBar {
         position: relative !important;
         top: auto !important;
@@ -1014,14 +1014,23 @@
       overscroll-behavior: contain;
     }
 
-    @media (max-width: 767px) {
-      /* Prevent iOS Safari auto-zoom on focus (< 16px) */
+    @media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+      /* Prevent iOS & iPadOS Safari auto-zoom on focus (< 16px) */
       input[type="text"],
       input[type="search"],
       input[type="number"],
       textarea,
       select {
         font-size: 16px !important;
+      }
+    }
+
+    @media (min-width: 640px) and (max-width: 900px) {
+      .theme-notebook.paper-cornell.reader-card {
+        background-image:
+          linear-gradient(90deg, transparent 120px, rgba(239, 68, 68, 0.48) 120px, rgba(239, 68, 68, 0.48) 122px, transparent 122px),
+          repeating-linear-gradient(to bottom, transparent 0px, transparent 33px, rgba(147, 197, 253, 0.4) 33px, rgba(147, 197, 253, 0.4) 34px);
+        padding-left: 8.75rem !important;
       }
     }
 
@@ -1729,8 +1738,8 @@
       </div>
     </section>
 
-    <!-- DRAGGABLE RESIZER HANDLE (Desktop) -->
-    <div id="splitResizer" class="no-print hidden lg:flex items-center justify-center w-2 self-stretch cursor-col-resize group select-none" title="Glisser pour redimensionner • Double-clic pour réinitialiser">
+    <!-- DRAGGABLE RESIZER HANDLE (Desktop & Tablet Landscape) -->
+    <div id="splitResizer" class="no-print hidden lg:flex items-center justify-center w-3 self-stretch cursor-col-resize group select-none touch-none" title="Glisser pour redimensionner • Double-clic pour réinitialiser">
       <div class="w-1 h-16 rounded-full bg-zinc-700/70 group-hover:bg-sky-400 transition"></div>
     </div>
 
@@ -3562,10 +3571,16 @@ flowchart TD
       }
     });
 
-    // Draggable Split Resizer
+    // Draggable Split Resizer (Mouse + iPad Touch / Apple Pencil)
     const splitResizer = document.getElementById('splitResizer');
     if (splitResizer) {
       let draggingSplit = false;
+      const updateSplitFromClientX = (clientX) => {
+        const rect = workspaceGrid.getBoundingClientRect();
+        if (!rect.width) return;
+        const pct = Math.max(25, Math.min(68, ((clientX - rect.left) / rect.width) * 100));
+        editorContainer.style.setProperty('--editor-width', `${pct.toFixed(1)}%`);
+      };
       splitResizer.addEventListener('mousedown', (e) => {
         e.preventDefault();
         draggingSplit = true;
@@ -3573,9 +3588,7 @@ flowchart TD
       });
       window.addEventListener('mousemove', (e) => {
         if (!draggingSplit) return;
-        const rect = workspaceGrid.getBoundingClientRect();
-        const pct = Math.max(25, Math.min(68, ((e.clientX - rect.left) / rect.width) * 100));
-        editorContainer.style.setProperty('--editor-width', `${pct.toFixed(1)}%`);
+        updateSplitFromClientX(e.clientX);
       });
       window.addEventListener('mouseup', () => {
         if (draggingSplit) {
@@ -3583,6 +3596,16 @@ flowchart TD
           document.body.style.cursor = '';
         }
       });
+      splitResizer.addEventListener('touchstart', () => {
+        draggingSplit = true;
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (!draggingSplit || !e.touches?.[0]) return;
+        updateSplitFromClientX(e.touches[0].clientX);
+      }, { passive: true });
+      window.addEventListener('touchend', () => {
+        draggingSplit = false;
+      }, { passive: true });
       splitResizer.addEventListener('dblclick', () => {
         editorContainer.style.setProperty('--editor-width', '43%');
       });
@@ -3631,8 +3654,11 @@ flowchart TD
       });
     }
 
+    let currentWorkspaceView = 'split';
+
     function setWorkspaceView(view) {
       const normalizedView = (view === 'editor' || view === 'reader') ? view : 'split';
+      currentWorkspaceView = normalizedView;
       const layoutBtnText = document.getElementById('layoutBtnText');
       isFullReaderMode = (normalizedView === 'reader');
 
@@ -3668,6 +3694,12 @@ flowchart TD
           : 'mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate';
       });
     }
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024 && currentWorkspaceView === 'editor') {
+        setWorkspaceView('split');
+      }
+    });
 
     document.getElementById('btnToggleLayout').addEventListener('click', () => {
       setWorkspaceView(isFullReaderMode ? 'split' : 'reader');
@@ -3761,7 +3793,7 @@ flowchart TD
     }
 
     window.addEventListener('wheel', (e) => {
-      if (currentTheme !== 'theme-notebook') return;
+      if (currentTheme !== 'theme-notebook' || window.innerWidth < 1280) return;
       if (
         notebookCustomBar.contains(e.target) ||
         editorContainer.contains(e.target) ||
@@ -3785,7 +3817,7 @@ flowchart TD
 
     window.addEventListener('touchmove', (e) => {
       if (currentTheme !== 'theme-notebook' || touchStartY === null) return;
-      if (window.innerWidth < 1024) return;
+      if (window.innerWidth < 1280) return;
       if (
         notebookCustomBar.contains(e.target) ||
         editorContainer.contains(e.target) ||
