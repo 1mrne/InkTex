@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>InkTeX Studio 3.0 | LaTeX, Chimie &amp; Cahier Manuscrit</title>
+  <title>InkTeX Studio</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✍️</text></svg>">
 
   <!-- Tailwind CSS v3 -->
@@ -486,60 +486,102 @@
       transform: scale(1.1);
     }
 
-    /* Smooth Hardware-Accelerated Overlay Manuscript Ribbon */
+    /* Smooth Zero-Jump Glassmorphic Manuscript Toolbar */
     #notebookCustomBar {
       position: absolute;
       top: 100%;
       left: 0;
       right: 0;
-      z-index: 40;
-      transform: translateY(0);
+      z-index: 20;
+      background: linear-gradient(180deg, rgba(20, 23, 33, 0.96) 0%, rgba(14, 16, 24, 0.97) 100%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transform: translate3d(0, 0, 0);
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
       will-change: transform, opacity;
       transition:
-        transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
         opacity 0.2s ease,
-        visibility 0.26s ease;
+        visibility 0.28s ease;
     }
 
     #notebookCustomBar.ribbon-collapsed {
-      transform: translateY(-115%) !important;
+      transform: translate3d(0, -104%, 0) !important;
       opacity: 0 !important;
       visibility: hidden !important;
       pointer-events: none !important;
     }
 
-    #showRibbonPillContainer {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      z-index: 35;
-      transform: translateY(0);
-      opacity: 1;
-      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
-    }
-
-    #showRibbonPillContainer.pill-hidden {
-      transform: translateY(-12px);
+    /* Expandable Paper & 4-Color Ink Drawer inside Ribbon */
+    #nbStyleDrawer {
+      display: grid;
+      grid-template-rows: 0fr;
       opacity: 0;
-      pointer-events: none;
+      transition: grid-template-rows 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease, margin-top 0.24s ease;
+    }
+    #nbStyleDrawer.drawer-open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 0.45rem;
+    }
+    #nbStyleDrawer > .nb-drawer-inner {
+      overflow: hidden;
     }
 
-    #workspaceGrid {
-      transition: padding-top 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Visual Pen Dots & Highlighter Swatches */
+    .nb-pen-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 9999px;
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+      cursor: pointer;
+      flex-shrink: 0;
     }
-    @media (min-width: 1280px) {
+    .nb-pen-dot:hover {
+      transform: scale(1.2);
+      border-color: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 0 2.5px rgba(56, 189, 248, 0.35);
+    }
+    .nb-pen-dot:active {
+      transform: scale(1.05);
+    }
+
+    .nb-hl-chip {
+      width: 20px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .nb-hl-chip:hover {
+      transform: translateY(-1px) scale(1.14);
+      filter: brightness(1.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+    }
+    .nb-hl-chip:active {
+      transform: scale(1.02);
+    }
+
+    /* Static spacing (zero mid-scroll layout jump!) */
+    @media (min-width: 1024px) {
       #workspaceGrid.notebook-mode-spacing {
-        padding-top: 6.85rem;
+        padding-top: 4rem;
       }
-      #workspaceGrid.notebook-mode-collapsed-spacing {
-        padding-top: 2.35rem;
+      #editorContainer {
+        transition: top 0.28s cubic-bezier(0.22, 1, 0.36, 1), height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      body.notebook-ribbon-open #editorContainer {
+        top: 158px;
+        height: calc(100vh - 174px);
       }
     }
-    @media (max-width: 1279px) {
+    @media (max-width: 1023px) {
       #notebookCustomBar {
         position: relative !important;
         top: auto !important;
@@ -549,8 +591,7 @@
       #notebookCustomBar.ribbon-collapsed {
         display: none !important;
       }
-      #workspaceGrid.notebook-mode-spacing,
-      #workspaceGrid.notebook-mode-collapsed-spacing {
+      #workspaceGrid.notebook-mode-spacing {
         padding-top: 0.75rem;
       }
     }
@@ -1181,12 +1222,6 @@
         </div>
         <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap min-w-0">
           <h1 class="font-semibold text-sm sm:text-base tracking-tight text-white truncate">InkTeX Studio</h1>
-          <span class="text-[10px] sm:text-[11px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30">
-            v3.0
-          </span>
-          <span class="hidden sm:inline-block text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-            LaTeX • Chimie • Mermaid • Cahier
-          </span>
         </div>
       </div>
 
@@ -1286,6 +1321,15 @@
               ✍️ Cahier<span class="hidden sm:inline"> Manuscrit</span>
             </button>
           </div>
+
+          <!-- Inline Docked Manuscript Toolbar Toggle (Zero Overlay on Notes!) -->
+          <div id="showRibbonPillContainer" class="hidden items-center sm:ml-1">
+            <button id="btnShowRibbonPill" type="button" aria-expanded="true" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-semibold bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 transition cursor-pointer" title="Afficher ou masquer la barre d'outils Manuscrit (Alt+T)">
+              <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i>
+              <span id="ribbonToggleLabel">Outils Cahier</span>
+              <span id="ribbonToggleChevron" class="inline-block text-[10px] transition-transform duration-200 rotate-180">▾</span>
+            </button>
+          </div>
         </div>
 
         <!-- Typography Controls -->
@@ -1316,31 +1360,31 @@
     </div>
 
     <!-- =====================================================
-         EXCLUSIVE "CAHIER MANUSCRIT" WORD-STYLE RIBBON
+         EXCLUSIVE "CAHIER MANUSCRIT" GLASSMORPHIC STUDIO BAR
          ===================================================== -->
-    <div id="notebookCustomBar" class="hidden relative z-20 bg-gradient-to-b from-[#151822] to-[#11131b] border-t border-sky-500/30 px-3 sm:px-4 py-2 shadow-xl">
-      <div class="max-w-[1640px] mx-auto flex flex-col gap-1.5 sm:gap-2 text-xs">
+    <div id="notebookCustomBar" class="hidden border-t border-sky-500/25 border-b border-zinc-800/90 px-3 sm:px-4 py-1.5 shadow-2xl">
+      <div class="max-w-[1640px] mx-auto flex flex-col text-xs">
 
-        <!-- RIBBON ROW 1 -->
-        <div class="flex flex-col lg:flex-row lg:flex-wrap items-stretch lg:items-center justify-between gap-1.5 sm:gap-2 pb-1.5 border-b border-zinc-800/90">
+        <!-- COMPACT PRIMARY STUDIO ROW (~46px) -->
+        <div class="flex items-center justify-between gap-2">
 
-          <div class="flex flex-nowrap lg:flex-wrap items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full pb-0.5 lg:pb-0">
-            <!-- Group 1: Undo / Redo -->
-            <div class="flex items-center gap-1 bg-zinc-900/90 px-1.5 py-1 rounded-lg border border-zinc-800 flex-shrink-0">
-              <button id="btnUndo" type="button" class="word-btn" title="Annuler la dernière modification (Ctrl+Z)" disabled>
+          <!-- Scrollable Tool Clusters -->
+          <div class="flex flex-nowrap items-center gap-1.5 overflow-x-auto no-scrollbar min-w-0 py-0.5">
+
+            <!-- Cluster 1: Undo / Redo -->
+            <div class="flex items-center gap-0.5 bg-zinc-900/90 p-0.5 rounded-lg border border-zinc-800 flex-shrink-0">
+              <button id="btnUndo" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Annuler (Ctrl+Z)" disabled>
                 <i data-lucide="undo-2" class="w-3.5 h-3.5 text-sky-400"></i>
-                <span>Annuler</span>
               </button>
-              <button id="btnRedo" type="button" class="word-btn" title="Rétablir (Ctrl+Y)" disabled>
+              <button id="btnRedo" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Rétablir (Ctrl+Y)" disabled>
                 <i data-lucide="redo-2" class="w-3.5 h-3.5 text-sky-400"></i>
-                <span>Rétablir</span>
               </button>
             </div>
 
-            <!-- Group 2: Font & Phrase Sizing -->
-            <div class="flex flex-nowrap items-center gap-1.5 bg-zinc-900/90 px-2 py-1 rounded-lg border border-zinc-800 flex-shrink-0">
-              <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-sky-400 flex-shrink-0"></i>
-              <select id="nbFontSelect" class="bg-zinc-950 text-zinc-100 border border-zinc-700 hover:border-sky-500/60 rounded-md px-2 py-1 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer max-w-[165px] sm:max-w-none" title="Police d'écriture du cahier">
+            <!-- Cluster 2: Handwriting Font & Phrase Sizing -->
+            <div class="flex flex-nowrap items-center gap-1 bg-zinc-900/90 px-1.5 py-0.5 rounded-lg border border-zinc-800 flex-shrink-0">
+              <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-sky-400 flex-shrink-0 ml-0.5"></i>
+              <select id="nbFontSelect" class="bg-zinc-950/90 text-zinc-100 border border-zinc-700/80 hover:border-sky-500/60 rounded-md px-1.5 py-1 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer max-w-[155px] sm:max-w-[185px]" title="Police d'écriture du cahier">
                 <optgroup label="Polices Manuscrites (Cahier)">
                   <option value="'Kalam', cursive" selected>Kalam (Stylo bille soigné)</option>
                   <option value="'Caveat', cursive">Caveat (Cursive fluide)</option>
@@ -1364,188 +1408,186 @@
 
               <div class="ribbon-divider"></div>
 
-              <select id="phraseSizeSelect" class="bg-zinc-950 text-zinc-100 border border-zinc-700 hover:border-sky-500/60 rounded-md px-1.5 py-1 text-xs font-mono focus:outline-none focus:border-sky-400 cursor-pointer" title="Taille de la phrase sélectionnée">
-                <option value="">Taille phrase</option>
-                <option value="12">12 pt (Petit)</option>
-                <option value="14">14 pt</option>
-                <option value="16">16 pt (Normal)</option>
-                <option value="18">18 pt</option>
-                <option value="20">20 pt (Sous-titre)</option>
-                <option value="24">24 pt (Grand)</option>
-                <option value="28">28 pt (Titre)</option>
-                <option value="34">34 pt (Très grand)</option>
-                <option value="42">42 pt (Affiche)</option>
-              </select>
-
-              <button id="btnGrowPhrase" type="button" class="word-btn font-bold text-sky-300" title="Agrandir la phrase sélectionnée (A+)">
-                <span>A</span><sup class="text-[10px] font-extrabold text-emerald-400">+</sup>
+              <button id="btnShrinkPhrase" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 font-bold text-sky-300 !px-1.5 !py-1" title="Réduire la phrase sélectionnée (A-)">
+                <span class="text-[11px]">A</span><sup class="text-[9px] font-extrabold text-amber-400">-</sup>
               </button>
-              <button id="btnShrinkPhrase" type="button" class="word-btn font-bold text-sky-300" title="Réduire la phrase sélectionnée (A-)">
-                <span class="text-[11px]">A</span><sup class="text-[10px] font-extrabold text-amber-400">-</sup>
+              <select id="phraseSizeSelect" class="bg-zinc-950/90 text-zinc-100 border border-zinc-700/80 hover:border-sky-500/60 rounded-md px-1 py-1 text-[11px] font-mono focus:outline-none focus:border-sky-400 cursor-pointer" title="Taille de la phrase sélectionnée">
+                <option value="">pt</option>
+                <option value="12">12 pt</option>
+                <option value="14">14 pt</option>
+                <option value="16">16 pt</option>
+                <option value="18">18 pt</option>
+                <option value="20">20 pt</option>
+                <option value="24">24 pt</option>
+                <option value="28">28 pt</option>
+                <option value="34">34 pt</option>
+                <option value="42">42 pt</option>
+              </select>
+              <button id="btnGrowPhrase" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 font-bold text-sky-300 !px-1.5 !py-1" title="Agrandir la phrase sélectionnée (A+)">
+                <span>A</span><sup class="text-[9px] font-extrabold text-emerald-400">+</sup>
               </button>
             </div>
 
-            <!-- Group 3: Formatting & Alignment & Gomme -->
-            <div class="flex flex-nowrap items-center gap-1 bg-zinc-900/90 px-2 py-1 rounded-lg border border-zinc-800 flex-shrink-0">
-              <button type="button" data-word-action="bold" class="word-action-btn word-btn font-bold px-2" title="Gras sur la sélection">B</button>
-              <button type="button" data-word-action="italic" class="word-action-btn word-btn italic font-serif px-2" title="Italique sur la sélection">I</button>
-              <button type="button" data-word-action="underline" class="word-action-btn word-btn underline px-2" title="Souligner la sélection">U</button>
-              <button type="button" data-word-action="strike" class="word-action-btn word-btn line-through text-rose-300 px-2" title="Barrer la sélection">S</button>
-              <button type="button" data-tag="souligne" class="phrase-tag-btn word-btn underline decoration-wavy decoration-rose-400 text-rose-300" title="Soulignement ondulé rouge">
-                <span>〰️ Ondulé</span>
-              </button>
-              <button type="button" data-tag="encadre" class="phrase-tag-btn word-btn border-rose-500/50 text-rose-200" title="Encadrer en rouge">
-                <span>▭ Rouge</span>
-              </button>
-              <button type="button" data-tag="encadre-vert" class="phrase-tag-btn word-btn border-emerald-500/50 text-emerald-200" title="Encadrer en vert">
-                <span>▭ Vert</span>
-              </button>
-              <button type="button" data-tag="encadre-bleu" class="phrase-tag-btn word-btn border-sky-500/50 text-sky-200" title="Encadrer en bleu">
-                <span>▭ Bleu</span>
-              </button>
+            <!-- Cluster 3: Formatting, Boxes, Alignment & Gomme -->
+            <div class="flex flex-nowrap items-center gap-0.5 bg-zinc-900/90 px-1.5 py-0.5 rounded-lg border border-zinc-800 flex-shrink-0">
+              <button type="button" data-word-action="bold" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 font-bold !px-2 !py-1" title="Gras (Ctrl+B)">B</button>
+              <button type="button" data-word-action="italic" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 italic font-serif !px-2 !py-1" title="Italique (Ctrl+I)">I</button>
+              <button type="button" data-word-action="underline" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 underline !px-2 !py-1" title="Souligner">U</button>
+              <button type="button" data-word-action="strike" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 line-through text-rose-300 !px-2 !py-1" title="Barrer">S</button>
+              <button type="button" data-tag="souligne" class="phrase-tag-btn word-btn !border-0 !bg-transparent hover:!bg-rose-500/20 underline decoration-wavy decoration-rose-400 text-rose-300 !px-1.5 !py-1" title="Soulignement ondulé rouge (clic = activer/retirer)">〰️</button>
 
               <div class="ribbon-divider"></div>
 
-              <button type="button" data-align="left" class="align-btn word-btn px-1.5" title="Aligner à gauche">
+              <button type="button" data-tag="encadre" class="phrase-tag-btn word-btn !px-1.5 !py-0.5 border-rose-500/60 bg-rose-500/10 text-rose-300" title="Encadrer en rouge">▭</button>
+              <button type="button" data-tag="encadre-vert" class="phrase-tag-btn word-btn !px-1.5 !py-0.5 border-emerald-500/60 bg-emerald-500/10 text-emerald-300" title="Encadrer en vert">▭</button>
+              <button type="button" data-tag="encadre-bleu" class="phrase-tag-btn word-btn !px-1.5 !py-0.5 border-sky-500/60 bg-sky-500/10 text-sky-300" title="Encadrer en bleu">▭</button>
+
+              <div class="ribbon-divider"></div>
+
+              <button type="button" data-align="left" class="align-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Aligner à gauche">
                 <i data-lucide="align-left" class="w-3.5 h-3.5"></i>
               </button>
-              <button type="button" data-align="center" class="align-btn word-btn px-1.5" title="Centrer le paragraphe">
+              <button type="button" data-align="center" class="align-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Centrer">
                 <i data-lucide="align-center" class="w-3.5 h-3.5"></i>
               </button>
-              <button type="button" data-align="right" class="align-btn word-btn px-1.5" title="Aligner à droite">
+              <button type="button" data-align="right" class="align-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Aligner à droite">
                 <i data-lucide="align-right" class="w-3.5 h-3.5"></i>
               </button>
 
               <div class="ribbon-divider"></div>
 
-              <button id="btnClearFormatting" type="button" class="word-btn text-amber-300 hover:text-amber-200" title="Gomme : Effacer le style/taille/couleur">
+              <button id="btnClearFormatting" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-amber-500/20 text-amber-300 hover:text-amber-200 !px-1.5 !py-1" title="Gomme : effacer style, couleur et taille">
                 <i data-lucide="eraser" class="w-3.5 h-3.5"></i>
-                <span>Gomme</span>
               </button>
             </div>
+
+            <!-- Cluster 4: Visual Ink Pens & Highlighters (Compact Swatch Dock) -->
+            <div class="flex flex-nowrap items-center gap-1.5 bg-zinc-900/90 px-2.5 py-1 rounded-lg border border-zinc-800 flex-shrink-0">
+              <span class="text-[10px] uppercase tracking-wider font-semibold text-zinc-400 hidden 2xl:inline mr-0.5">Stylo</span>
+              <button type="button" data-tag="rouge" class="phrase-tag-btn nb-pen-dot" style="background:#dc2626" title="Stylo Rouge (clic = activer/retirer)"></button>
+              <button type="button" data-tag="bleu" class="phrase-tag-btn nb-pen-dot" style="background:#2563eb" title="Stylo Bleu (clic = activer/retirer)"></button>
+              <button type="button" data-tag="vert" class="phrase-tag-btn nb-pen-dot" style="background:#16a34a" title="Stylo Vert (clic = activer/retirer)"></button>
+              <button type="button" data-tag="noir" class="phrase-tag-btn nb-pen-dot" style="background:#1e293b" title="Stylo Noir (clic = activer/retirer)"></button>
+              <button type="button" data-tag="violet" class="phrase-tag-btn nb-pen-dot" style="background:#7c3aed" title="Stylo Violet (clic = activer/retirer)"></button>
+              <button type="button" data-tag="orange" class="phrase-tag-btn nb-pen-dot" style="background:#ea580c" title="Stylo Orange (clic = activer/retirer)"></button>
+
+              <div class="ribbon-divider"></div>
+
+              <span class="text-[10px] uppercase tracking-wider font-semibold text-amber-300/80 hidden 2xl:inline mr-0.5">Fluo</span>
+              <button type="button" data-tag="jaune" class="phrase-tag-btn nb-hl-chip" style="background:rgba(253,224,71,0.88)" title="Surligneur Jaune"></button>
+              <button type="button" data-tag="surligne-vert" class="phrase-tag-btn nb-hl-chip" style="background:rgba(134,239,172,0.85)" title="Surligneur Vert"></button>
+              <button type="button" data-tag="rose" class="phrase-tag-btn nb-hl-chip" style="background:rgba(249,168,212,0.88)" title="Surligneur Rose"></button>
+              <button type="button" data-tag="surligne-bleu" class="phrase-tag-btn nb-hl-chip" style="background:rgba(147,197,253,0.88)" title="Surligneur Bleu"></button>
+              <button type="button" data-tag="surligne-orange" class="phrase-tag-btn nb-hl-chip" style="background:rgba(253,186,116,0.9)" title="Surligneur Orange"></button>
+            </div>
+
           </div>
 
-          <!-- Group 4: Paper, Margin, Snap-Lines, Pin & Hide -->
-          <div class="flex flex-nowrap lg:flex-wrap items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full pb-0.5 lg:pb-0">
-            <div class="flex items-center gap-1.5 bg-zinc-900/90 px-2.5 py-1 rounded-lg border border-zinc-800 flex-shrink-0">
-              <i data-lucide="notebook" class="w-3.5 h-3.5 text-indigo-400 flex-shrink-0"></i>
-              <span class="text-zinc-400 font-medium hidden sm:inline">Papier :</span>
-              <select id="nbPaperSelect" class="bg-zinc-950 text-zinc-100 border border-zinc-700 rounded-md px-2 py-1 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer max-w-[150px] sm:max-w-none">
-                <option value="paper-lignes" selected>Ligné classique</option>
-                <option value="paper-seyes">Grands Carreaux (Seyès)</option>
-                <option value="paper-quadrille">Petits Carreaux (5x5)</option>
-                <option value="paper-pointille">Pointillés (Bullet)</option>
-                <option value="paper-cornell">Méthode Cornell</option>
-                <option value="paper-parchemin">Parchemin Crème</option>
-                <option value="paper-vierge">Feuille Blanche</option>
-              </select>
-              <button id="btnToggleMargin" type="button" class="word-btn px-2 py-0.5 text-rose-300 border-rose-500/40 flex-shrink-0" title="Afficher ou masquer la marge rouge">
-                <span>Marge</span>
-              </button>
-              <button id="btnSnapLines" type="button" class="word-btn px-2 py-0.5 text-sky-300 flex-shrink-0" title="Aligner l'écriture exactement sur les lignes du papier">
-                <span>Aligner Lignes</span>
-              </button>
-            </div>
-
-            <button id="btnPinRibbon" type="button" class="word-btn px-2 py-1 text-zinc-300 flex-shrink-0" title="Épingler la barre d'outils">
-              <i data-lucide="pin" class="w-3.5 h-3.5 text-sky-400"></i>
-              <span id="pinRibbonText">Épingler</span>
+          <!-- Right Fixed Controls: Paper/Ink Drawer + Pin + Collapse -->
+          <div class="flex items-center gap-1 flex-shrink-0">
+            <button id="btnToggleNbDrawer" type="button" aria-expanded="false" class="word-btn px-2 py-1 bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-200 border-indigo-500/40 flex-shrink-0" title="Choisir le papier (Ligné, Seyès, Feuille Blanche...) et les 4 couleurs d'encre">
+              <i data-lucide="notebook" class="w-3.5 h-3.5 text-indigo-300"></i>
+              <span id="nbActivePaperLabel" class="hidden sm:inline">Ligné</span>
+              <span id="nbDrawerChevron" class="inline-block text-[10px] transition-transform duration-200">▾</span>
             </button>
-            <button id="btnHideRibbon" type="button" class="word-btn px-2 py-1 text-zinc-300 hover:text-amber-300 flex-shrink-0" title="Masquer la barre d'outils">
-              <span>▴ Masquer</span>
+
+            <button id="btnPinRibbon" type="button" class="word-btn px-2 py-1 text-zinc-300 flex-shrink-0" title="Épingler la barre (empêche le masquage au défilement)">
+              <i data-lucide="pin" class="w-3.5 h-3.5 text-sky-400"></i>
+              <span id="pinRibbonText" class="hidden xl:inline">Épingler</span>
+            </button>
+
+            <button id="btnHideRibbon" type="button" class="word-btn px-2 py-1 text-zinc-400 hover:text-amber-300 flex-shrink-0" title="Masquer la barre d'outils (Alt+T)">
+              <span>▴</span>
             </button>
           </div>
 
         </div>
 
-        <!-- RIBBON ROW 2: Phrase Pens & Highlighters + 1-Click Presets & 4-Color Swatches -->
-        <div class="flex flex-col lg:flex-row lg:flex-wrap items-stretch lg:items-center justify-between gap-1.5 sm:gap-3">
+        <!-- EXPANDABLE SUB-PANEL: Paper, Margin, Snap-Lines & 4-Color Ink Presets/Swatches -->
+        <div id="nbStyleDrawer" aria-hidden="true">
+          <div class="nb-drawer-inner">
+            <div class="pt-2 pb-1 border-t border-zinc-800/90 flex flex-wrap items-center justify-between gap-2">
 
-          <div class="flex flex-nowrap lg:flex-wrap items-center gap-1.5 bg-zinc-900/90 px-2.5 py-1 rounded-lg border border-zinc-800 overflow-x-auto no-scrollbar max-w-full">
-            <span class="text-amber-300 font-semibold flex items-center gap-1 mr-1 flex-shrink-0">
-              <i data-lucide="highlighter" class="w-3.5 h-3.5"></i>
-              <span>Sélection :</span>
-            </span>
+              <!-- Paper & Sheet Rules -->
+              <div class="flex flex-wrap items-center gap-1.5 bg-zinc-900/90 px-2.5 py-1.5 rounded-xl border border-zinc-800">
+                <i data-lucide="notebook" class="w-3.5 h-3.5 text-indigo-400 flex-shrink-0"></i>
+                <span class="text-zinc-400 font-medium">Papier :</span>
+                <select id="nbPaperSelect" class="bg-zinc-950 text-zinc-100 border border-zinc-700 rounded-md px-2 py-1 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer">
+                  <option value="paper-lignes" selected>Ligné classique</option>
+                  <option value="paper-seyes">Grands Carreaux (Seyès)</option>
+                  <option value="paper-quadrille">Petits Carreaux (5x5)</option>
+                  <option value="paper-pointille">Pointillés (Bullet)</option>
+                  <option value="paper-cornell">Méthode Cornell</option>
+                  <option value="paper-parchemin">Parchemin Crème</option>
+                  <option value="paper-vierge">Feuille Blanche</option>
+                </select>
+                <button id="btnToggleMargin" type="button" class="word-btn px-2 py-1 text-rose-300 border-rose-500/40 flex-shrink-0" title="Afficher ou masquer la marge rouge">
+                  <span>Marge</span>
+                </button>
+                <button id="btnSnapLines" type="button" class="word-btn px-2 py-1 text-sky-300 flex-shrink-0" title="Aligner l'écriture exactement sur les lignes du papier">
+                  <span>Aligner Lignes</span>
+                </button>
+              </div>
 
-            <button type="button" data-tag="rouge" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 font-medium transition cursor-pointer">🔴 Rouge</button>
-            <button type="button" data-tag="bleu" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 font-medium transition cursor-pointer">🔵 Bleu</button>
-            <button type="button" data-tag="vert" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 font-medium transition cursor-pointer">🟢 Vert</button>
-            <button type="button" data-tag="noir" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-zinc-700/60 hover:bg-zinc-700 text-zinc-200 border border-zinc-600 font-medium transition cursor-pointer">⚫ Noir</button>
-            <button type="button" data-tag="violet" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 font-medium transition cursor-pointer">🟣 Violet</button>
-            <button type="button" data-tag="orange" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-500/30 font-medium transition cursor-pointer">🟠 Orange</button>
+              <!-- Global 4-Color Pen Presets & Custom Role Swatches -->
+              <div class="flex flex-wrap items-center gap-1.5">
+                <div class="flex items-center gap-1.5 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-400 flex-shrink-0"></i>
+                  <select id="nbInkPresetSelect" class="bg-zinc-950 text-zinc-100 border border-zinc-700 rounded-md px-1.5 py-0.5 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer" title="Préréglage rapide Stylo 4 Couleurs">
+                    <option value="bic4" selected>Bic 4 Couleurs</option>
+                    <option value="cahier-bleu">Cahier Bleu Classique</option>
+                    <option value="examen">Examen Propre</option>
+                    <option value="medical">Révision Médicale</option>
+                    <option value="monochrome">Monochrome Noir</option>
+                  </select>
+                </div>
 
-            <div class="ribbon-divider flex-shrink-0"></div>
+                <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0" data-role-group="title">
+                  <span class="text-zinc-300 font-medium mr-0.5">Titres :</span>
+                  <button type="button" data-color="#c92a2a" class="swatch-dot active" style="background:#c92a2a" title="Rouge"></button>
+                  <button type="button" data-color="#1850b8" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
+                  <button type="button" data-color="#1b7a34" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
+                  <button type="button" data-color="#1e293b" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
+                  <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
+                  <input type="color" value="#c92a2a" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les titres" />
+                </div>
 
-            <button type="button" data-tag="jaune" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-200 border border-yellow-400/40 font-medium transition cursor-pointer">🖍️ Jaune</button>
-            <button type="button" data-tag="surligne-vert" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-green-400/20 hover:bg-green-400/30 text-green-200 border border-green-400/40 font-medium transition cursor-pointer">🖍️ Vert</button>
-            <button type="button" data-tag="rose" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-pink-400/20 hover:bg-pink-400/30 text-pink-200 border border-pink-400/40 font-medium transition cursor-pointer">🖍️ Rose</button>
-            <button type="button" data-tag="surligne-bleu" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-sky-400/20 hover:bg-sky-400/30 text-sky-200 border border-sky-400/40 font-medium transition cursor-pointer">🖍️ Bleu</button>
-            <button type="button" data-tag="surligne-orange" class="phrase-tag-btn flex-shrink-0 px-2 py-0.5 rounded bg-orange-400/20 hover:bg-orange-400/30 text-orange-200 border border-orange-400/40 font-medium transition cursor-pointer">🖍️ Orange</button>
+                <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0" data-role-group="text">
+                  <span class="text-zinc-300 font-medium mr-0.5">Texte :</span>
+                  <button type="button" data-color="#1e293b" class="swatch-dot active" style="background:#1e293b" title="Noir"></button>
+                  <button type="button" data-color="#1850b8" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
+                  <button type="button" data-color="#c92a2a" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
+                  <button type="button" data-color="#1b7a34" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
+                  <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
+                  <input type="color" value="#1e293b" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour le texte" />
+                </div>
+
+                <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0" data-role-group="bold">
+                  <span class="text-zinc-300 font-medium mr-0.5">Gras :</span>
+                  <button type="button" data-color="#1850b8" class="swatch-dot active" style="background:#1850b8" title="Bleu"></button>
+                  <button type="button" data-color="#c92a2a" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
+                  <button type="button" data-color="#1b7a34" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
+                  <button type="button" data-color="#1e293b" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
+                  <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
+                  <input type="color" value="#1850b8" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les mots en gras" />
+                </div>
+
+                <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0" data-role-group="math">
+                  <span class="text-zinc-300 font-medium mr-0.5">Formules :</span>
+                  <button type="button" data-color="#1b7a34" class="swatch-dot active" style="background:#1b7a34" title="Vert"></button>
+                  <button type="button" data-color="#1850b8" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
+                  <button type="button" data-color="#c92a2a" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
+                  <button type="button" data-color="#1e293b" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
+                  <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
+                  <input type="color" value="#1b7a34" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les formules LaTeX" />
+                </div>
+              </div>
+
+            </div>
           </div>
-
-          <div class="flex flex-nowrap lg:flex-wrap items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar max-w-full">
-            <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1 rounded-lg border border-zinc-800 flex-shrink-0">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-400 flex-shrink-0"></i>
-              <select id="nbInkPresetSelect" class="bg-zinc-950 text-zinc-100 border border-zinc-700 rounded-md px-1.5 py-0.5 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer" title="Préréglage rapide Stylo 4 Couleurs">
-                <option value="bic4" selected>Bic 4 Couleurs</option>
-                <option value="cahier-bleu">Cahier Bleu Classique</option>
-                <option value="examen">Examen Propre</option>
-                <option value="medical">Révision Médicale</option>
-                <option value="monochrome">Monochrome Noir</option>
-              </select>
-            </div>
-
-            <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1 rounded-lg border border-zinc-800 flex-shrink-0" data-role-group="title">
-              <span class="text-zinc-300 font-medium mr-0.5">Titres :</span>
-              <button type="button" data-color="#c92a2a" class="swatch-dot active" style="background:#c92a2a" title="Rouge"></button>
-              <button type="button" data-color="#1850b8" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
-              <button type="button" data-color="#1b7a34" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
-              <button type="button" data-color="#1e293b" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
-              <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
-              <input type="color" value="#c92a2a" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les titres" />
-            </div>
-
-            <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1 rounded-lg border border-zinc-800 flex-shrink-0" data-role-group="text">
-              <span class="text-zinc-300 font-medium mr-0.5">Texte :</span>
-              <button type="button" data-color="#1e293b" class="swatch-dot active" style="background:#1e293b" title="Noir"></button>
-              <button type="button" data-color="#1850b8" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
-              <button type="button" data-color="#c92a2a" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
-              <button type="button" data-color="#1b7a34" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
-              <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
-              <input type="color" value="#1e293b" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour le texte" />
-            </div>
-
-            <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1 rounded-lg border border-zinc-800 flex-shrink-0" data-role-group="bold">
-              <span class="text-zinc-300 font-medium mr-0.5">Gras :</span>
-              <button type="button" data-color="#1850b8" class="swatch-dot active" style="background:#1850b8" title="Bleu"></button>
-              <button type="button" data-color="#c92a2a" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
-              <button type="button" data-color="#1b7a34" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
-              <button type="button" data-color="#1e293b" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
-              <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
-              <input type="color" value="#1850b8" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les mots en gras" />
-            </div>
-
-            <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1 rounded-lg border border-zinc-800 flex-shrink-0" data-role-group="math">
-              <span class="text-zinc-300 font-medium mr-0.5">Formules :</span>
-              <button type="button" data-color="#1b7a34" class="swatch-dot active" style="background:#1b7a34" title="Vert"></button>
-              <button type="button" data-color="#1850b8" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
-              <button type="button" data-color="#c92a2a" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
-              <button type="button" data-color="#1e293b" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
-              <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
-              <input type="color" value="#1b7a34" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les formules LaTeX" />
-            </div>
-          </div>
-
         </div>
 
       </div>
-    </div>
-
-    <!-- Floating Pill Button to Restore Manuscript Ribbon -->
-    <div id="showRibbonPillContainer" class="hidden pill-hidden flex justify-center pointer-events-none">
-      <button id="btnShowRibbonPill" type="button" class="pointer-events-auto mt-1.5 px-4 py-1 rounded-full text-xs font-semibold bg-[#151822]/95 hover:bg-sky-950 text-sky-300 border border-sky-500/50 shadow-xl backdrop-blur-md transition transform hover:scale-105 flex items-center gap-1.5 cursor-pointer">
-        <span>🛠️ Afficher les outils ▾</span>
-      </button>
     </div>
   </header>
 
@@ -1608,10 +1650,15 @@
 
   <!-- Mobile View Mode Switcher (Phones & Tablets < 1024px) -->
   <div id="mobileViewSwitcher" class="no-print lg:hidden sticky top-0 z-30 bg-[#0e1015]/95 border-b border-zinc-800/90 backdrop-blur-md px-3 py-1.5">
-    <div class="max-w-md mx-auto grid grid-cols-3 gap-1 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800 text-[11px] font-semibold">
-      <button type="button" data-mob-view="editor" class="mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate">📝 Écrire</button>
-      <button type="button" data-mob-view="reader" class="mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate">📖 Cahier</button>
-      <button type="button" data-mob-view="split" class="mob-view-btn py-1.5 px-2 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 transition cursor-pointer truncate">📑 Divisé</button>
+    <div class="max-w-md mx-auto flex items-center gap-1.5">
+      <div class="flex-1 grid grid-cols-3 gap-1 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800 text-[11px] font-semibold">
+        <button type="button" data-mob-view="editor" class="mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate">📝 Écrire</button>
+        <button type="button" data-mob-view="reader" class="mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate">📖 Cahier</button>
+        <button type="button" data-mob-view="split" class="mob-view-btn py-1.5 px-2 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 transition cursor-pointer truncate">📑 Divisé</button>
+      </div>
+      <button id="btnMobileRibbonToggle" type="button" class="hidden flex-shrink-0 px-2.5 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 text-xs font-semibold transition cursor-pointer" title="Afficher/Masquer les outils Cahier">
+        🛠️
+      </button>
     </div>
   </div>
 
@@ -1862,6 +1909,7 @@
             <p><code class="text-zinc-100">Ctrl + F</code> : Rechercher &amp; Remplacer</p>
             <p><code class="text-zinc-100">Ctrl + Shift + E</code> : Centre d'Export</p>
             <p><code class="text-zinc-100">Ctrl + Z / Y</code> : Annuler / Rétablir</p>
+            <p><code class="text-zinc-100">Alt + T</code> : Barre d'outils Cahier</p>
           </div>
           <div class="bg-[#0e1015] border border-zinc-800 rounded-xl p-3 space-y-1.5">
             <div class="font-semibold text-emerald-300">Syntaxe InkTeX Pro</div>
@@ -2497,6 +2545,7 @@ flowchart TD
           nbPreset: nbInkPresetSelect ? nbInkPresetSelect.value : 'bic4',
           noRedMargin: noRedMargin,
           snapLines: snapLinesEnabled,
+          ribbonPinned: typeof isRibbonPinned === 'boolean' ? isRibbonPinned : false,
           fontSize: fontSizeSlider ? fontSizeSlider.value : '16.5',
           lineHeight: lineHeightSlider ? lineHeightSlider.value : '1.78',
           colors: {
@@ -2549,6 +2598,10 @@ flowchart TD
           nbPaperSelect.value = data.nbPaper;
           readerCard.classList.remove('paper-lignes', 'paper-seyes', 'paper-quadrille', 'paper-pointille', 'paper-cornell', 'paper-parchemin', 'paper-vierge');
           readerCard.classList.add(data.nbPaper);
+          if (typeof updateActivePaperLabel === 'function') updateActivePaperLabel(data.nbPaper);
+        }
+        if (typeof data.ribbonPinned === 'boolean' && typeof setRibbonPinnedState === 'function') {
+          setRibbonPinnedState(data.ribbonPinned, false);
         }
         if (typeof data.noRedMargin === 'boolean') {
           noRedMargin = data.noRedMargin;
@@ -3685,6 +3738,7 @@ flowchart TD
       nbPaperSelect.addEventListener('change', (e) => {
         readerCard.classList.remove('paper-lignes', 'paper-seyes', 'paper-quadrille', 'paper-pointille', 'paper-cornell', 'paper-parchemin', 'paper-vierge');
         readerCard.classList.add(e.target.value);
+        if (typeof updateActivePaperLabel === 'function') updateActivePaperLabel(e.target.value);
         saveToLocalStorage();
       });
     }
@@ -3770,13 +3824,91 @@ flowchart TD
     });
 
     // =====================================================
-    // ZERO-GLITCH HARDWARE-ACCELERATED MANUSCRIPT RIBBON
+    // ZERO-JUMP SMOOTH MANUSCRIPT STUDIO TOOLBAR CONTROLLER
     // =====================================================
+    const nbStyleDrawer = document.getElementById('nbStyleDrawer');
+    const btnToggleNbDrawer = document.getElementById('btnToggleNbDrawer');
+    const nbDrawerChevron = document.getElementById('nbDrawerChevron');
+    const nbActivePaperLabel = document.getElementById('nbActivePaperLabel');
+    const ribbonToggleChevron = document.getElementById('ribbonToggleChevron');
+    const btnMobileRibbonToggle = document.getElementById('btnMobileRibbonToggle');
+
+    const PAPER_SHORT_LABELS = {
+      'paper-lignes': 'Ligné',
+      'paper-seyes': 'Seyès',
+      'paper-quadrille': '5x5',
+      'paper-pointille': 'Bullet',
+      'paper-cornell': 'Cornell',
+      'paper-parchemin': 'Crème',
+      'paper-vierge': 'Blanche'
+    };
+
     let isRibbonPinned = false;
     let isManuallyHidden = false;
+    let isRibbonHovered = false;
+    let isNbDrawerOpen = false;
     let manualOpenProtectUntil = 0;
-    let ribbonTransitionLockUntil = 0;
-    let touchStartY = null;
+    let lastScrollY = window.scrollY || 0;
+    let scrollDirAccum = 0;
+    let lastScrollDir = 0;
+    let scrollRafPending = false;
+
+    function updateActivePaperLabel(paperVal) {
+      if (nbActivePaperLabel) {
+        nbActivePaperLabel.textContent = PAPER_SHORT_LABELS[paperVal] || 'Papier';
+      }
+    }
+
+    function setNbStyleDrawer(open) {
+      isNbDrawerOpen = !!open;
+      if (nbStyleDrawer) {
+        nbStyleDrawer.classList.toggle('drawer-open', isNbDrawerOpen);
+        nbStyleDrawer.setAttribute('aria-hidden', String(!isNbDrawerOpen));
+      }
+      if (btnToggleNbDrawer) {
+        btnToggleNbDrawer.setAttribute('aria-expanded', String(isNbDrawerOpen));
+        btnToggleNbDrawer.classList.toggle('bg-indigo-500/30', isNbDrawerOpen);
+        btnToggleNbDrawer.classList.toggle('border-indigo-400/70', isNbDrawerOpen);
+      }
+      if (nbDrawerChevron) {
+        nbDrawerChevron.classList.toggle('rotate-180', isNbDrawerOpen);
+      }
+    }
+
+    function setRibbonPinnedState(pinned, shouldSave = true) {
+      isRibbonPinned = !!pinned;
+      if (btnPinRibbon) {
+        btnPinRibbon.classList.toggle('bg-sky-500/25', isRibbonPinned);
+        btnPinRibbon.classList.toggle('border-sky-500/60', isRibbonPinned);
+        btnPinRibbon.classList.toggle('text-sky-200', isRibbonPinned);
+      }
+      if (pinRibbonText) {
+        pinRibbonText.textContent = isRibbonPinned ? 'Épinglé' : 'Épingler';
+      }
+      if (shouldSave) saveToLocalStorage();
+    }
+
+    function syncRibbonToggleUI(isOpen) {
+      const activeNotebook = currentTheme === 'theme-notebook';
+      document.body.classList.toggle('notebook-ribbon-open', activeNotebook && isOpen);
+      if (btnShowRibbonPill) {
+        btnShowRibbonPill.setAttribute('aria-expanded', String(isOpen));
+        btnShowRibbonPill.classList.toggle('bg-sky-500/20', isOpen);
+        btnShowRibbonPill.classList.toggle('border-sky-400/55', isOpen);
+        btnShowRibbonPill.classList.toggle('text-sky-200', isOpen);
+        btnShowRibbonPill.classList.toggle('bg-zinc-900', !isOpen);
+        btnShowRibbonPill.classList.toggle('border-zinc-700', !isOpen);
+        btnShowRibbonPill.classList.toggle('text-sky-300', !isOpen);
+      }
+      if (ribbonToggleChevron) {
+        ribbonToggleChevron.classList.toggle('rotate-180', isOpen);
+      }
+      if (btnMobileRibbonToggle) {
+        btnMobileRibbonToggle.classList.toggle('hidden', !activeNotebook);
+        btnMobileRibbonToggle.classList.toggle('bg-sky-500/25', isOpen);
+        btnMobileRibbonToggle.classList.toggle('bg-zinc-900', !isOpen);
+      }
+    }
 
     function applyThemeSelection(selectedTheme, shouldSave = true) {
       document.querySelectorAll('.theme-btn').forEach((b) => {
@@ -3794,17 +3926,22 @@ flowchart TD
 
       if (selectedTheme === 'theme-notebook') {
         isManuallyHidden = false;
+        setNbStyleDrawer(false);
         notebookCustomBar.classList.remove('hidden', 'ribbon-collapsed');
         showRibbonPillContainer.classList.remove('hidden');
-        showRibbonPillContainer.classList.add('pill-hidden');
+        showRibbonPillContainer.classList.add('flex');
         workspaceGrid.classList.add('notebook-mode-spacing');
-        workspaceGrid.classList.remove('notebook-mode-collapsed-spacing');
+        syncRibbonToggleUI(true);
+        if (nbPaperSelect) updateActivePaperLabel(nbPaperSelect.value);
       } else {
+        setNbStyleDrawer(false);
         notebookCustomBar.classList.add('hidden');
         notebookCustomBar.classList.remove('ribbon-collapsed');
-        showRibbonPillContainer.classList.add('hidden', 'pill-hidden');
-        workspaceGrid.classList.remove('notebook-mode-spacing', 'notebook-mode-collapsed-spacing');
+        showRibbonPillContainer.classList.add('hidden');
+        showRibbonPillContainer.classList.remove('flex');
+        workspaceGrid.classList.remove('notebook-mode-spacing');
         floatingPenPopup.classList.add('hidden');
+        syncRibbonToggleUI(false);
       }
 
       if (prevTheme !== selectedTheme && mermaidQueue.length > 0) {
@@ -3821,117 +3958,133 @@ flowchart TD
 
     function collapseManuscriptRibbon(force = false) {
       if (currentTheme !== 'theme-notebook') return;
-      if (!force && (isRibbonPinned || Date.now() < manualOpenProtectUntil || Date.now() < ribbonTransitionLockUntil)) return;
+      if (!force) {
+        const hasFocusedChild = notebookCustomBar.contains(document.activeElement);
+        if (isRibbonPinned || isRibbonHovered || isNbDrawerOpen || hasFocusedChild || Date.now() < manualOpenProtectUntil) return;
+      }
+      if (force) setNbStyleDrawer(false);
       if (!notebookCustomBar.classList.contains('ribbon-collapsed')) {
-        ribbonTransitionLockUntil = Date.now() + 380;
         notebookCustomBar.classList.add('ribbon-collapsed');
-        showRibbonPillContainer.classList.remove('pill-hidden');
-        workspaceGrid.classList.remove('notebook-mode-spacing');
-        workspaceGrid.classList.add('notebook-mode-collapsed-spacing');
+        syncRibbonToggleUI(false);
       }
     }
 
     function expandManuscriptRibbon(isManualClick = false) {
       if (currentTheme !== 'theme-notebook') return;
-      if (!isManualClick && (isManuallyHidden || Date.now() < ribbonTransitionLockUntil)) return;
+      if (!isManualClick && isManuallyHidden) return;
       if (isManualClick) {
         isManuallyHidden = false;
-        manualOpenProtectUntil = Date.now() + 950;
+        manualOpenProtectUntil = Date.now() + 900;
       }
       if (notebookCustomBar.classList.contains('ribbon-collapsed')) {
-        ribbonTransitionLockUntil = Date.now() + 380;
         notebookCustomBar.classList.remove('ribbon-collapsed');
       }
-      showRibbonPillContainer.classList.add('pill-hidden');
-      workspaceGrid.classList.remove('notebook-mode-collapsed-spacing');
-      workspaceGrid.classList.add('notebook-mode-spacing');
+      syncRibbonToggleUI(true);
     }
 
-    window.addEventListener('wheel', (e) => {
-      if (currentTheme !== 'theme-notebook' || window.innerWidth < 1280) return;
-      if (
-        notebookCustomBar.contains(e.target) ||
-        editorContainer.contains(e.target) ||
-        (exportModal && !exportModal.classList.contains('hidden')) ||
-        (pluginModal && !pluginModal.classList.contains('hidden')) ||
-        (shortcutsModal && !shortcutsModal.classList.contains('hidden'))
-      ) return;
-      if (e.deltaY > 6) collapseManuscriptRibbon(false);
-      else if (e.deltaY < -24) expandManuscriptRibbon(false);
-    }, { passive: true });
-
-    window.addEventListener('touchstart', (e) => {
-      if (currentTheme === 'theme-notebook' && e.touches?.length === 1) {
-        if (notebookCustomBar.contains(e.target) || editorContainer.contains(e.target)) {
-          touchStartY = null;
-          return;
-        }
-        touchStartY = e.touches[0].clientY;
+    function toggleManuscriptRibbon() {
+      if (currentTheme !== 'theme-notebook') return;
+      if (notebookCustomBar.classList.contains('ribbon-collapsed')) {
+        expandManuscriptRibbon(true);
+      } else {
+        isManuallyHidden = true;
+        if (isRibbonPinned) setRibbonPinnedState(false, true);
+        collapseManuscriptRibbon(true);
       }
-    }, { passive: true });
+    }
 
-    window.addEventListener('touchmove', (e) => {
-      if (currentTheme !== 'theme-notebook' || touchStartY === null) return;
-      if (window.innerWidth < 1280) return;
-      if (
-        notebookCustomBar.contains(e.target) ||
-        editorContainer.contains(e.target) ||
-        (exportModal && !exportModal.classList.contains('hidden'))
-      ) return;
-      const currentTouchY = e.touches[0].clientY;
-      const touchDeltaY = touchStartY - currentTouchY;
-      if (touchDeltaY > 10) {
-        collapseManuscriptRibbon(false);
-        touchStartY = currentTouchY;
-      } else if (touchDeltaY < -22) {
-        expandManuscriptRibbon(false);
-        touchStartY = currentTouchY;
+    notebookCustomBar?.addEventListener('mouseenter', () => { isRibbonHovered = true; });
+    notebookCustomBar?.addEventListener('mouseleave', () => { isRibbonHovered = false; });
+
+    btnToggleNbDrawer?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setNbStyleDrawer(!isNbDrawerOpen);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (isNbDrawerOpen && notebookCustomBar && !notebookCustomBar.contains(e.target)) {
+        setNbStyleDrawer(false);
       }
-    }, { passive: true });
+    });
 
+    // Smooth rAF directional scroll hysteresis (works with wheel, trackpad, scrollbar & keys; zero layout jump)
     window.addEventListener('scroll', () => {
       if (floatingPenPopup && !floatingPenPopup.classList.contains('hidden')) {
         floatingPenPopup.classList.add('hidden');
       }
-      if (currentTheme !== 'theme-notebook') return;
-      if ((window.scrollY || document.documentElement.scrollTop) <= 12) {
-        expandManuscriptRibbon(false);
-      }
+      if (currentTheme !== 'theme-notebook' || scrollRafPending) return;
+      scrollRafPending = true;
+      window.requestAnimationFrame(() => {
+        scrollRafPending = false;
+        const currentY = Math.max(0, window.scrollY || document.documentElement.scrollTop || 0);
+        const delta = currentY - lastScrollY;
+        lastScrollY = currentY;
+
+        if (window.innerWidth < 1024) return;
+
+        if (currentY <= 36) {
+          scrollDirAccum = 0;
+          lastScrollDir = 0;
+          if (!isManuallyHidden) expandManuscriptRibbon(false);
+          return;
+        }
+
+        if (Math.abs(delta) < 1) return;
+        const dir = delta > 0 ? 1 : -1;
+        if (dir !== lastScrollDir) {
+          scrollDirAccum = 0;
+          lastScrollDir = dir;
+        }
+        scrollDirAccum += Math.abs(delta);
+
+        if (dir === 1 && currentY > 125 && scrollDirAccum >= 72) {
+          collapseManuscriptRibbon(false);
+          scrollDirAccum = 0;
+        } else if (dir === -1 && scrollDirAccum >= 95) {
+          expandManuscriptRibbon(false);
+          scrollDirAccum = 0;
+        }
+      });
     }, { passive: true });
 
     btnShowRibbonPill?.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      isManuallyHidden = false;
-      expandManuscriptRibbon(true);
+      toggleManuscriptRibbon();
+    });
+
+    btnMobileRibbonToggle?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (notebookCustomBar.classList.contains('ribbon-collapsed')) {
+        expandManuscriptRibbon(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        isManuallyHidden = true;
+        collapseManuscriptRibbon(true);
+      }
     });
 
     btnHideRibbon?.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       isManuallyHidden = true;
-      if (isRibbonPinned && btnPinRibbon) {
-        isRibbonPinned = false;
-        btnPinRibbon.classList.remove('bg-sky-500/25', 'border-sky-500/60', 'text-sky-200');
-        pinRibbonText.textContent = 'Épingler';
-      }
+      if (isRibbonPinned) setRibbonPinnedState(false, true);
       collapseManuscriptRibbon(true);
-      showToast('Barre d’outils masquée');
+      showToast('Barre d’outils masquée (Alt+T pour réafficher)');
     });
 
     btnPinRibbon?.addEventListener('click', (e) => {
       e.preventDefault();
-      isRibbonPinned = !isRibbonPinned;
-      if (isRibbonPinned) {
+      const nextPinned = !isRibbonPinned;
+      setRibbonPinnedState(nextPinned, true);
+      if (nextPinned) {
         isManuallyHidden = false;
-        btnPinRibbon.classList.add('bg-sky-500/25', 'border-sky-500/60', 'text-sky-200');
-        pinRibbonText.textContent = 'Épinglé';
         expandManuscriptRibbon(true);
         showToast('Barre d’outils épinglée');
       } else {
-        btnPinRibbon.classList.remove('bg-sky-500/25', 'border-sky-500/60', 'text-sky-200');
-        pinRibbonText.textContent = 'Épingler';
-        showToast('Masquage automatique réactivé');
+        showToast('Masquage automatique au défilement réactivé');
       }
     });
 
@@ -4659,6 +4812,14 @@ flowchart TD
         pomodoroPopover?.classList.add('hidden');
         btnPomodoro?.setAttribute('aria-expanded', 'false');
         symbolsPopover?.classList.add('hidden');
+        if (typeof setNbStyleDrawer === 'function') setNbStyleDrawer(false);
+        return;
+      }
+      if (e.altKey && !e.ctrlKey && !e.metaKey && e.key.toLowerCase() === 't') {
+        if (currentTheme === 'theme-notebook' && typeof toggleManuscriptRibbon === 'function') {
+          e.preventDefault();
+          toggleManuscriptRibbon();
+        }
         return;
       }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
