@@ -2744,6 +2744,61 @@ flowchart TD
         // Convert standalone ChatGPT-style [ \frac{a}{b} ] math blocks (single or multi-line) into $$...$$
         normalized = normalized.replace(/^\[\s*([^\n]*\\[a-zA-Z]+[^\n]*)\s*\]$/gm, (_, inner) => `$$${inner}$$`);
         normalized = normalized.replace(/^\[\r?\n([^\[\]]*\\[a-zA-Z]+[^\[\]]*)\r?\n\]$/gm, (_, inner) => `$$${inner.trim()}$$`);
+
+        // Unwrap Gemini / NotebookLM / ChatGPT inline backticked or quoted LaTeX formulas (e.g. `"D = \frac{\Delta E}{\Delta m} ..."`)
+        const LATEX_MATH_CMD_RE = /\\(?:frac|dfrac|tfrac|sqrt|sum|prod|int|oint|lim|infty|partial|nabla|Delta|Gamma|Lambda|Omega|Theta|Phi|Psi|Pi|Sigma|alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon|phi|varphi|chi|psi|omega|pm|mp|times|div|cdot|quad|qquad|Rightarrow|Leftarrow|Leftrightarrow|rightarrow|leftarrow|leftrightarrow|to|mapsto|approx|equiv|neq|ne|leq|le|geq|ge|propto|subset|supset|in|notin|cup|cap|forall|exists|neg|wedge|vee|perp|parallel|angle|triangle|circ|degree|log|ln|exp|sin|cos|tan|cot|sec|csc|arcsin|arccos|arctan|sinh|cosh|tanh|mathrm|mathbf|mathit|mathcal|mathbb|hat|bar|vec|tilde|dot|ddot|overline|overbrace|underbrace|left|right|ce|pu)\b/;
+        const LATEX_SCRIPT_RE = /[A-Za-z0-9)\]}]\s*(?:\^\{[^}\r\n]+\}|_\{[^}\r\n]+\})|\b[A-Za-z]_[A-Za-z0-9]\b(?=[^`\r\n]*=)/;
+        const CODE_NOISE_RE = /[A-Za-z]:\\|https?:\/\/|\b(?:function|const|let|var|return|import|export|class|console\.log|document\.|window\.)\b/;
+
+        const convertAiMathSpan = (rawSpan, wasBackticked) => {
+          if (CODE_NOISE_RE.test(rawSpan)) return null;
+          let openQ = '';
+          let closeQ = '';
+          let core = rawSpan.trim();
+          const quoteWrap = core.match(/^([""«])\s*([\s\S]*?)\s*([""»])(\.?)$/);
+          if (quoteWrap) {
+            openQ = quoteWrap[1];
+            core = quoteWrap[2].trim();
+            closeQ = quoteWrap[3] + (quoteWrap[4] || '');
+          }
+          if (!core) return null;
+
+          // If already delimited with $...$ or \(...\) inside backticks, just unwrap backticks
+          if (/(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$\n]+?\$)/.test(core)) {
+            return wasBackticked ? `${openQ}${core}${closeQ}` : null;
+          }
+
+          if (!LATEX_MATH_CMD_RE.test(core) && !LATEX_SCRIPT_RE.test(core)) {
+            return null;
+          }
+
+          // Case A: Leading prose before an implication arrow (\Rightarrow, \rightarrow, etc.)
+          const arrowSplit = core.match(/^([A-Za-zÀ-ÖØ-öø-ÿ0-9'’\-\s(),]{3,}?\s+)(\\(?:Rightarrow|Leftarrow|Leftrightarrow|rightarrow|leftarrow|leftrightarrow|to|mapsto)\b[\s\S]+)$/);
+          if (arrowSplit && !/[\\=]/.test(arrowSplit[1])) {
+            return `${openQ}${arrowSplit[1]}$${arrowSplit[2].trim()}$${closeQ}`;
+          }
+
+          // Case B: Multi-word prose (2+ plain words) before an equation LHS = RHS
+          const proseEqSplit = core.match(/^((?:[A-Za-zÀ-ÖØ-öø-ÿ'’\-]+\s+){2,})([A-Za-z0-9\\][A-Za-z0-9_^{}()[\]\\+-]*\s*=[\s\S]+)$/);
+          if (proseEqSplit && !/[\\=]/.test(proseEqSplit[1])) {
+            return `${openQ}${proseEqSplit[1]}$${proseEqSplit[2].trim()}$${closeQ}`;
+          }
+
+          return `${openQ}$${core}$${closeQ}`;
+        };
+
+        // 2a. Unwrap single-line backticked LaTeX math: `"D = \frac{...}"` or `D = \frac{...}`
+        normalized = normalized.replace(/`([^`\r\n]+?)`/g, (full, inner) => {
+          const converted = convertAiMathSpan(inner, true);
+          return converted !== null ? converted : full;
+        });
+
+        // 2b. Wrap un-backticked quoted OCR formulas: "D = \frac{\Delta E}{\Delta m} ..."
+        normalized = normalized.replace(/"([^"\r\n]+?)"/g, (full, inner) => {
+          if (inner.includes('$') || inner.includes('\\(') || inner.includes('\\[')) return full;
+          const converted = convertAiMathSpan(`"${inner}"`, false);
+          return converted !== null ? converted : full;
+        });
       }
 
       // Support \begin{equation} / \begin{align*} / \begin{gather*}
