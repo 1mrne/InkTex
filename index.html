@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -39,7 +39,7 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest" crossorigin="anonymous"></script>
+  <script defer src="https://unpkg.com/lucide@latest" crossorigin="anonymous"></script>
 
   <style id="inktexCoreStyles">
     :root {
@@ -301,12 +301,50 @@
       margin: 10px 0;
     }
 
-    /* Notebook Date/Subject Stamp Header */
+    /* Notebook Date/Subject Stamp Header (self-contained for live view & standalone .html export) */
     .notebook-meta-stamp {
       display: none;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem 0.75rem;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px dashed rgba(56, 189, 248, 0.5);
+      font-size: 0.75rem;
+      line-height: 1.4;
+      position: relative;
+      z-index: 5;
     }
     .theme-notebook.with-stamp .notebook-meta-stamp {
       display: flex;
+    }
+    .notebook-meta-stamp > div {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .notebook-meta-stamp span {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(190, 18, 60, 0.82);
+      flex-shrink: 0;
+    }
+    .notebook-meta-stamp input {
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.55);
+      color: #1e293b;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: 600;
+      padding: 0.15rem 0.3rem;
+      line-height: 1.45;
+    }
+    .notebook-meta-stamp input:focus {
+      outline: none;
+      border-bottom-color: #0284c7;
     }
     .theme-notebook.paper-vierge.with-spiral .notebook-spiral-holes,
     .theme-notebook.paper-vierge.with-stamp .notebook-meta-stamp {
@@ -332,12 +370,35 @@
       );
     }
 
-    /* Snap-to-lines mode for lined & Seyès paper */
+    /* Snap-to-lines mode for lined & Seyès paper (aligned to --paper-line-step multiples) */
     .theme-notebook.snap-lines {
-      line-height: 34px !important;
+      --paper-line-step: 34px;
+      line-height: var(--paper-line-step) !important;
     }
     .theme-notebook.snap-lines.paper-seyes {
-      line-height: 32px !important;
+      --paper-line-step: 32px;
+      line-height: var(--paper-line-step) !important;
+    }
+    .theme-notebook.snap-lines .reader-content p,
+    .theme-notebook.snap-lines .reader-content ul,
+    .theme-notebook.snap-lines .reader-content ol,
+    .theme-notebook.snap-lines .reader-content blockquote {
+      margin-top: 0;
+      margin-bottom: var(--paper-line-step);
+    }
+    .theme-notebook.snap-lines .reader-content li {
+      margin-bottom: 0;
+      line-height: var(--paper-line-step);
+    }
+    .theme-notebook.snap-lines .reader-content h1,
+    .theme-notebook.snap-lines .reader-content h2,
+    .theme-notebook.snap-lines .reader-content h3,
+    .theme-notebook.snap-lines .reader-content h4,
+    .theme-notebook.snap-lines .reader-content h5,
+    .theme-notebook.snap-lines .reader-content h6 {
+      line-height: var(--paper-line-step) !important;
+      margin-top: var(--paper-line-step);
+      margin-bottom: 0;
     }
 
     /* Notebook Typography Roles */
@@ -1030,8 +1091,8 @@
         flex: 1;
         min-width: 0;
       }
-      #splitResizer {
-        display: flex;
+      #workspaceGrid.full-reader #splitResizer {
+        display: none !important;
       }
     }
     @media (max-width: 1023px) {
@@ -1088,8 +1149,7 @@
         border-radius: 0.9rem;
       }
       .theme-notebook.reader-card,
-      .theme-notebook.paper-lignes.reader-card,
-      .theme-notebook.paper-parchemin.reader-card {
+      .theme-notebook.paper-lignes.reader-card {
         background-image:
           linear-gradient(90deg, transparent 34px, rgba(239, 68, 68, 0.42) 34px, rgba(239, 68, 68, 0.42) 36px, transparent 36px),
           repeating-linear-gradient(to bottom, transparent 0px, transparent 33px, rgba(147, 197, 253, 0.42) 33px, rgba(147, 197, 253, 0.42) 34px);
@@ -1099,6 +1159,7 @@
         background-image:
           linear-gradient(90deg, transparent 34px, rgba(180, 83, 9, 0.34) 34px, rgba(180, 83, 9, 0.34) 36px, transparent 36px),
           repeating-linear-gradient(to bottom, transparent 0px, transparent 33px, rgba(180, 145, 95, 0.28) 33px, rgba(180, 145, 95, 0.28) 34px);
+        padding-left: 2.75rem !important;
       }
       .theme-notebook.paper-seyes.reader-card {
         background-image:
@@ -1114,6 +1175,7 @@
           repeating-linear-gradient(to bottom, transparent 0px, transparent 33px, rgba(147, 197, 253, 0.4) 33px, rgba(147, 197, 253, 0.4) 34px);
         padding-left: 5.75rem !important;
       }
+      .theme-notebook[class*="paper-"].no-red-margin.reader-card,
       .theme-notebook.no-red-margin.reader-card,
       .theme-notebook.paper-quadrille.reader-card,
       .theme-notebook.paper-pointille.reader-card {
@@ -1156,12 +1218,12 @@
       background: #4b5057;
     }
 
-    /* Strip any Netlify Badges */
-    a[href*="netlify.com"],
-    a[href*="netlify.app"],
-    div[class*="netlify"],
-    div[id*="netlify"],
-    aside[class*="netlify"] {
+    /* Strip any injected Netlify Badges (strictly direct body children; never user links in notes) */
+    body > a[href*="netlify.com"],
+    body > a[href*="netlify.app"],
+    body > div[class*="netlify"],
+    body > div[id*="netlify"],
+    body > aside[class*="netlify"] {
       display: none !important;
       visibility: hidden !important;
       opacity: 0 !important;
@@ -1196,10 +1258,22 @@
         margin: 0 !important;
       }
       #readerContainer {
+        display: flex !important;
         width: 100% !important;
         max-width: 100% !important;
         padding: 0 !important;
         margin: 0 !important;
+      }
+      .active-recall-on .reader-content strong,
+      .active-recall-on .reader-content .ink-encadre,
+      .active-recall-on .reader-content .ink-encadre-vert,
+      .active-recall-on .reader-content .ink-encadre-bleu,
+      .active-recall-on .reader-content .hl-jaune,
+      .active-recall-on .reader-content .hl-vert,
+      .active-recall-on .reader-content .hl-rose,
+      .active-recall-on .reader-content .hl-bleu,
+      .active-recall-on .reader-content .hl-orange {
+        filter: none !important;
       }
       .reader-card {
         box-shadow: none !important;
@@ -1207,6 +1281,29 @@
         max-width: 100% !important;
         width: 100% !important;
       }
+      .reader-card.theme-dark {
+        --bg-surface: #ffffff !important;
+        --bg-elevated: #f8fafc !important;
+        --text-main: #1e293b !important;
+        --text-strong: #0f172a !important;
+        --text-heading: #0f172a !important;
+        --text-muted: #64748b !important;
+        --border-divider: #cbd5e1 !important;
+        --callout-bg: #f1f5f9 !important;
+        --code-bg: #f1f5f9 !important;
+        --code-text: #0369a1 !important;
+        --badge-bg: #e2e8f0 !important;
+        --badge-text: #334155 !important;
+        --table-header-bg: #f1f5f9 !important;
+        --table-row-alt: #f8fafc !important;
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+      }
+      .reader-card.theme-dark .callout-clinical .inktex-callout-title { color: #dc2626 !important; }
+      .reader-card.theme-dark .callout-def .inktex-callout-title { color: #1d4ed8 !important; }
+      .reader-card.theme-dark .callout-formule .inktex-callout-title { color: #047857 !important; }
+      .reader-card.theme-dark .callout-attention .inktex-callout-title { color: #b45309 !important; }
+      .reader-card.theme-dark .callout-astuce .inktex-callout-title { color: #6d28d9 !important; }
       .page-guide-overlay,
       .inktex-copy-code-btn {
         display: none !important;
@@ -1228,20 +1325,20 @@
           <i data-lucide="book-open-check" class="w-4 h-4 sm:w-5 sm:h-5 text-white"></i>
         </div>
         <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap min-w-0">
-          <h1 class="font-semibold text-sm sm:text-base tracking-tight text-white truncate">InkTeX Studio</h1>
+          <span class="font-semibold text-sm sm:text-base tracking-tight text-white truncate">InkTeX Studio</span>
         </div>
       </div>
 
       <!-- Actions -->
       <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap justify-end">
         <!-- Outline / Sommaire -->
-        <button id="btnToggleOutline" type="button" class="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition cursor-pointer" title="Afficher le sommaire du cours">
+        <button id="btnToggleOutline" type="button" aria-pressed="false" aria-label="Sommaire du cours" class="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition cursor-pointer" title="Afficher le sommaire du cours">
           <i data-lucide="list-tree" class="w-3.5 h-3.5 text-sky-400"></i>
           <span class="hidden md:inline">Sommaire</span>
         </button>
 
         <!-- Active Recall Blur Mode -->
-        <button id="btnActiveRecall" type="button" class="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition cursor-pointer" title="Mode Révision Active : masque les mots-clés pour tester votre mémoire">
+        <button id="btnActiveRecall" type="button" aria-pressed="false" aria-label="Mode Révision Active" class="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition cursor-pointer" title="Mode Révision Active : masque les mots-clés pour tester votre mémoire">
           <i data-lucide="eye-off" class="w-3.5 h-3.5 text-violet-400"></i>
           <span class="hidden md:inline">Révision</span>
         </button>
@@ -1300,7 +1397,7 @@
           <span>PDF</span>
         </button>
 
-        <button id="btnOpenShortcuts" type="button" class="inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition cursor-pointer" title="Guide syntaxe & raccourcis clavier">
+        <button id="btnOpenShortcuts" type="button" aria-label="Guide syntaxe et raccourcis clavier" class="inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition cursor-pointer" title="Guide syntaxe & raccourcis clavier">
           ?
         </button>
       </div>
@@ -1342,7 +1439,7 @@
         <!-- Typography Controls -->
         <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-4 w-full md:w-auto">
           <div class="col-span-2 sm:col-span-1 flex items-center gap-1.5 min-w-0">
-            <span class="text-zinc-400 flex-shrink-0">Police :</span>
+            <label for="baseFontSelect" class="text-zinc-400 flex-shrink-0">Police :</label>
             <select id="baseFontSelect" class="flex-1 sm:flex-none min-w-0 max-w-full bg-zinc-900 text-zinc-200 border border-zinc-800 hover:border-zinc-700 rounded-lg px-2 py-1 text-xs font-medium focus:outline-none focus:border-sky-500 cursor-pointer">
               <option value="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif">🍎 San Francisco Pro (iOS)</option>
               <option value="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" selected>Inter (Studio)</option>
@@ -1351,13 +1448,13 @@
           </div>
 
           <div class="flex items-center gap-1.5 min-w-0">
-            <span class="text-zinc-400 flex-shrink-0 text-[11px] sm:text-xs">Taille :</span>
+            <label for="fontSizeSlider" class="text-zinc-400 flex-shrink-0 text-[11px] sm:text-xs">Taille :</label>
             <input id="fontSizeSlider" type="range" min="14" max="26" step="0.5" value="16.5" class="flex-1 min-w-0 w-full sm:w-20 accent-sky-500 cursor-pointer" />
             <span id="fontSizeLabel" class="text-zinc-300 font-mono text-[11px] w-10 sm:w-12 text-right flex-shrink-0">16.5px</span>
           </div>
 
           <div class="flex items-center gap-1.5 min-w-0">
-            <span class="text-zinc-400 flex-shrink-0 text-[11px] sm:text-xs">Ligne :</span>
+            <label for="lineHeightSlider" class="text-zinc-400 flex-shrink-0 text-[11px] sm:text-xs">Ligne :</label>
             <input id="lineHeightSlider" type="range" min="1.4" max="2.4" step="0.05" value="1.78" class="flex-1 min-w-0 w-full sm:w-20 accent-sky-500 cursor-pointer" />
             <span id="lineHeightLabel" class="text-zinc-300 font-mono text-[11px] w-8 sm:w-10 text-right flex-shrink-0">1.78</span>
           </div>
@@ -1380,10 +1477,10 @@
 
             <!-- Cluster 1: Undo / Redo -->
             <div class="flex items-center gap-0.5 bg-zinc-900/90 p-0.5 rounded-lg border border-zinc-800 flex-shrink-0">
-              <button id="btnUndo" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Annuler (Ctrl+Z)" disabled>
+              <button id="btnUndo" type="button" aria-label="Annuler" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Annuler (Ctrl+Z)" disabled>
                 <i data-lucide="undo-2" class="w-3.5 h-3.5 text-sky-400"></i>
               </button>
-              <button id="btnRedo" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Rétablir (Ctrl+Y)" disabled>
+              <button id="btnRedo" type="button" aria-label="Rétablir" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Rétablir (Ctrl+Y)" disabled>
                 <i data-lucide="redo-2" class="w-3.5 h-3.5 text-sky-400"></i>
               </button>
             </div>
@@ -1391,7 +1488,7 @@
             <!-- Cluster 2: Handwriting Font & Phrase Sizing -->
             <div class="flex flex-nowrap items-center gap-1 bg-zinc-900/90 px-1.5 py-0.5 rounded-lg border border-zinc-800 flex-shrink-0">
               <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-sky-400 flex-shrink-0 ml-0.5"></i>
-              <select id="nbFontSelect" class="bg-zinc-950/90 text-zinc-100 border border-zinc-700/80 hover:border-sky-500/60 rounded-md px-1.5 py-1 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer max-w-[155px] sm:max-w-[185px]" title="Police d'écriture du cahier">
+              <select id="nbFontSelect" aria-label="Police d'écriture du cahier" class="bg-zinc-950/90 text-zinc-100 border border-zinc-700/80 hover:border-sky-500/60 rounded-md px-1.5 py-1 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer max-w-[155px] sm:max-w-[185px]" title="Police d'écriture du cahier">
                 <optgroup label="Polices Manuscrites (Cahier)">
                   <option value="'Kalam', cursive" selected>Kalam (Stylo bille soigné)</option>
                   <option value="'Caveat', cursive">Caveat (Cursive fluide)</option>
@@ -1415,10 +1512,10 @@
 
               <div class="ribbon-divider"></div>
 
-              <button id="btnShrinkPhrase" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 font-bold text-sky-300 !px-1.5 !py-1" title="Réduire la phrase sélectionnée (A-)">
+              <button id="btnShrinkPhrase" type="button" aria-label="Réduire la phrase sélectionnée" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 font-bold text-sky-300 !px-1.5 !py-1" title="Réduire la phrase sélectionnée (A-)">
                 <span class="text-[11px]">A</span><sup class="text-[9px] font-extrabold text-amber-400">-</sup>
               </button>
-              <select id="phraseSizeSelect" class="bg-zinc-950/90 text-zinc-100 border border-zinc-700/80 hover:border-sky-500/60 rounded-md px-1 py-1 text-[11px] font-mono focus:outline-none focus:border-sky-400 cursor-pointer" title="Taille de la phrase sélectionnée">
+              <select id="phraseSizeSelect" aria-label="Taille de la phrase sélectionnée" class="bg-zinc-950/90 text-zinc-100 border border-zinc-700/80 hover:border-sky-500/60 rounded-md px-1 py-1 text-[11px] font-mono focus:outline-none focus:border-sky-400 cursor-pointer" title="Taille de la phrase sélectionnée">
                 <option value="">pt</option>
                 <option value="12">12 pt</option>
                 <option value="14">14 pt</option>
@@ -1430,40 +1527,40 @@
                 <option value="34">34 pt</option>
                 <option value="42">42 pt</option>
               </select>
-              <button id="btnGrowPhrase" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 font-bold text-sky-300 !px-1.5 !py-1" title="Agrandir la phrase sélectionnée (A+)">
+              <button id="btnGrowPhrase" type="button" aria-label="Agrandir la phrase sélectionnée" class="word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 font-bold text-sky-300 !px-1.5 !py-1" title="Agrandir la phrase sélectionnée (A+)">
                 <span>A</span><sup class="text-[9px] font-extrabold text-emerald-400">+</sup>
               </button>
             </div>
 
             <!-- Cluster 3: Formatting, Boxes, Alignment & Gomme -->
             <div class="flex flex-nowrap items-center gap-0.5 bg-zinc-900/90 px-1.5 py-0.5 rounded-lg border border-zinc-800 flex-shrink-0">
-              <button type="button" data-word-action="bold" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 font-bold !px-2 !py-1" title="Gras (Ctrl+B)">B</button>
-              <button type="button" data-word-action="italic" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 italic font-serif !px-2 !py-1" title="Italique (Ctrl+I)">I</button>
-              <button type="button" data-word-action="underline" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 underline !px-2 !py-1" title="Souligner">U</button>
-              <button type="button" data-word-action="strike" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 line-through text-rose-300 !px-2 !py-1" title="Barrer">S</button>
-              <button type="button" data-tag="souligne" class="phrase-tag-btn word-btn !border-0 !bg-transparent hover:!bg-rose-500/20 underline decoration-wavy decoration-rose-400 text-rose-300 !px-1.5 !py-1" title="Soulignement ondulé rouge (clic = activer/retirer)">〰️</button>
+              <button type="button" data-word-action="bold" aria-label="Gras" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 font-bold !px-2 !py-1" title="Gras (Ctrl+B)">B</button>
+              <button type="button" data-word-action="italic" aria-label="Italique" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 italic font-serif !px-2 !py-1" title="Italique (Ctrl+I)">I</button>
+              <button type="button" data-word-action="underline" aria-label="Souligner" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 underline !px-2 !py-1" title="Souligner">U</button>
+              <button type="button" data-word-action="strike" aria-label="Barrer" class="word-action-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 line-through text-rose-300 !px-2 !py-1" title="Barrer">S</button>
+              <button type="button" data-tag="souligne" aria-label="Soulignement ondulé rouge" class="phrase-tag-btn word-btn !border-0 !bg-transparent hover:!bg-rose-500/20 underline decoration-wavy decoration-rose-400 text-rose-300 !px-1.5 !py-1" title="Soulignement ondulé rouge (clic = activer/retirer)">〰️</button>
 
               <div class="ribbon-divider"></div>
 
-              <button type="button" data-tag="encadre" class="phrase-tag-btn word-btn !px-1.5 !py-0.5 border-rose-500/60 bg-rose-500/10 text-rose-300" title="Encadrer en rouge">▭</button>
-              <button type="button" data-tag="encadre-vert" class="phrase-tag-btn word-btn !px-1.5 !py-0.5 border-emerald-500/60 bg-emerald-500/10 text-emerald-300" title="Encadrer en vert">▭</button>
-              <button type="button" data-tag="encadre-bleu" class="phrase-tag-btn word-btn !px-1.5 !py-0.5 border-sky-500/60 bg-sky-500/10 text-sky-300" title="Encadrer en bleu">▭</button>
+              <button type="button" data-tag="encadre" aria-label="Encadrer en rouge" class="phrase-tag-btn word-btn !px-1.5 !py-0.5 border-rose-500/60 bg-rose-500/10 text-rose-300" title="Encadrer en rouge">▭</button>
+              <button type="button" data-tag="encadre-vert" aria-label="Encadrer en vert" class="phrase-tag-btn word-btn !px-1.5 !py-0.5 border-emerald-500/60 bg-emerald-500/10 text-emerald-300" title="Encadrer en vert">▭</button>
+              <button type="button" data-tag="encadre-bleu" aria-label="Encadrer en bleu" class="phrase-tag-btn word-btn !px-1.5 !py-0.5 border-sky-500/60 bg-sky-500/10 text-sky-300" title="Encadrer en bleu">▭</button>
 
               <div class="ribbon-divider"></div>
 
-              <button type="button" data-align="left" class="align-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Aligner à gauche">
+              <button type="button" data-align="left" aria-label="Aligner à gauche" class="align-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Aligner à gauche">
                 <i data-lucide="align-left" class="w-3.5 h-3.5"></i>
               </button>
-              <button type="button" data-align="center" class="align-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Centrer">
+              <button type="button" data-align="center" aria-label="Centrer" class="align-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Centrer">
                 <i data-lucide="align-center" class="w-3.5 h-3.5"></i>
               </button>
-              <button type="button" data-align="right" class="align-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Aligner à droite">
+              <button type="button" data-align="right" aria-label="Aligner à droite" class="align-btn word-btn !border-0 !bg-transparent hover:!bg-sky-500/20 !px-1.5 !py-1" title="Aligner à droite">
                 <i data-lucide="align-right" class="w-3.5 h-3.5"></i>
               </button>
 
               <div class="ribbon-divider"></div>
 
-              <button id="btnClearFormatting" type="button" class="word-btn !border-0 !bg-transparent hover:!bg-amber-500/20 text-amber-300 hover:text-amber-200 !px-1.5 !py-1" title="Gomme : effacer style, couleur et taille">
+              <button id="btnClearFormatting" type="button" aria-label="Effacer le formatage" class="word-btn !border-0 !bg-transparent hover:!bg-amber-500/20 text-amber-300 hover:text-amber-200 !px-1.5 !py-1" title="Gomme : effacer style, couleur et taille">
                 <i data-lucide="eraser" class="w-3.5 h-3.5"></i>
               </button>
             </div>
@@ -1471,21 +1568,21 @@
             <!-- Cluster 4: Visual Ink Pens & Highlighters (Compact Swatch Dock) -->
             <div class="flex flex-nowrap items-center gap-1.5 bg-zinc-900/90 px-2.5 py-1 rounded-lg border border-zinc-800 flex-shrink-0">
               <span class="text-[10px] uppercase tracking-wider font-semibold text-zinc-400 hidden 2xl:inline mr-0.5">Stylo</span>
-              <button type="button" data-tag="rouge" class="phrase-tag-btn nb-pen-dot" style="background:#dc2626" title="Stylo Rouge (clic = activer/retirer)"></button>
-              <button type="button" data-tag="bleu" class="phrase-tag-btn nb-pen-dot" style="background:#2563eb" title="Stylo Bleu (clic = activer/retirer)"></button>
-              <button type="button" data-tag="vert" class="phrase-tag-btn nb-pen-dot" style="background:#16a34a" title="Stylo Vert (clic = activer/retirer)"></button>
-              <button type="button" data-tag="noir" class="phrase-tag-btn nb-pen-dot" style="background:#1e293b" title="Stylo Noir (clic = activer/retirer)"></button>
-              <button type="button" data-tag="violet" class="phrase-tag-btn nb-pen-dot" style="background:#7c3aed" title="Stylo Violet (clic = activer/retirer)"></button>
-              <button type="button" data-tag="orange" class="phrase-tag-btn nb-pen-dot" style="background:#ea580c" title="Stylo Orange (clic = activer/retirer)"></button>
+              <button type="button" data-tag="rouge" aria-label="Stylo Rouge" class="phrase-tag-btn nb-pen-dot" style="background:#dc2626" title="Stylo Rouge (clic = activer/retirer)"></button>
+              <button type="button" data-tag="bleu" aria-label="Stylo Bleu" class="phrase-tag-btn nb-pen-dot" style="background:#2563eb" title="Stylo Bleu (clic = activer/retirer)"></button>
+              <button type="button" data-tag="vert" aria-label="Stylo Vert" class="phrase-tag-btn nb-pen-dot" style="background:#16a34a" title="Stylo Vert (clic = activer/retirer)"></button>
+              <button type="button" data-tag="noir" aria-label="Stylo Noir" class="phrase-tag-btn nb-pen-dot" style="background:#1e293b" title="Stylo Noir (clic = activer/retirer)"></button>
+              <button type="button" data-tag="violet" aria-label="Stylo Violet" class="phrase-tag-btn nb-pen-dot" style="background:#7c3aed" title="Stylo Violet (clic = activer/retirer)"></button>
+              <button type="button" data-tag="orange" aria-label="Stylo Orange" class="phrase-tag-btn nb-pen-dot" style="background:#ea580c" title="Stylo Orange (clic = activer/retirer)"></button>
 
               <div class="ribbon-divider"></div>
 
               <span class="text-[10px] uppercase tracking-wider font-semibold text-amber-300/80 hidden 2xl:inline mr-0.5">Fluo</span>
-              <button type="button" data-tag="jaune" class="phrase-tag-btn nb-hl-chip" style="background:rgba(253,224,71,0.88)" title="Surligneur Jaune"></button>
-              <button type="button" data-tag="surligne-vert" class="phrase-tag-btn nb-hl-chip" style="background:rgba(134,239,172,0.85)" title="Surligneur Vert"></button>
-              <button type="button" data-tag="rose" class="phrase-tag-btn nb-hl-chip" style="background:rgba(249,168,212,0.88)" title="Surligneur Rose"></button>
-              <button type="button" data-tag="surligne-bleu" class="phrase-tag-btn nb-hl-chip" style="background:rgba(147,197,253,0.88)" title="Surligneur Bleu"></button>
-              <button type="button" data-tag="surligne-orange" class="phrase-tag-btn nb-hl-chip" style="background:rgba(253,186,116,0.9)" title="Surligneur Orange"></button>
+              <button type="button" data-tag="jaune" aria-label="Surligneur Jaune" class="phrase-tag-btn nb-hl-chip" style="background:rgba(253,224,71,0.88)" title="Surligneur Jaune"></button>
+              <button type="button" data-tag="surligne-vert" aria-label="Surligneur Vert" class="phrase-tag-btn nb-hl-chip" style="background:rgba(134,239,172,0.85)" title="Surligneur Vert"></button>
+              <button type="button" data-tag="rose" aria-label="Surligneur Rose" class="phrase-tag-btn nb-hl-chip" style="background:rgba(249,168,212,0.88)" title="Surligneur Rose"></button>
+              <button type="button" data-tag="surligne-bleu" aria-label="Surligneur Bleu" class="phrase-tag-btn nb-hl-chip" style="background:rgba(147,197,253,0.88)" title="Surligneur Bleu"></button>
+              <button type="button" data-tag="surligne-orange" aria-label="Surligneur Orange" class="phrase-tag-btn nb-hl-chip" style="background:rgba(253,186,116,0.9)" title="Surligneur Orange"></button>
             </div>
 
           </div>
@@ -1498,12 +1595,12 @@
               <span id="nbDrawerChevron" class="inline-block text-[10px] transition-transform duration-200">▾</span>
             </button>
 
-            <button id="btnPinRibbon" type="button" class="word-btn px-2 py-1 text-zinc-300 flex-shrink-0" title="Épingler la barre (empêche le masquage au défilement)">
+            <button id="btnPinRibbon" type="button" aria-pressed="false" aria-label="Épingler la barre d'outils" class="word-btn px-2 py-1 text-zinc-300 flex-shrink-0" title="Épingler la barre (empêche le masquage au défilement)">
               <i data-lucide="pin" class="w-3.5 h-3.5 text-sky-400"></i>
               <span id="pinRibbonText" class="hidden xl:inline">Épingler</span>
             </button>
 
-            <button id="btnHideRibbon" type="button" class="word-btn px-2 py-1 text-zinc-400 hover:text-amber-300 flex-shrink-0" title="Masquer la barre d'outils (Alt+T)">
+            <button id="btnHideRibbon" type="button" aria-label="Masquer la barre d'outils" class="word-btn px-2 py-1 text-zinc-400 hover:text-amber-300 flex-shrink-0" title="Masquer la barre d'outils (Alt+T)">
               <span>▴</span>
             </button>
           </div>
@@ -1518,7 +1615,7 @@
               <!-- Paper & Sheet Rules -->
               <div class="flex flex-wrap items-center gap-1.5 bg-zinc-900/90 px-2.5 py-1.5 rounded-xl border border-zinc-800">
                 <i data-lucide="notebook" class="w-3.5 h-3.5 text-indigo-400 flex-shrink-0"></i>
-                <span class="text-zinc-400 font-medium">Papier :</span>
+                <label for="nbPaperSelect" class="text-zinc-400 font-medium">Papier :</label>
                 <select id="nbPaperSelect" class="bg-zinc-950 text-zinc-100 border border-zinc-700 rounded-md px-2 py-1 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer">
                   <option value="paper-lignes" selected>Ligné classique</option>
                   <option value="paper-seyes">Grands Carreaux (Seyès)</option>
@@ -1528,10 +1625,10 @@
                   <option value="paper-parchemin">Parchemin Crème</option>
                   <option value="paper-vierge">Feuille Blanche</option>
                 </select>
-                <button id="btnToggleMargin" type="button" class="word-btn px-2 py-1 text-rose-300 border-rose-500/40 flex-shrink-0" title="Afficher ou masquer la marge rouge">
+                <button id="btnToggleMargin" type="button" aria-pressed="false" class="word-btn px-2 py-1 text-rose-300 border-rose-500/40 flex-shrink-0" title="Afficher ou masquer la marge rouge">
                   <span>Marge</span>
                 </button>
-                <button id="btnSnapLines" type="button" class="word-btn px-2 py-1 text-sky-300 flex-shrink-0" title="Aligner l'écriture exactement sur les lignes du papier">
+                <button id="btnSnapLines" type="button" aria-pressed="false" class="word-btn px-2 py-1 text-sky-300 flex-shrink-0" title="Aligner l'écriture exactement sur les lignes du papier">
                   <span>Aligner Lignes</span>
                 </button>
               </div>
@@ -1540,7 +1637,7 @@
               <div class="flex flex-wrap items-center gap-1.5">
                 <div class="flex items-center gap-1.5 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0">
                   <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-400 flex-shrink-0"></i>
-                  <select id="nbInkPresetSelect" class="bg-zinc-950 text-zinc-100 border border-zinc-700 rounded-md px-1.5 py-0.5 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer" title="Préréglage rapide Stylo 4 Couleurs">
+                  <select id="nbInkPresetSelect" aria-label="Préréglage Stylo 4 Couleurs" class="bg-zinc-950 text-zinc-100 border border-zinc-700 rounded-md px-1.5 py-0.5 text-xs font-medium focus:outline-none focus:border-sky-400 cursor-pointer" title="Préréglage rapide Stylo 4 Couleurs">
                     <option value="bic4" selected>Bic 4 Couleurs</option>
                     <option value="cahier-bleu">Cahier Bleu Classique</option>
                     <option value="examen">Examen Propre</option>
@@ -1551,42 +1648,42 @@
 
                 <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0" data-role-group="title">
                   <span class="text-zinc-300 font-medium mr-0.5">Titres :</span>
-                  <button type="button" data-color="#c92a2a" class="swatch-dot active" style="background:#c92a2a" title="Rouge"></button>
-                  <button type="button" data-color="#1850b8" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
-                  <button type="button" data-color="#1b7a34" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
-                  <button type="button" data-color="#1e293b" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
-                  <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
-                  <input type="color" value="#c92a2a" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les titres" />
+                  <button type="button" data-color="#c92a2a" aria-label="Titres en rouge" class="swatch-dot active" style="background:#c92a2a" title="Rouge"></button>
+                  <button type="button" data-color="#1850b8" aria-label="Titres en bleu" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
+                  <button type="button" data-color="#1b7a34" aria-label="Titres en vert" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
+                  <button type="button" data-color="#1e293b" aria-label="Titres en noir" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
+                  <button type="button" data-color="#6741d9" aria-label="Titres en violet" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
+                  <input type="color" aria-label="Couleur personnalisée pour les titres" value="#c92a2a" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les titres" />
                 </div>
 
                 <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0" data-role-group="text">
                   <span class="text-zinc-300 font-medium mr-0.5">Texte :</span>
-                  <button type="button" data-color="#1e293b" class="swatch-dot active" style="background:#1e293b" title="Noir"></button>
-                  <button type="button" data-color="#1850b8" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
-                  <button type="button" data-color="#c92a2a" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
-                  <button type="button" data-color="#1b7a34" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
-                  <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
-                  <input type="color" value="#1e293b" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour le texte" />
+                  <button type="button" data-color="#1e293b" aria-label="Texte en noir" class="swatch-dot active" style="background:#1e293b" title="Noir"></button>
+                  <button type="button" data-color="#1850b8" aria-label="Texte en bleu" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
+                  <button type="button" data-color="#c92a2a" aria-label="Texte en rouge" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
+                  <button type="button" data-color="#1b7a34" aria-label="Texte en vert" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
+                  <button type="button" data-color="#6741d9" aria-label="Texte en violet" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
+                  <input type="color" aria-label="Couleur personnalisée pour le texte" value="#1e293b" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour le texte" />
                 </div>
 
                 <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0" data-role-group="bold">
                   <span class="text-zinc-300 font-medium mr-0.5">Gras :</span>
-                  <button type="button" data-color="#1850b8" class="swatch-dot active" style="background:#1850b8" title="Bleu"></button>
-                  <button type="button" data-color="#c92a2a" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
-                  <button type="button" data-color="#1b7a34" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
-                  <button type="button" data-color="#1e293b" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
-                  <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
-                  <input type="color" value="#1850b8" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les mots en gras" />
+                  <button type="button" data-color="#1850b8" aria-label="Gras en bleu" class="swatch-dot active" style="background:#1850b8" title="Bleu"></button>
+                  <button type="button" data-color="#c92a2a" aria-label="Gras en rouge" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
+                  <button type="button" data-color="#1b7a34" aria-label="Gras en vert" class="swatch-dot" style="background:#1b7a34" title="Vert"></button>
+                  <button type="button" data-color="#1e293b" aria-label="Gras en noir" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
+                  <button type="button" data-color="#6741d9" aria-label="Gras en violet" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
+                  <input type="color" aria-label="Couleur personnalisée pour les mots en gras" value="#1850b8" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les mots en gras" />
                 </div>
 
                 <div class="flex items-center gap-1 bg-zinc-900/90 px-2 py-1.5 rounded-xl border border-zinc-800 flex-shrink-0" data-role-group="math">
                   <span class="text-zinc-300 font-medium mr-0.5">Formules :</span>
-                  <button type="button" data-color="#1b7a34" class="swatch-dot active" style="background:#1b7a34" title="Vert"></button>
-                  <button type="button" data-color="#1850b8" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
-                  <button type="button" data-color="#c92a2a" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
-                  <button type="button" data-color="#1e293b" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
-                  <button type="button" data-color="#6741d9" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
-                  <input type="color" value="#1b7a34" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les formules LaTeX" />
+                  <button type="button" data-color="#1b7a34" aria-label="Formules en vert" class="swatch-dot active" style="background:#1b7a34" title="Vert"></button>
+                  <button type="button" data-color="#1850b8" aria-label="Formules en bleu" class="swatch-dot" style="background:#1850b8" title="Bleu"></button>
+                  <button type="button" data-color="#c92a2a" aria-label="Formules en rouge" class="swatch-dot" style="background:#c92a2a" title="Rouge"></button>
+                  <button type="button" data-color="#1e293b" aria-label="Formules en noir" class="swatch-dot" style="background:#1e293b" title="Noir"></button>
+                  <button type="button" data-color="#6741d9" aria-label="Formules en violet" class="swatch-dot" style="background:#6741d9" title="Violet"></button>
+                  <input type="color" aria-label="Couleur personnalisée pour les formules LaTeX" value="#1b7a34" class="role-color-picker w-4 h-4 rounded cursor-pointer bg-transparent border-0 p-0 ml-0.5" title="Autre couleur pour les formules LaTeX" />
                 </div>
               </div>
 
@@ -1600,30 +1697,30 @@
 
   <!-- Floating Mini Toolbar on Notebook Selection -->
   <div id="floatingPenPopup" class="no-print hidden fixed z-50 bg-[#14161f]/95 border border-sky-500/40 rounded-xl shadow-2xl px-2.5 py-1.5 flex flex-nowrap sm:flex-wrap items-center gap-1.5 backdrop-blur-md max-w-[calc(100vw-1rem)] overflow-x-auto no-scrollbar">
-    <button type="button" id="popupGrowBtn" class="word-btn font-bold text-sky-300 px-1.5 py-0.5" title="Agrandir la phrase (A+)">
+    <button type="button" id="popupGrowBtn" aria-label="Agrandir la phrase" class="word-btn font-bold text-sky-300 px-1.5 py-0.5" title="Agrandir la phrase (A+)">
       A<sup class="text-[9px] text-emerald-400">+</sup>
     </button>
-    <button type="button" id="popupShrinkBtn" class="word-btn font-bold text-sky-300 px-1.5 py-0.5" title="Réduire la phrase (A-)">
+    <button type="button" id="popupShrinkBtn" aria-label="Réduire la phrase" class="word-btn font-bold text-sky-300 px-1.5 py-0.5" title="Réduire la phrase (A-)">
       <span class="text-[10px]">A</span><sup class="text-[9px] text-amber-400">-</sup>
     </button>
-    <button type="button" data-word-action="bold" class="popup-word-btn word-btn font-bold px-1.5 py-0.5" title="Gras">B</button>
-    <button type="button" data-word-action="italic" class="popup-word-btn word-btn italic font-serif px-1.5 py-0.5" title="Italique">I</button>
-    <button type="button" data-tag="encadre" class="popup-pen-btn word-btn text-rose-300 px-1.5 py-0.5" title="Encadrer en rouge">▭R</button>
-    <button type="button" data-tag="encadre-vert" class="popup-pen-btn word-btn text-emerald-300 px-1.5 py-0.5" title="Encadrer en vert">▭V</button>
-    <button type="button" data-tag="encadre-bleu" class="popup-pen-btn word-btn text-sky-300 px-1.5 py-0.5" title="Encadrer en bleu">▭B</button>
+    <button type="button" data-word-action="bold" aria-label="Gras" class="popup-word-btn word-btn font-bold px-1.5 py-0.5" title="Gras">B</button>
+    <button type="button" data-word-action="italic" aria-label="Italique" class="popup-word-btn word-btn italic font-serif px-1.5 py-0.5" title="Italique">I</button>
+    <button type="button" data-tag="encadre" aria-label="Encadrer en rouge" class="popup-pen-btn word-btn text-rose-300 px-1.5 py-0.5" title="Encadrer en rouge">▭R</button>
+    <button type="button" data-tag="encadre-vert" aria-label="Encadrer en vert" class="popup-pen-btn word-btn text-emerald-300 px-1.5 py-0.5" title="Encadrer en vert">▭V</button>
+    <button type="button" data-tag="encadre-bleu" aria-label="Encadrer en bleu" class="popup-pen-btn word-btn text-sky-300 px-1.5 py-0.5" title="Encadrer en bleu">▭B</button>
     <span class="text-zinc-600 mx-0.5">|</span>
-    <button type="button" data-tag="rouge" class="popup-pen-btn w-4 h-4 rounded-full bg-[#c92a2a] hover:scale-110 transition cursor-pointer" title="Stylo Rouge"></button>
-    <button type="button" data-tag="bleu" class="popup-pen-btn w-4 h-4 rounded-full bg-[#1850b8] hover:scale-110 transition cursor-pointer" title="Stylo Bleu"></button>
-    <button type="button" data-tag="vert" class="popup-pen-btn w-4 h-4 rounded-full bg-[#1b7a34] hover:scale-110 transition cursor-pointer" title="Stylo Vert"></button>
-    <button type="button" data-tag="noir" class="popup-pen-btn w-4 h-4 rounded-full bg-[#1e293b] border border-zinc-400 hover:scale-110 transition cursor-pointer" title="Stylo Noir"></button>
-    <button type="button" data-tag="violet" class="popup-pen-btn w-4 h-4 rounded-full bg-[#6741d9] hover:scale-110 transition cursor-pointer" title="Stylo Violet"></button>
-    <button type="button" data-tag="orange" class="popup-pen-btn w-4 h-4 rounded-full bg-[#d9480f] hover:scale-110 transition cursor-pointer" title="Stylo Orange"></button>
+    <button type="button" data-tag="rouge" aria-label="Stylo Rouge" class="popup-pen-btn w-4 h-4 rounded-full bg-[#c92a2a] hover:scale-110 transition cursor-pointer" title="Stylo Rouge"></button>
+    <button type="button" data-tag="bleu" aria-label="Stylo Bleu" class="popup-pen-btn w-4 h-4 rounded-full bg-[#1850b8] hover:scale-110 transition cursor-pointer" title="Stylo Bleu"></button>
+    <button type="button" data-tag="vert" aria-label="Stylo Vert" class="popup-pen-btn w-4 h-4 rounded-full bg-[#1b7a34] hover:scale-110 transition cursor-pointer" title="Stylo Vert"></button>
+    <button type="button" data-tag="noir" aria-label="Stylo Noir" class="popup-pen-btn w-4 h-4 rounded-full bg-[#1e293b] border border-zinc-400 hover:scale-110 transition cursor-pointer" title="Stylo Noir"></button>
+    <button type="button" data-tag="violet" aria-label="Stylo Violet" class="popup-pen-btn w-4 h-4 rounded-full bg-[#6741d9] hover:scale-110 transition cursor-pointer" title="Stylo Violet"></button>
+    <button type="button" data-tag="orange" aria-label="Stylo Orange" class="popup-pen-btn w-4 h-4 rounded-full bg-[#d9480f] hover:scale-110 transition cursor-pointer" title="Stylo Orange"></button>
     <span class="text-zinc-600 mx-0.5">|</span>
-    <button type="button" data-tag="jaune" class="popup-pen-btn px-1.5 py-0.5 rounded text-[10px] font-semibold bg-yellow-300 text-zinc-900 hover:scale-105 transition cursor-pointer" title="Surligneur Jaune">Jaune</button>
-    <button type="button" data-tag="surligne-vert" class="popup-pen-btn px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-300 text-zinc-900 hover:scale-105 transition cursor-pointer" title="Surligneur Vert">Vert</button>
-    <button type="button" data-tag="rose" class="popup-pen-btn px-1.5 py-0.5 rounded text-[10px] font-semibold bg-pink-300 text-zinc-900 hover:scale-105 transition cursor-pointer" title="Surligneur Rose">Rose</button>
-    <button type="button" data-tag="souligne" class="popup-pen-btn px-1.5 py-0.5 rounded text-[10px] font-semibold bg-zinc-800 text-rose-300 underline decoration-wavy decoration-rose-400 hover:scale-105 transition cursor-pointer" title="Souligné Rouge">〰️</button>
-    <button type="button" id="popupClearBtn" class="word-btn text-amber-300 px-1.5 py-0.5" title="Gomme (Effacer le style)">
+    <button type="button" data-tag="jaune" aria-label="Surligneur Jaune" class="popup-pen-btn px-1.5 py-0.5 rounded text-[10px] font-semibold bg-yellow-300 text-zinc-900 hover:scale-105 transition cursor-pointer" title="Surligneur Jaune">Jaune</button>
+    <button type="button" data-tag="surligne-vert" aria-label="Surligneur Vert" class="popup-pen-btn px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-300 text-zinc-900 hover:scale-105 transition cursor-pointer" title="Surligneur Vert">Vert</button>
+    <button type="button" data-tag="rose" aria-label="Surligneur Rose" class="popup-pen-btn px-1.5 py-0.5 rounded text-[10px] font-semibold bg-pink-300 text-zinc-900 hover:scale-105 transition cursor-pointer" title="Surligneur Rose">Rose</button>
+    <button type="button" data-tag="souligne" aria-label="Soulignement ondulé rouge" class="popup-pen-btn px-1.5 py-0.5 rounded text-[10px] font-semibold bg-zinc-800 text-rose-300 underline decoration-wavy decoration-rose-400 hover:scale-105 transition cursor-pointer" title="Souligné Rouge">〰️</button>
+    <button type="button" id="popupClearBtn" aria-label="Effacer le style" class="word-btn text-amber-300 px-1.5 py-0.5" title="Gomme (Effacer le style)">
       <i data-lucide="eraser" class="w-3 h-3"></i>
     </button>
   </div>
@@ -1635,7 +1732,7 @@
         <i data-lucide="list-tree" class="w-3.5 h-3.5 text-sky-400"></i>
         <span>Sommaire du Cours</span>
       </span>
-      <button id="btnCloseOutline" type="button" class="text-zinc-400 hover:text-white cursor-pointer p-1">
+      <button id="btnCloseOutline" type="button" aria-label="Fermer le sommaire" class="text-zinc-400 hover:text-white cursor-pointer p-1">
         <i data-lucide="x" class="w-3.5 h-3.5"></i>
       </button>
     </div>
@@ -1655,15 +1752,21 @@
     </div>
   </div>
 
+  <!-- Global Non-blocking Toast (always visible in Reader Mode, Mobile, and above Modals) -->
+  <div id="statusToast" role="status" aria-live="polite" class="no-print hidden fixed bottom-4 right-4 px-3.5 py-2 rounded-xl bg-sky-600 text-white text-xs font-medium shadow-2xl border border-sky-400/40 flex items-center gap-1.5 z-[80] max-w-[calc(100vw-2rem)]">
+    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 flex-shrink-0"></i>
+    <span id="statusToastText">Action effectuée</span>
+  </div>
+
   <!-- Mobile View Mode Switcher (Phones & Tablets < 1024px) -->
   <div id="mobileViewSwitcher" class="no-print lg:hidden sticky top-0 z-30 bg-[#0e1015]/95 border-b border-zinc-800/90 backdrop-blur-md px-3 py-1.5">
     <div class="max-w-md mx-auto flex items-center gap-1.5">
       <div class="flex-1 grid grid-cols-3 gap-1 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800 text-[11px] font-semibold">
-        <button type="button" data-mob-view="editor" class="mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate">📝 Écrire</button>
-        <button type="button" data-mob-view="reader" class="mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate">📖 Cahier</button>
-        <button type="button" data-mob-view="split" class="mob-view-btn py-1.5 px-2 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 transition cursor-pointer truncate">📑 Divisé</button>
+        <button type="button" data-mob-view="editor" aria-pressed="false" class="mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate">📝 Écrire</button>
+        <button type="button" data-mob-view="reader" aria-pressed="false" class="mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate">📖 Cahier</button>
+        <button type="button" data-mob-view="split" aria-pressed="true" class="mob-view-btn py-1.5 px-2 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 transition cursor-pointer truncate">📑 Divisé</button>
       </div>
-      <button id="btnMobileRibbonToggle" type="button" class="hidden flex-shrink-0 px-2.5 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 text-xs font-semibold transition cursor-pointer" title="Afficher/Masquer les outils Cahier">
+      <button id="btnMobileRibbonToggle" type="button" aria-label="Afficher ou masquer les outils Cahier" class="hidden flex-shrink-0 px-2.5 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 text-xs font-semibold transition cursor-pointer" title="Afficher/Masquer les outils Cahier">
         🛠️
       </button>
     </div>
@@ -1672,10 +1775,10 @@
   <!-- =====================================================
        MAIN WORKSPACE (SPLIT EDITOR + RESIZER + LIVE READER)
        ===================================================== -->
-  <main id="workspaceGrid" class="split-layout flex-1 max-w-[1640px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-3 p-2.5 sm:p-5">
+  <main id="workspaceGrid" class="split-layout flex-1 max-w-[1640px] w-full mx-auto grid grid-cols-1 gap-3 p-2.5 sm:p-5">
 
     <!-- LEFT PANE: Raw Markdown / LaTeX Input -->
-    <section id="editorContainer" class="no-print split-pane lg:col-span-5 min-w-0 min-h-0 max-w-full flex flex-col bg-[#131314] border border-[#282a2e] rounded-2xl overflow-hidden shadow-xl h-[300px] sm:h-[380px] lg:h-[calc(100vh-135px)] lg:sticky lg:top-[116px]">
+    <section id="editorContainer" class="no-print split-pane min-w-0 min-h-0 max-w-full flex flex-col bg-[#131314] border border-[#282a2e] rounded-2xl overflow-hidden shadow-xl h-[300px] sm:h-[380px] lg:h-[calc(100vh-135px)] lg:sticky lg:top-[116px]">
 
       <!-- Editor Header -->
       <div class="px-3 sm:px-3.5 py-2 sm:py-2.5 bg-[#18191b] border-b border-[#282a2e] flex flex-wrap items-center justify-between gap-2">
@@ -1688,18 +1791,18 @@
         </div>
 
         <div class="flex items-center gap-1 flex-wrap">
-          <button id="btnToggleFind" type="button" class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition cursor-pointer" title="Rechercher & Remplacer (Ctrl+F)">
+          <button id="btnToggleFind" type="button" aria-label="Rechercher et remplacer" class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition cursor-pointer" title="Rechercher & Remplacer (Ctrl+F)">
             <i data-lucide="search" class="w-3.5 h-3.5 text-sky-400"></i>
           </button>
 
-          <button id="btnSyncScroll" type="button" class="hidden lg:inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-400 border border-zinc-700 transition cursor-pointer" title="Synchroniser le défilement Éditeur / Cahier">
+          <button id="btnSyncScroll" type="button" aria-pressed="false" aria-label="Synchroniser le défilement" class="hidden lg:inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-400 border border-zinc-700 transition cursor-pointer" title="Synchroniser le défilement Éditeur / Cahier">
             <i data-lucide="link-2" class="w-3.5 h-3.5"></i>
           </button>
 
-          <label class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition cursor-pointer" title="Importer un fichier .md, .tex ou .txt">
+          <label class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition cursor-pointer focus-within:ring-2 focus-within:ring-sky-400" title="Importer un fichier .md, .tex ou .txt">
             <i data-lucide="file-up" class="w-3.5 h-3.5 text-amber-400"></i>
             <span class="hidden xl:inline">Ouvrir</span>
-            <input id="fileImportInput" type="file" accept=".md,.markdown,.tex,.txt" class="hidden" />
+            <input id="fileImportInput" type="file" aria-label="Importer un fichier Markdown, LaTeX ou texte" accept=".md,.markdown,.tex,.txt" class="sr-only" />
           </label>
 
           <button id="btnPasteClipboard" type="button" class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 transition cursor-pointer" title="Coller depuis le presse-papier">
@@ -1707,7 +1810,7 @@
             <span>Coller</span>
           </button>
 
-          <button id="btnClearEditor" type="button" class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-zinc-800 hover:bg-rose-950/60 hover:text-rose-300 text-zinc-400 border border-zinc-700 transition cursor-pointer" title="Vider l'éditeur">
+          <button id="btnClearEditor" type="button" aria-label="Vider l'éditeur" class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-zinc-800 hover:bg-rose-950/60 hover:text-rose-300 text-zinc-400 border border-zinc-700 transition cursor-pointer" title="Vider l'éditeur">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
           </button>
         </div>
@@ -1760,13 +1863,13 @@
 
       <!-- Find & Replace Bar -->
       <div id="findReplaceBar" class="hidden px-3 py-2 bg-[#161820] border-b border-zinc-800 flex flex-wrap items-center gap-1.5 text-xs">
-        <input id="findInput" type="text" placeholder="Rechercher..." class="flex-1 min-w-[110px] bg-zinc-900 border border-zinc-700 rounded-md px-2 py-1 text-zinc-100 focus:outline-none focus:border-sky-500" />
-        <input id="replaceInput" type="text" placeholder="Remplacer par..." class="flex-1 min-w-[110px] bg-zinc-900 border border-zinc-700 rounded-md px-2 py-1 text-zinc-100 focus:outline-none focus:border-sky-500" />
+        <input id="findInput" type="text" aria-label="Rechercher dans l'éditeur" placeholder="Rechercher..." class="flex-1 min-w-[110px] bg-zinc-900 border border-zinc-700 rounded-md px-2 py-1 text-zinc-100 focus:outline-none focus:border-sky-500" />
+        <input id="replaceInput" type="text" aria-label="Remplacer par" placeholder="Remplacer par..." class="flex-1 min-w-[110px] bg-zinc-900 border border-zinc-700 rounded-md px-2 py-1 text-zinc-100 focus:outline-none focus:border-sky-500" />
         <span id="findMatchLabel" class="text-[11px] text-zinc-400 font-mono px-1">0</span>
-        <button id="btnFindNext" type="button" class="px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 cursor-pointer" title="Suivant">↓</button>
+        <button id="btnFindNext" type="button" aria-label="Occurrence suivante" class="px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 cursor-pointer" title="Suivant">↓</button>
         <button id="btnReplaceOne" type="button" class="px-2 py-1 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 cursor-pointer">Rempl.</button>
         <button id="btnReplaceAll" type="button" class="px-2 py-1 rounded bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 cursor-pointer">Tout</button>
-        <button id="btnCloseFind" type="button" class="px-1.5 py-1 text-zinc-400 hover:text-white cursor-pointer">✕</button>
+        <button id="btnCloseFind" type="button" aria-label="Fermer la barre de recherche" class="px-1.5 py-1 text-zinc-400 hover:text-white cursor-pointer">✕</button>
       </div>
 
       <!-- Textarea -->
@@ -1778,12 +1881,6 @@
           placeholder="Collez votre cours IA (ChatGPT / Gemini / NotebookLM), équations LaTeX \(\Delta G\), réactions chimiques \ce{H2O}, tableaux Markdown ou schémas ```mermaid..."
           class="mono-editor flex-1 min-h-0 w-full overflow-y-auto bg-[#0e0f11] text-zinc-200 p-4 text-[13px] leading-relaxed focus:outline-none resize-none"
         ></textarea>
-
-        <!-- Non-blocking Toast -->
-        <div id="statusToast" role="status" aria-live="polite" class="hidden absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-medium shadow-lg flex items-center gap-1.5 z-30">
-          <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
-          <span id="statusToastText">Action effectuée</span>
-        </div>
       </div>
 
       <!-- Editor Footer -->
@@ -1794,12 +1891,12 @@
     </section>
 
     <!-- DRAGGABLE RESIZER HANDLE (Desktop & Tablet Landscape) -->
-    <div id="splitResizer" class="no-print hidden lg:flex items-center justify-center w-3 self-stretch cursor-col-resize group select-none touch-none" title="Glisser pour redimensionner • Double-clic pour réinitialiser">
+    <div id="splitResizer" role="separator" aria-orientation="vertical" aria-label="Redimensionner l'éditeur et le cahier" tabindex="0" class="no-print hidden lg:flex items-center justify-center w-3 self-stretch cursor-col-resize group select-none touch-none" title="Glisser ou flèches gauche/droite pour redimensionner • Double-clic pour réinitialiser">
       <div class="w-1 h-16 rounded-full bg-zinc-700/70 group-hover:bg-sky-400 transition"></div>
     </div>
 
     <!-- RIGHT PANE: Clean Study Reader Output -->
-    <section id="readerContainer" class="split-pane lg:col-span-7 min-w-0 max-w-full flex flex-col items-center">
+    <section id="readerContainer" class="split-pane min-w-0 max-w-full flex flex-col items-center">
       <div id="readerCard" class="reader-card theme-dark paper-lignes w-full max-w-[920px] min-w-0 min-h-[60dvh] lg:min-h-[calc(100vh-135px)] rounded-2xl border border-[#282a2e] shadow-2xl p-4 sm:p-10 md:p-12 flex flex-col justify-start">
 
         <!-- Optional Realistic Spiral Binding Holes -->
@@ -1817,11 +1914,11 @@
         <div class="notebook-meta-stamp flex-wrap items-center justify-between gap-2 sm:gap-3 pb-3 mb-4 border-b border-dashed border-sky-400/50 text-xs">
           <div class="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-[170px]">
             <span class="font-bold uppercase tracking-wider text-rose-700/80 flex-shrink-0">Matière :</span>
-            <input id="nbSubjectInput" type="text" value="Cours &amp; Révisions" class="bg-transparent border-b border-sky-400/50 focus:border-sky-600 focus:outline-none text-slate-800 font-semibold px-1 py-0.5 leading-normal flex-1 min-w-0 sm:flex-none sm:w-48" />
+            <input id="nbSubjectInput" type="text" aria-label="Matière du cahier" value="Cours &amp; Révisions" class="bg-transparent border-b border-sky-400/50 focus:border-sky-600 focus:outline-none text-slate-800 font-semibold px-1 py-0.5 leading-normal flex-1 min-w-0 sm:flex-none sm:w-48" />
           </div>
           <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <span class="font-bold uppercase tracking-wider text-rose-700/80 flex-shrink-0">Date :</span>
-            <input id="nbDateInput" type="text" class="bg-transparent border-b border-sky-400/50 focus:border-sky-600 focus:outline-none text-slate-700 font-medium px-1 py-0.5 leading-normal w-24 sm:w-28 text-right" />
+            <input id="nbDateInput" type="text" aria-label="Date du cahier" class="bg-transparent border-b border-sky-400/50 focus:border-sky-600 focus:outline-none text-slate-700 font-medium px-1 py-0.5 leading-normal w-24 sm:w-28 text-right" />
           </div>
         </div>
 
@@ -1847,7 +1944,7 @@
             <i data-lucide="puzzle" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 id="pluginModalTitle" class="text-sm font-semibold text-white">Centre de Plugins &amp; Extensions InkTeX</h3>
+            <h2 id="pluginModalTitle" class="text-sm font-semibold text-white">Centre de Plugins &amp; Extensions InkTeX</h2>
             <p class="text-[11px] text-zinc-400">Activez des plugins scientifiques, outils d'étude et macros personnalisées en temps réel</p>
           </div>
         </div>
@@ -1890,7 +1987,7 @@
             </span>
             <button id="btnSaveMacros" type="button" class="px-2.5 py-1 rounded-md bg-emerald-600/25 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/40 font-semibold cursor-pointer">Appliquer</button>
           </div>
-          <textarea id="customMacrosInput" rows="4" spellcheck="false" class="mono-editor w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-[11px] text-zinc-200 focus:outline-none focus:border-sky-500"></textarea>
+          <textarea id="customMacrosInput" aria-label="Macros LaTeX personnalisées" rows="4" spellcheck="false" class="mono-editor w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-[11px] text-zinc-200 focus:outline-none focus:border-sky-500"></textarea>
         </div>
       </div>
     </div>
@@ -1902,7 +1999,7 @@
   <div id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsModalTitle" class="no-print hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4">
     <div class="bg-[#14161d] border border-zinc-800 rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[88dvh]">
       <div class="px-5 py-3.5 bg-[#191c26] border-b border-zinc-800 flex items-center justify-between">
-        <h3 id="shortcutsModalTitle" class="text-sm font-semibold text-white">Guide Rapide &amp; Raccourcis Clavier</h3>
+        <h2 id="shortcutsModalTitle" class="text-sm font-semibold text-white">Guide Rapide &amp; Raccourcis Clavier</h2>
         <button id="btnCloseShortcuts" type="button" class="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 cursor-pointer" aria-label="Fermer">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
@@ -1946,7 +2043,7 @@
             <i data-lucide="download" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 id="exportModalTitle" class="text-sm font-semibold text-white">Centre d'Export Avancé</h3>
+            <h2 id="exportModalTitle" class="text-sm font-semibold text-white">Centre d'Export Avancé</h2>
             <p class="text-[11px] text-zinc-400">Exportez en PDF, PNG, JPG, HTML, Markdown ou LaTeX (.tex)</p>
           </div>
         </div>
@@ -2666,12 +2763,27 @@ flowchart TD
     let historyIndex = -1;
     let isRestoringHistory = false;
 
-    function pushHistoryState(customDomHtml = null) {
+    let toastTimeout = null;
+    let historyDebounce = null;
+    let storageSaveDebounce = null;
+
+    function scheduleSaveToLocalStorage() {
+      clearTimeout(storageSaveDebounce);
+      storageSaveDebounce = setTimeout(() => {
+        saveToLocalStorage();
+      }, 900);
+    }
+
+    function pushHistoryState() {
       if (isRestoringHistory) return;
-      const snapshot = { raw: rawInput.value, domHtml: customDomHtml };
+      const snapshot = {
+        raw: rawInput.value,
+        selStart: rawInput.selectionStart || 0,
+        selEnd: rawInput.selectionEnd || 0
+      };
       if (historyIndex >= 0) {
         const current = historyStack[historyIndex];
-        if (current.raw === snapshot.raw && current.domHtml === snapshot.domHtml) {
+        if (current.raw === snapshot.raw) {
           updateUndoRedoButtons();
           return;
         }
@@ -2691,18 +2803,25 @@ flowchart TD
       if (btnRedo) btnRedo.disabled = historyIndex >= historyStack.length - 1;
     }
 
+    function restoreHistorySnapshot(state) {
+      const prevScroll = rawInput.scrollTop;
+      rawInput.value = state.raw;
+      if (typeof rawInput.setSelectionRange === 'function') {
+        const maxLen = rawInput.value.length;
+        const s = Math.min(state.selStart || 0, maxLen);
+        const e = Math.min(state.selEnd || s, maxLen);
+        if (document.activeElement === rawInput) rawInput.setSelectionRange(s, e);
+      }
+      rawInput.scrollTop = prevScroll;
+      updateReader(false);
+    }
+
     function performUndo() {
       if (historyIndex <= 0) return;
+      clearTimeout(historyDebounce);
       isRestoringHistory = true;
       historyIndex--;
-      const state = historyStack[historyIndex];
-      rawInput.value = state.raw;
-      if (state.domHtml) {
-        readerOutput.innerHTML = state.domHtml;
-        saveToLocalStorage();
-      } else {
-        updateReader(false);
-      }
+      restoreHistorySnapshot(historyStack[historyIndex]);
       isRestoringHistory = false;
       updateUndoRedoButtons();
       showToast('Annulé (Undo)');
@@ -2710,16 +2829,10 @@ flowchart TD
 
     function performRedo() {
       if (historyIndex >= historyStack.length - 1) return;
+      clearTimeout(historyDebounce);
       isRestoringHistory = true;
       historyIndex++;
-      const state = historyStack[historyIndex];
-      rawInput.value = state.raw;
-      if (state.domHtml) {
-        readerOutput.innerHTML = state.domHtml;
-        saveToLocalStorage();
-      } else {
-        updateReader(false);
-      }
+      restoreHistorySnapshot(historyStack[historyIndex]);
       isRestoringHistory = false;
       updateUndoRedoButtons();
       showToast('Rétabli (Redo)');
@@ -2748,8 +2861,8 @@ flowchart TD
     function showToast(msg) {
       statusToastText.textContent = msg;
       statusToast.classList.remove('hidden');
-      clearTimeout(window._toastTimeout);
-      window._toastTimeout = setTimeout(() => {
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
         statusToast.classList.add('hidden');
       }, 2400);
     }
@@ -2776,25 +2889,105 @@ flowchart TD
       'left|right|big|Big|bigg|Bigg|middle|begin|end|displaystyle|textstyle|scriptstyle|scriptscriptstyle|limits|nolimits|not|operatorname|' +
       'ce|pu|url|href|phantom|hphantom|vphantom|cancel|bcancel|xcancel|sout|tag|label|ref|eqref';
     const LATEX_MATH_CMD_RE = new RegExp('\\\\(?:' + LATEX_KNOWN_CMD_NAMES + ')\\b');
-    const DOUBLED_LATEX_CMD_RE = new RegExp('(?<!\\\\)\\\\{2}(?=(?:' + LATEX_KNOWN_CMD_NAMES + ')\\b)', 'g');
+    const DOUBLED_LATEX_CMD_RE = new RegExp('(^|[^\\\\])\\\\{2}(?=(?:' + LATEX_KNOWN_CMD_NAMES + ')\\b)', 'g');
     const DOUBLED_OPEN_BRACKET_RE = /\\{2,}\[(?!\s*[-+]?[\d.]+\s*(?:pt|mm|cm|em|ex|in|bp|px)\s*\])/g;
 
     /**
      * Cleans double-escaped LaTeX commands (e.g., \\Delta -> \Delta)
      * while preserving genuine LaTeX matrix/align line breaks (\\, \\[4pt], x=1\\y=2).
+     * Uses capturing groups instead of lookbehinds for Safari / iPadOS < 16.4 compatibility.
      */
     function cleanInnerMath(mathExpr, extraCmdNames = []) {
-      let cleaned = mathExpr.trim().replace(DOUBLED_LATEX_CMD_RE, '\\');
+      let cleaned = mathExpr.trim().replace(DOUBLED_LATEX_CMD_RE, '$1\\');
       if (extraCmdNames && extraCmdNames.length > 0) {
         const safeNames = extraCmdNames
           .filter(n => typeof n === 'string' && n.length >= 2 && /^[a-zA-Z]+$/.test(n))
           .map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
         if (safeNames.length > 0) {
-          const extraRe = new RegExp('(?<!\\\\)\\\\{2}(?=(?:' + safeNames.join('|') + ')\\b)', 'g');
-          cleaned = cleaned.replace(extraRe, '\\');
+          const extraRe = new RegExp('(^|[^\\\\])\\\\{2}(?=(?:' + safeNames.join('|') + ')\\b)', 'g');
+          cleaned = cleaned.replace(extraRe, '$1\\');
         }
       }
       return cleaned;
+    }
+
+    /**
+     * Splits a Markdown table row on unescaped '|' outside inline code and LaTeX math ($...$, $$...$$, \(...\)).
+     * Zero regex lookbehinds for full Safari / iPadOS < 16.4 compatibility.
+     */
+    function splitMarkdownTableRow(rowLine, unescapePipes = true) {
+      let s = rowLine.trim();
+      if (s.startsWith('|')) s = s.slice(1);
+      if (s.endsWith('|')) {
+        let bs = 0;
+        for (let k = s.length - 2; k >= 0 && s[k] === '\\'; k--) bs++;
+        if (bs % 2 === 0) s = s.slice(0, -1);
+      }
+      const cells = [];
+      let cur = '';
+      let inCode = false;
+      let dollarDelim = 0;
+      let inParenMath = false;
+
+      for (let i = 0; i < s.length; i++) {
+        const ch = s[i];
+        const next = s[i + 1];
+
+        if (ch === '\\') {
+          if (!inCode && dollarDelim === 0 && !inParenMath) {
+            if (next === '(') { inParenMath = true; cur += '\\('; i++; continue; }
+            if (next === '|') { cur += unescapePipes ? '|' : '\\|'; i++; continue; }
+          } else if (inParenMath && next === ')') {
+            inParenMath = false;
+            cur += '\\)';
+            i++;
+            continue;
+          }
+          cur += ch;
+          if (i + 1 < s.length) { cur += s[i + 1]; i++; }
+          continue;
+        }
+
+        if (ch === '`' && dollarDelim === 0 && !inParenMath) {
+          inCode = !inCode;
+          cur += ch;
+          continue;
+        }
+
+        if (ch === '$' && !inCode && !inParenMath) {
+          if (dollarDelim === 0) {
+            if (next === '$') { dollarDelim = 2; cur += '$$'; i++; continue; }
+            dollarDelim = 1;
+            cur += '$';
+            continue;
+          } else if (dollarDelim === 2 && next === '$') {
+            dollarDelim = 0;
+            cur += '$$';
+            i++;
+            continue;
+          } else if (dollarDelim === 1) {
+            dollarDelim = 0;
+            cur += '$';
+            continue;
+          }
+        }
+
+        if (ch === '|' && !inCode && dollarDelim === 0 && !inParenMath) {
+          cells.push(cur.trim());
+          cur = '';
+          continue;
+        }
+
+        cur += ch;
+      }
+      cells.push(cur.trim());
+      return cells;
+    }
+
+    function isTableSeparator(rowLine) {
+      if (!rowLine || !rowLine.includes('|')) return false;
+      const cells = splitMarkdownTableRow(rowLine, true);
+      return cells.length > 0 && cells.every(c => /^:?-{2,}:?$/.test(c));
     }
 
     // =====================================================
@@ -2804,15 +2997,15 @@ flowchart TD
     let currentOutline = [];
     const katexCache = new Map();
     const KATEX_CACHE_MAX = 1200;
+    const hljsCache = new Map();
+    const HLJS_CACHE_MAX = 200;
 
     function renderMarkdownAndLatex(rawText, options = { updateGlobals: true }) {
       const updateGlobals = options && options.updateGlobals !== false;
       const localMermaidQueue = [];
-      const localOutline = [];
 
       if (updateGlobals) {
         mermaidQueue = localMermaidQueue;
-        currentOutline = localOutline;
       }
 
       if (!rawText || !rawText.trim()) {
@@ -2896,13 +3089,36 @@ flowchart TD
           const converted = convertAiMathSpan(inner, true);
           return converted !== null ? converted : full;
         });
+      }
 
-        // 2b. Wrap un-backticked quoted OCR formulas: "D = \frac{\Delta E}{\Delta m} ..." or “...”
+      // 2.2 Stash remaining inline backtick code spans BEFORE quoted-OCR & math extraction
+      // so `$HOME` and `$PATH` or `\ce{H2O}` inside code are never hijacked as KaTeX math
+      const preInlineCodeStash = [];
+      normalized = normalized.replace(/`([^`\r\n]+?)`/g, (_, code) => {
+        const idx = preInlineCodeStash.length;
+        preInlineCodeStash.push(code);
+        return `@@PRECODE-${idx}@@`;
+      });
+
+      // 2b. Wrap un-backticked quoted OCR formulas: "D = \frac{\Delta E}{\Delta m} ..." or “...”
+      if (window.InkTeX.isPluginEnabled('ai-fixer')) {
+        const LATEX_SCRIPT_RE2 = /[A-Za-z0-9)\]}]\s*(?:\^\{[^}\r\n]+\}|_\{[^}\r\n]+\})|\b[A-Za-z]_[A-Za-z0-9]\b(?=[^`\r\n]*=)/;
+        const CODE_NOISE_RE2 = /[A-Za-z]:\\|https?:\/\/|\b(?:function|const|let|var|return|import|export|class|console\.log|document\.|window\.)\b/;
         normalized = normalized.replace(/(["\u201c])([^"\u201d\r\n]+?)(["\u201d])/g, (full, openQ, inner, closeQ) => {
           if ((openQ === '"' && closeQ !== '"') || (openQ === '\u201c' && closeQ !== '\u201d')) return full;
-          if (inner.includes('$') || inner.includes('\\(') || inner.includes('\\[')) return full;
-          const converted = convertAiMathSpan(`${openQ}${inner}${closeQ}`, false);
-          return converted !== null ? converted : full;
+          if (inner.includes('$') || inner.includes('\\(') || inner.includes('\\[') || inner.includes('@@PRECODE-')) return full;
+          if (CODE_NOISE_RE2.test(inner)) return full;
+          const core = inner.trim();
+          if (!core || (!LATEX_MATH_CMD_RE.test(core) && !LATEX_SCRIPT_RE2.test(core))) return full;
+          const arrowSplit = core.match(/^([A-Za-zÀ-ÖØ-öø-ÿ0-9'’\-\s(),]{3,}?\s+)(\\(?:Rightarrow|Leftarrow|Leftrightarrow|rightarrow|leftarrow|leftrightarrow|to|mapsto)\b[\s\S]+)$/);
+          if (arrowSplit && !/[\\=]/.test(arrowSplit[1])) {
+            return `${openQ}${arrowSplit[1]}$${arrowSplit[2].trim()}$${closeQ}`;
+          }
+          const proseEqSplit = core.match(/^((?:[A-Za-zÀ-ÖØ-öø-ÿ'’\-]+\s+){2,})([A-Za-z0-9\\][A-Za-z0-9_^{}()[\]\\+-]*\s*=[\s\S]+)$/);
+          if (proseEqSplit && !/[\\=]/.test(proseEqSplit[1])) {
+            return `${openQ}${proseEqSplit[1]}$${proseEqSplit[2].trim()}$${closeQ}`;
+          }
+          return `${openQ}$${core}$${closeQ}`;
         });
       }
 
@@ -2926,13 +3142,20 @@ flowchart TD
 
       function storeMath(expr, displayMode) {
         const id = `@@KATEXTOKEN-${mathStash.length}@@`;
-        let cleaned = cleanInnerMath(expr, customMacroNames);
-        if (!useMhchem && /\\ce\{/.test(cleaned)) {
-          cleaned = cleaned.replace(/\\ce\{([^}]+)\}/g, '\\text{$1}');
+        let restoredExpr = expr.replace(/@@ESCAPEDDOLLAR@@/g, '\\$');
+        let cleaned = cleanInnerMath(restoredExpr, customMacroNames);
+        if (!useMhchem && /\\(?:ce|pu)\{/.test(cleaned)) {
+          let prevC;
+          let guardC = 0;
+          do {
+            prevC = cleaned;
+            cleaned = cleaned.replace(/\\(?:ce|pu)\{((?:[^{}]|\{[^{}]*\})+)\}/g, '\\text{$1}');
+            guardC++;
+          } while (cleaned !== prevC && guardC < 5);
         }
-        let rendered = escapeHtml(expr);
+        let rendered = escapeHtml(restoredExpr);
         if (window.katex) {
-          const cacheKey = `${displayMode ? 'D' : 'I'}|${macroSig}|${cleaned}`;
+          const cacheKey = `${displayMode ? 'D' : 'I'}|${useMhchem ? 'C1' : 'C0'}|${macroSig}|${cleaned}`;
           if (katexCache.has(cacheKey)) {
             rendered = katexCache.get(cacheKey);
           } else {
@@ -2943,10 +3166,10 @@ flowchart TD
                 strict: false,
                 minRuleThickness: 0.06,
                 macros: { ...customMacros },
-                trust: (ctx) => ['\\url', '\\href'].includes(ctx.command) && ['http', 'https', '_relative'].includes(ctx.protocol)
+                trust: (ctx) => ['\\url', '\\href'].includes(ctx.command) && ['http', 'https'].includes(ctx.protocol)
               });
               if (katexCache.size >= KATEX_CACHE_MAX) {
-                katexCache.clear();
+                katexCache.delete(katexCache.keys().next().value);
               }
               katexCache.set(cacheKey, rendered);
             } catch (e) {
@@ -3029,14 +3252,14 @@ flowchart TD
           return tok;
         });
 
-        // Safe Markdown Images ![alt](https://...) & Links [label](https://...) with URL stashed
+        // Safe Markdown Images ![alt](https://...) & Links [label](https://...) supporting balanced parentheses in URLs
         const safeUrls = [];
-        safe = safe.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g, (_, alt, url) => {
+        safe = safe.replace(/!\[([^\]]*)\]\((https?:\/\/(?:[^\s()]+|\([^\s()]*\))+)\)/g, (_, alt, url) => {
           const urlTok = `@@SAFEURL-${safeUrls.length}@@`;
           safeUrls.push(url);
-          return `<img src="${urlTok}" alt="${alt}" class="inktex-img" loading="lazy" />`;
+          return `<img src="${urlTok}" alt="${alt}" class="inktex-img" loading="lazy" referrerpolicy="no-referrer" />`;
         });
-        safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) => {
+        safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/(?:[^\s()]+|\([^\s()]*\))+)\)/g, (_, label, url) => {
           const urlTok = `@@SAFEURL-${safeUrls.length}@@`;
           safeUrls.push(url);
           return `<a href="${urlTok}" target="_blank" rel="noopener noreferrer" class="inktex-link">${label}</a>`;
@@ -3046,16 +3269,16 @@ flowchart TD
         safe = safe.replace(/==([^=]+?)==/g, '<span class="hl-jaune">$1</span>');
         safe = safe.replace(/~~([^~]+?)~~/g, '<span class="ink-strike">$1</span>');
 
-        // Subscript ~sub~ and Superscript ^sup^ (outside math/code)
-        safe = safe.replace(/(?<!~)~([^~\s]+?)~(?!~)/g, '<sub>$1</sub>');
+        // Subscript ~sub~ and Superscript ^sup^ (outside math/code; zero lookbehind for Safari < 16.4)
+        safe = safe.replace(/(^|[^~])~([^~\s]+?)~(?!~)/g, '$1<sub>$2</sub>');
         safe = safe.replace(/\^([^^\s]+?)\^/g, '<sup>$1</sup>');
 
         // Bold-italic ***...***, Bold **...** / __...__, and Italic *...* / _..._
         safe = safe.replace(/\*\*\*([^*]+?)\*\*\*/g, '<strong><em>$1</em></strong>');
         safe = safe.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
-        safe = safe.replace(/(?<![\w\\])__([^_\n]+?)__(?!\w)/g, '<strong>$1</strong>');
+        safe = safe.replace(/(^|[^\w\\])__([^_\n]+?)__(?!\w)/g, '$1<strong>$2</strong>');
         safe = safe.replace(/\*([^*]+?)\*/g, '<em>$1</em>');
-        safe = safe.replace(/(?<![\w\\])_([^_\n]+?)_(?!\w)/g, '<em>$1</em>');
+        safe = safe.replace(/(^|[^\w\\])_([^_\n]+?)_(?!\w)/g, '$1<em>$2</em>');
 
         // Process {size:XX} and {tag}...{/tag} in any nesting order
         const sizePattern = /\{size:(\d+(?:\.\d+)?)\}([\s\S]*?)\{\/size\}/gi;
@@ -3076,13 +3299,19 @@ flowchart TD
           safetyCounter++;
         } while (safe !== prevSafe && safetyCounter < 15);
 
-        // Citation Badges [1], [2]
-        safe = safe.replace(/\[(\d{1,3})\]/g, '<span class="citation-badge">$1</span>');
+        // Citation Badges [1], [2] (controlled by ai-fixer plugin)
+        if (window.InkTeX.isPluginEnabled('ai-fixer')) {
+          safe = safe.replace(/\[(\d{1,3})\]/g, '<span class="citation-badge">$1</span>');
+        }
 
-        // Restore stashed URLs, escaped punctuation, and inline code
+        // Restore stashed URLs, escaped punctuation, and inline code (including pre-stashed backtick code)
         safe = safe.replace(/@@SAFEURL-(\d+)@@/g, (_, idx) => safeUrls[Number(idx)] || '');
         safe = safe.replace(/@@ESCCHAR-(\d+)@@/g, (_, idx) => escapedChars[Number(idx)] || '');
         safe = safe.replace(/@@INLINECODE-(\d+)@@/g, (_, idx) => inlineCodes[Number(idx)] || '');
+        safe = safe.replace(/@@PRECODE-(\d+)@@/g, (_, idx) => {
+          const rawCode = preInlineCodeStash[Number(idx)];
+          return rawCode !== undefined ? `<code class="inktex-code-inline">${escapeHtml(rawCode)}</code>` : '';
+        });
         return safe;
       }
 
@@ -3090,15 +3319,7 @@ flowchart TD
       let taskCounter = 0;
 
       function parseTableCells(rowLine) {
-        let s = rowLine.trim();
-        if (s.startsWith('|')) s = s.slice(1);
-        if (s.endsWith('|') && !s.endsWith('\\|')) s = s.slice(0, -1);
-        return s.split(/(?<!\\)\|/).map(c => c.trim().replace(/\\\|/g, '|'));
-      }
-
-      function isTableSeparator(rowLine) {
-        const cells = parseTableCells(rowLine);
-        return cells.length > 0 && cells.every(c => /^:?-{2,}:?$/.test(c));
+        return splitMarkdownTableRow(rowLine, true);
       }
 
       const CALLOUT_META = {
@@ -3228,9 +3449,6 @@ flowchart TD
               headingText = headingMatch[2];
             }
             const headingId = `sec-${headingSeq++}`;
-            if (depth === 0) {
-              localOutline.push({ id: headingId, level, text: headingText.replace(/\{[^}]+\}/g, '').replace(/\*\*/g, '') });
-            }
             blockHtml.push(`<h${level} id="${headingId}"${alignAttr}>${formatInlineMarkdown(headingText)}</h${level}>`);
             continue;
           }
@@ -3291,7 +3509,8 @@ flowchart TD
           if (itemMatch || ulMatch || olMatch) {
             const listTag = olMatch ? 'ol' : (itemMatch ? (latexListMode || 'ul') : 'ul');
             const indentStr = itemMatch ? itemMatch[1] : (ulMatch ? ulMatch[1] : olMatch[1]);
-            const olStart = olMatch ? (parseInt(olMatch[2], 10) || 1) : 1;
+            const parsedStart = olMatch ? parseInt(olMatch[2], 10) : 1;
+            const olStart = Number.isNaN(parsedStart) ? 1 : parsedStart;
             let content = itemMatch ? itemMatch[2] : (ulMatch ? ulMatch[2] : olMatch[3]);
             const indentSpaces = indentStr.replace(/\t/g, '  ').length;
             const desiredLevel = indentSpaces >= 4 ? 3 : (indentSpaces >= 2 ? 2 : 1);
@@ -3336,7 +3555,7 @@ flowchart TD
       if (window.DOMPurify) {
         finalHtml = window.DOMPurify.sanitize(finalHtml, {
           USE_PROFILES: { html: true },
-          ADD_ATTR: ['style', 'class', 'data-pt-size', 'data-line-idx', 'data-task-idx', 'data-mermaid-idx', 'data-lang', 'target', 'rel', 'type', 'checked', 'start', 'src', 'alt', 'loading']
+          ADD_ATTR: ['style', 'class', 'data-pt-size', 'data-task-idx', 'data-mermaid-idx', 'data-lang', 'target', 'rel', 'type', 'checked', 'start', 'src', 'alt', 'loading', 'referrerpolicy']
         });
       } else {
         finalHtml = sanitizeHtmlFallback(finalHtml);
@@ -3352,6 +3571,7 @@ flowchart TD
       const tpl = document.createElement('template');
       tpl.innerHTML = html;
       const blockedTags = new Set(['SCRIPT', 'IFRAME', 'OBJECT', 'EMBED', 'STYLE', 'LINK', 'META', 'BASE', 'FORM', 'MATH', 'SVG']);
+      const allowedStyleProps = new Set(['text-align', 'font-size', 'line-height']);
       const walk = (node) => {
         for (const child of Array.from(node.childNodes)) {
           if (child.nodeType === 1) {
@@ -3362,10 +3582,24 @@ flowchart TD
             for (const attr of Array.from(child.attributes)) {
               const name = attr.name.toLowerCase();
               const val = (attr.value || '').replace(/[\u0000-\u0020]+/g, '');
-              if (name.startsWith('on') || name === 'srcdoc') {
+              if (name.startsWith('on') || name === 'srcdoc' || name === 'formaction') {
                 child.removeAttribute(attr.name);
-              } else if ((name === 'href' || name === 'src' || name === 'xlink:href') && /^(?:javascript|vbscript|data:text\/html)/i.test(val)) {
+              } else if ((name === 'href' || name === 'src' || name === 'xlink:href') && /^(?:javascript|vbscript|data):/i.test(val)) {
                 child.removeAttribute(attr.name);
+              } else if (name === 'style') {
+                const safeDecls = (attr.value || '')
+                  .split(';')
+                  .map(d => d.trim())
+                  .filter(Boolean)
+                  .filter(decl => {
+                    const idx = decl.indexOf(':');
+                    if (idx === -1) return false;
+                    const prop = decl.slice(0, idx).trim().toLowerCase();
+                    const propVal = decl.slice(idx + 1).trim();
+                    return allowedStyleProps.has(prop) && !/(?:url\s*\(|expression\s*\(|javascript:)/i.test(propVal);
+                  });
+                if (safeDecls.length > 0) child.setAttribute('style', safeDecls.join('; '));
+                else child.removeAttribute('style');
               }
             }
             walk(child);
@@ -3394,8 +3628,75 @@ flowchart TD
 
     // Post-Render Plugins (Mermaid async SVG, Highlight.js, Interactive Checkboxes, Copy Code, Active Recall, Outline)
     let mermaidRenderDebounce = null;
+    let pendingMermaidTask = null;
     const mermaidSvgCache = new Map();
     const MERMAID_CACHE_MAX = 60;
+    const RECALL_SELECTOR = 'strong, .ink-encadre, .ink-encadre-vert, .ink-encadre-bleu, .hl-jaune, .hl-vert, .hl-rose, .hl-bleu, .hl-orange';
+
+    // Single delegated listeners on #readerOutput (zero per-element listener churn)
+    readerOutput.addEventListener('click', async (e) => {
+      const copyBtn = e.target.closest?.('.inktex-copy-code-btn');
+      if (copyBtn) {
+        const codeEl = copyBtn.closest('.inktex-code-wrap')?.querySelector('code');
+        if (!codeEl) return;
+        try {
+          await navigator.clipboard.writeText(codeEl.textContent || '');
+          copyBtn.textContent = 'Copié !';
+          setTimeout(() => { copyBtn.textContent = 'Copier'; }, 1500);
+        } catch (err) {
+          showToast('Copie bloquée par le navigateur');
+        }
+        return;
+      }
+      if (activeRecallMode) {
+        const recallEl = e.target.closest?.(RECALL_SELECTOR);
+        if (recallEl && readerOutput.contains(recallEl)) {
+          const revealed = recallEl.classList.toggle('recall-revealed');
+          recallEl.setAttribute('aria-pressed', String(revealed));
+        }
+      }
+    });
+
+    readerOutput.addEventListener('keydown', (e) => {
+      if (!activeRecallMode) return;
+      if (e.key === 'Enter' || e.key === ' ') {
+        const recallEl = e.target.closest?.(RECALL_SELECTOR);
+        if (recallEl && readerOutput.contains(recallEl)) {
+          e.preventDefault();
+          const revealed = recallEl.classList.toggle('recall-revealed');
+          recallEl.setAttribute('aria-pressed', String(revealed));
+        }
+      }
+    });
+
+    readerOutput.addEventListener('change', (e) => {
+      const cb = e.target.closest?.('.inktex-task-checkbox');
+      if (!cb) return;
+      const targetIdx = parseInt(cb.getAttribute('data-task-idx'), 10);
+      if (isNaN(targetIdx)) return;
+      const lines = rawInput.value.split(/\r?\n/);
+      let seen = 0;
+      let inFence = false;
+      for (let li = 0; li < lines.length; li++) {
+        // Ignore single-line ```code``` spans when tracking multi-line fenced blocks
+        if (/^\s*```(?![^`]*```)/.test(lines[li])) {
+          inFence = !inFence;
+          continue;
+        }
+        if (!inFence && /^\s*(?:>\s*)*[-*•]\s+\[([ xX])\]\s+/.test(lines[li])) {
+          if (seen === targetIdx) {
+            lines[li] = cb.checked
+              ? lines[li].replace(/\[[ ]\]/, '[x]')
+              : lines[li].replace(/\[[xX]\]/, '[ ]');
+            pushHistoryState();
+            rawInput.value = lines.join('\n');
+            updateReader(true);
+            break;
+          }
+          seen++;
+        }
+      }
+    });
 
     function renderOutlineDrawer() {
       if (!outlineList) return;
@@ -3424,68 +3725,99 @@ flowchart TD
       });
     }
 
-    async function runPostRenderPlugins() {
-      // 1. Highlight.js & Copy Code buttons
+    async function renderPendingMermaidItems(pendingWrappers, isNotebook, isDark) {
+      if (!pendingWrappers || pendingWrappers.length === 0 || !window.mermaid) return;
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          htmlLabels: false,
+          look: isNotebook ? 'handDrawn' : 'classic',
+          theme: isNotebook ? 'neutral' : (isDark ? 'dark' : 'default')
+        });
+        for (const item of pendingWrappers) {
+          if (!item.wrap.isConnected) continue;
+          const renderId = `inktex-mmd-${Date.now()}-${item.idx}`;
+          try {
+            const { svg } = await window.mermaid.render(renderId, item.diagramSrc);
+            item.wrap.innerHTML = svg;
+            const svgEl = item.wrap.querySelector('svg');
+            if (svgEl) {
+              try {
+                const bbox = svgEl.getBBox();
+                if (bbox && bbox.width > 0 && bbox.height > 0) {
+                  const pad = 16;
+                  const vx = Math.floor(bbox.x - pad);
+                  const vy = Math.floor(bbox.y - pad);
+                  const vw = Math.ceil(bbox.width + pad * 2);
+                  const vh = Math.ceil(bbox.height + pad * 2);
+                  svgEl.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
+                  svgEl.setAttribute('width', String(vw));
+                  svgEl.setAttribute('height', String(vh));
+                  svgEl.style.maxWidth = '100%';
+                  svgEl.style.height = 'auto';
+                  svgEl.style.overflow = 'visible';
+                }
+              } catch (bboxErr) {}
+            }
+            if (mermaidSvgCache.size >= MERMAID_CACHE_MAX) {
+              mermaidSvgCache.delete(mermaidSvgCache.keys().next().value);
+            }
+            mermaidSvgCache.set(item.cacheKey, item.wrap.innerHTML);
+          } catch (err) {
+            item.wrap.innerHTML = `<div class="text-xs text-rose-400 font-mono p-2">Erreur de syntaxe Mermaid : ${escapeHtml(err.message || String(err))}</div>`;
+          }
+        }
+      } catch (e) {
+        console.warn('Mermaid init/render error:', e);
+      }
+    }
+
+    async function flushPendingMermaid() {
+      if (pendingMermaidTask) {
+        const task = pendingMermaidTask;
+        clearTimeout(mermaidRenderDebounce);
+        pendingMermaidTask = null;
+        await renderPendingMermaidItems(task.pendingWrappers, task.isNotebook, task.isDark);
+      }
+    }
+
+    async function runPostRenderPlugins(options = { offlineFallback: false }) {
+      // 1. Highlight.js (with FIFO cache to avoid re-tokenizing unchanged code blocks on every keystroke)
       if (window.hljs && window.InkTeX.isPluginEnabled('code-highlight')) {
         readerOutput.querySelectorAll('.inktex-code-wrap pre code').forEach(block => {
-          try { window.hljs.highlightElement(block); } catch (e) {}
-        });
-      }
-
-      readerOutput.querySelectorAll('.inktex-copy-code-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const codeEl = btn.closest('.inktex-code-wrap')?.querySelector('code');
-          if (!codeEl) return;
+          const lang = (block.getAttribute('data-lang') || '').trim();
+          const code = block.textContent || '';
+          const hKey = `${lang}|${code}`;
+          if (hljsCache.has(hKey)) {
+            block.innerHTML = hljsCache.get(hKey);
+            block.classList.add('hljs');
+            return;
+          }
           try {
-            await navigator.clipboard.writeText(codeEl.textContent || '');
-            btn.textContent = 'Copié !';
-            setTimeout(() => { btn.textContent = 'Copier'; }, 1500);
-          } catch (e) {
-            showToast('Copie bloquée par le navigateur');
-          }
-        });
-      });
-
-      // 2. Interactive Task Checkboxes (tracks task order outside fenced code blocks)
-      readerOutput.querySelectorAll('.inktex-task-checkbox').forEach(cb => {
-        cb.addEventListener('change', (e) => {
-          const targetIdx = parseInt(e.target.getAttribute('data-task-idx'), 10);
-          if (isNaN(targetIdx)) return;
-          const lines = rawInput.value.split(/\r?\n/);
-          let seen = 0;
-          let inFence = false;
-          for (let li = 0; li < lines.length; li++) {
-            if (/^\s*```/.test(lines[li])) {
-              inFence = !inFence;
-              continue;
+            window.hljs.highlightElement(block);
+            if (hljsCache.size >= HLJS_CACHE_MAX) {
+              hljsCache.delete(hljsCache.keys().next().value);
             }
-            if (!inFence && /^\s*(?:>\s*)*[-*•]\s+\[([ xX])\]\s+/.test(lines[li])) {
-              if (seen === targetIdx) {
-                lines[li] = e.target.checked
-                  ? lines[li].replace(/\[[ ]\]/, '[x]')
-                  : lines[li].replace(/\[[xX]\]/, '[ ]');
-                rawInput.value = lines.join('\n');
-                updateReader(true);
-                break;
-              }
-              seen++;
-            }
-          }
-        });
-      });
-
-      // 3. Active Recall Click-to-Reveal
-      if (activeRecallMode) {
-        readerOutput.querySelectorAll('strong, .ink-encadre, .ink-encadre-vert, .ink-encadre-bleu, .hl-jaune, .hl-vert, .hl-rose, .hl-bleu, .hl-orange').forEach(el => {
-          el.addEventListener('click', () => el.classList.toggle('recall-revealed'));
+            hljsCache.set(hKey, block.innerHTML);
+          } catch (e) {}
         });
       }
 
-      // 4. Outline Drawer
+      // 2. Active Recall Keyboard Accessibility attributes (events handled via delegation)
+      if (activeRecallMode) {
+        readerOutput.querySelectorAll(RECALL_SELECTOR).forEach(el => {
+          el.setAttribute('tabindex', '0');
+          el.setAttribute('role', 'button');
+          el.setAttribute('aria-pressed', String(el.classList.contains('recall-revealed')));
+        });
+      }
+
+      // 3. Outline Drawer
       currentOutline = buildOutlineFromDom();
       renderOutlineDrawer();
 
-      // 5. Mermaid v11 Diagrams (Hand-drawn look in Cahier Manuscrit, cached for flicker-free typing)
+      // 4. Mermaid v11 Diagrams (Hand-drawn look in Cahier Manuscrit, cached for flicker-free typing)
       if (mermaidQueue.length > 0 && window.InkTeX.isPluginEnabled('mermaid')) {
         const isNotebook = currentTheme === 'theme-notebook';
         const isDark = currentTheme === 'theme-dark';
@@ -3507,56 +3839,19 @@ flowchart TD
 
         if (pendingWrappers.length > 0 && window.mermaid) {
           clearTimeout(mermaidRenderDebounce);
+          pendingMermaidTask = { pendingWrappers, isNotebook, isDark };
           mermaidRenderDebounce = setTimeout(async () => {
-            try {
-              window.mermaid.initialize({
-                startOnLoad: false,
-                securityLevel: 'strict',
-                htmlLabels: false,
-                look: isNotebook ? 'handDrawn' : 'classic',
-                theme: isNotebook ? 'neutral' : (isDark ? 'dark' : 'default')
-              });
-              for (const item of pendingWrappers) {
-                if (!item.wrap.isConnected) continue;
-                const renderId = `inktex-mmd-${Date.now()}-${item.idx}`;
-                try {
-                  const { svg } = await window.mermaid.render(renderId, item.diagramSrc);
-                  item.wrap.innerHTML = svg;
-                  const svgEl = item.wrap.querySelector('svg');
-                  if (svgEl) {
-                    try {
-                      const bbox = svgEl.getBBox();
-                      if (bbox && bbox.width > 0 && bbox.height > 0) {
-                        const pad = 16;
-                        const vx = Math.floor(bbox.x - pad);
-                        const vy = Math.floor(bbox.y - pad);
-                        const vw = Math.ceil(bbox.width + pad * 2);
-                        const vh = Math.ceil(bbox.height + pad * 2);
-                        svgEl.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
-                        svgEl.setAttribute('width', String(vw));
-                        svgEl.setAttribute('height', String(vh));
-                        svgEl.style.maxWidth = '100%';
-                        svgEl.style.height = 'auto';
-                        svgEl.style.overflow = 'visible';
-                      }
-                    } catch (bboxErr) {}
-                  }
-                  if (mermaidSvgCache.size >= MERMAID_CACHE_MAX) {
-                    mermaidSvgCache.clear();
-                  }
-                  mermaidSvgCache.set(item.cacheKey, item.wrap.innerHTML);
-                } catch (err) {
-                  item.wrap.innerHTML = `<div class="text-xs text-rose-400 font-mono p-2">Erreur de syntaxe Mermaid : ${escapeHtml(err.message || String(err))}</div>`;
-                }
-              }
-            } catch (e) {
-              console.warn('Mermaid init/render error:', e);
-            }
+            pendingMermaidTask = null;
+            await renderPendingMermaidItems(pendingWrappers, isNotebook, isDark);
           }, 120);
+        } else if (pendingWrappers.length > 0 && options && options.offlineFallback && !window.mermaid) {
+          pendingWrappers.forEach(item => {
+            item.wrap.innerHTML = `<pre class="w-full text-left text-xs font-mono opacity-80 whitespace-pre-wrap p-2">${escapeHtml(item.diagramSrc)}</pre>`;
+          });
         }
       }
 
-      // 6. External Plugins afterRender
+      // 5. External Plugins afterRender
       for (const ext of registeredExternalPlugins) {
         if (window.InkTeX.isPluginEnabled(ext.id) && typeof ext.afterRender === 'function') {
           try { ext.afterRender(readerOutput, { theme: currentTheme }); } catch (e) { console.warn(e); }
@@ -3565,23 +3860,30 @@ flowchart TD
     }
 
     let readerInputDebounce = null;
-    function updateReader(recordHistory = true) {
+    function updateReader(recordHistory = true, immediateSave = !recordHistory) {
       clearTimeout(readerInputDebounce);
       readerOutput.innerHTML = renderMarkdownAndLatex(rawInput.value);
       runPostRenderPlugins();
-      saveToLocalStorage();
+      if (immediateSave) {
+        clearTimeout(storageSaveDebounce);
+        saveToLocalStorage();
+      } else {
+        scheduleSaveToLocalStorage();
+      }
       if (recordHistory) {
-        clearTimeout(window._historyDebounce);
-        window._historyDebounce = setTimeout(() => {
+        clearTimeout(historyDebounce);
+        historyDebounce = setTimeout(() => {
           pushHistoryState();
         }, 300);
       }
     }
 
     /**
-     * Replaces a range in #rawInput while preserving native Ctrl+Z undo stack when possible.
+     * Replaces a range in #rawInput while flushing pending undo snapshots and preserving native Ctrl+Z when possible.
      */
     function replaceEditorRange(start, end, replacement, newSelStart = null, newSelEnd = null, preserveFocus = true) {
+      clearTimeout(historyDebounce);
+      pushHistoryState();
       const prevActive = document.activeElement;
       const canExec = rawInput.offsetParent !== null && typeof document.execCommand === 'function';
       let usedExec = false;
@@ -3620,9 +3922,10 @@ flowchart TD
     rawInput.addEventListener('input', () => {
       updateCursorLineCol();
       clearTimeout(readerInputDebounce);
+      const delay = rawInput.value.length > 8000 ? 220 : 110;
       readerInputDebounce = setTimeout(() => {
-        updateReader(true);
-      }, 110);
+        updateReader(true, false);
+      }, delay);
     });
 
     // Tab indentation in textarea (undoable via native Ctrl+Z)
@@ -3696,8 +3999,6 @@ flowchart TD
       const end = rawInput.selectionEnd || 0;
       const pos = start + text.length - cursorBackOffset;
       replaceEditorRange(start, end, text, pos, pos, false);
-      rawInput.focus();
-      rawInput.setSelectionRange(pos, pos);
       updateReader(true);
     }
 
@@ -3842,6 +4143,7 @@ flowchart TD
     document.getElementById('btnSyncScroll')?.addEventListener('click', (e) => {
       syncScrollEnabled = !syncScrollEnabled;
       const btn = e.currentTarget;
+      btn.setAttribute('aria-pressed', String(syncScrollEnabled));
       btn.classList.toggle('bg-sky-500/20', syncScrollEnabled);
       btn.classList.toggle('text-sky-300', syncScrollEnabled);
       btn.classList.toggle('border-sky-500/40', syncScrollEnabled);
@@ -3863,15 +4165,19 @@ flowchart TD
       }
     });
 
-    // Draggable Split Resizer (Mouse + iPad Touch / Apple Pencil)
+    // Draggable Split Resizer (Mouse + iPad Touch / Apple Pencil + Keyboard Arrow Keys)
     const splitResizer = document.getElementById('splitResizer');
     if (splitResizer) {
       let draggingSplit = false;
+      let currentEditorWidthPct = 43;
+      const setSplitPct = (pct) => {
+        currentEditorWidthPct = Math.max(25, Math.min(68, pct));
+        editorContainer.style.setProperty('--editor-width', `${currentEditorWidthPct.toFixed(1)}%`);
+      };
       const updateSplitFromClientX = (clientX) => {
         const rect = workspaceGrid.getBoundingClientRect();
         if (!rect.width) return;
-        const pct = Math.max(25, Math.min(68, ((clientX - rect.left) / rect.width) * 100));
-        editorContainer.style.setProperty('--editor-width', `${pct.toFixed(1)}%`);
+        setSplitPct(((clientX - rect.left) / rect.width) * 100);
       };
       splitResizer.addEventListener('mousedown', (e) => {
         e.preventDefault();
@@ -3899,7 +4205,12 @@ flowchart TD
         draggingSplit = false;
       }, { passive: true });
       splitResizer.addEventListener('dblclick', () => {
-        editorContainer.style.setProperty('--editor-width', '43%');
+        setSplitPct(43);
+      });
+      splitResizer.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); setSplitPct(currentEditorWidthPct - 3); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); setSplitPct(currentEditorWidthPct + 3); }
+        else if (e.key === 'Home' || e.key === '0') { e.preventDefault(); setSplitPct(43); }
       });
     }
 
@@ -3932,6 +4243,7 @@ flowchart TD
         noRedMargin = !noRedMargin;
         readerCard.classList.toggle('no-red-margin', noRedMargin);
         btnToggleMargin.classList.toggle('opacity-50', noRedMargin);
+        btnToggleMargin.setAttribute('aria-pressed', String(noRedMargin));
         saveToLocalStorage();
         showToast(noRedMargin ? 'Marge rouge masquée' : 'Marge rouge affichée');
       });
@@ -3942,6 +4254,7 @@ flowchart TD
         snapLinesEnabled = !snapLinesEnabled;
         readerCard.classList.toggle('snap-lines', snapLinesEnabled);
         btnSnapLines.classList.toggle('bg-sky-500/25', snapLinesEnabled);
+        btnSnapLines.setAttribute('aria-pressed', String(snapLinesEnabled));
         saveToLocalStorage();
         showToast(snapLinesEnabled ? 'Texte aligné sur les lignes du cahier' : 'Interligne libre');
       });
@@ -3954,34 +4267,32 @@ flowchart TD
       currentWorkspaceView = normalizedView;
       const layoutBtnText = document.getElementById('layoutBtnText');
       isFullReaderMode = (normalizedView === 'reader');
+      workspaceGrid.classList.toggle('full-reader', isFullReaderMode);
 
       if (normalizedView === 'reader') {
         editorContainer.classList.add('hidden');
         editorContainer.classList.remove('h-[calc(100dvh-110px)]', 'min-h-[260px]');
         editorContainer.classList.add('h-[300px]', 'sm:h-[380px]');
         if (splitResizer) splitResizer.classList.add('lg:hidden');
-        readerContainer.classList.remove('hidden', 'lg:col-span-7');
-        readerContainer.classList.add('lg:col-span-12');
+        readerContainer.classList.remove('hidden');
         if (layoutBtnText) layoutBtnText.textContent = 'Afficher l’Éditeur';
       } else if (normalizedView === 'editor') {
         editorContainer.classList.remove('hidden', 'h-[300px]', 'sm:h-[380px]');
         editorContainer.classList.add('h-[calc(100dvh-110px)]', 'min-h-[260px]');
         if (splitResizer) splitResizer.classList.remove('lg:hidden');
         readerContainer.classList.add('hidden');
-        readerContainer.classList.remove('lg:col-span-12');
-        readerContainer.classList.add('lg:col-span-7');
         if (layoutBtnText) layoutBtnText.textContent = 'Mode Lecture Plein Écran';
       } else {
         editorContainer.classList.remove('hidden', 'h-[calc(100dvh-110px)]', 'min-h-[260px]');
         editorContainer.classList.add('h-[300px]', 'sm:h-[380px]');
         if (splitResizer) splitResizer.classList.remove('lg:hidden');
-        readerContainer.classList.remove('hidden', 'lg:col-span-12');
-        readerContainer.classList.add('lg:col-span-7');
+        readerContainer.classList.remove('hidden');
         if (layoutBtnText) layoutBtnText.textContent = 'Mode Lecture Plein Écran';
       }
 
       document.querySelectorAll('.mob-view-btn').forEach((btn) => {
         const isActive = btn.getAttribute('data-mob-view') === normalizedView;
+        btn.setAttribute('aria-pressed', String(isActive));
         btn.className = isActive
           ? 'mob-view-btn py-1.5 px-2 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 transition cursor-pointer truncate'
           : 'mob-view-btn py-1.5 px-2 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer truncate';
@@ -4062,6 +4373,7 @@ flowchart TD
     function setRibbonPinnedState(pinned, shouldSave = true) {
       isRibbonPinned = !!pinned;
       if (btnPinRibbon) {
+        btnPinRibbon.setAttribute('aria-pressed', String(isRibbonPinned));
         btnPinRibbon.classList.toggle('bg-sky-500/25', isRibbonPinned);
         btnPinRibbon.classList.toggle('border-sky-500/60', isRibbonPinned);
         btnPinRibbon.classList.toggle('text-sky-200', isRibbonPinned);
@@ -4096,7 +4408,9 @@ flowchart TD
 
     function applyThemeSelection(selectedTheme, shouldSave = true) {
       document.querySelectorAll('.theme-btn').forEach((b) => {
-        if (b.getAttribute('data-theme') === selectedTheme) {
+        const isSelected = b.getAttribute('data-theme') === selectedTheme;
+        b.setAttribute('aria-pressed', String(isSelected));
+        if (isSelected) {
           b.className = 'theme-btn px-2 sm:px-3 py-1.5 sm:py-1 rounded-lg text-[11px] sm:text-xs font-medium text-center truncate bg-sky-500/20 text-sky-300 border border-sky-500/40 transition cursor-pointer';
         } else {
           b.className = 'theme-btn px-2 sm:px-3 py-1.5 sm:py-1 rounded-lg text-[11px] sm:text-xs font-medium text-center truncate bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-zinc-200 transition cursor-pointer';
@@ -4392,6 +4706,19 @@ flowchart TD
       }
     }
 
+    function isInsideRawSyntax(raw, startIdx, endIdx) {
+      // Avoid corrupting LaTeX commands (\text, \alpha) or InkTeX tags ({rouge}, {/rouge}, {size:18}, {align:center})
+      if (startIdx > 0 && raw[startIdx - 1] === '\\') return true;
+      const lineStart = raw.lastIndexOf('\n', Math.max(0, startIdx - 1)) + 1;
+      const lineEndIdx = raw.indexOf('\n', endIdx);
+      const beforeOnLine = raw.slice(lineStart, startIdx);
+      const afterOnLine = raw.slice(endIdx, lineEndIdx === -1 ? raw.length : lineEndIdx);
+      if (/\{\/?[a-zA-Z0-9_:-]*$/.test(beforeOnLine) && /^[a-zA-Z0-9_:-]*\}/.test(afterOnLine)) {
+        return true;
+      }
+      return false;
+    }
+
     function findPhraseBoundsInRaw(plainPhrase, targetRange = null) {
       if (!plainPhrase) return null;
       const raw = rawInput.value;
@@ -4399,28 +4726,33 @@ flowchart TD
       let start = -1;
       let end = -1;
 
-      // Locate the N-th exact occurrence matching the user's selected instance in the preview
+      // Locate the N-th exact occurrence outside {tag} / \cmd syntax tokens
       let searchFrom = 0;
       let matchCount = 0;
       let lastFound = -1;
       while (true) {
         const found = raw.indexOf(plainPhrase, searchFrom);
         if (found === -1) break;
+        const foundEnd = found + plainPhrase.length;
+        if (isInsideRawSyntax(raw, found, foundEnd)) {
+          searchFrom = found + 1;
+          continue;
+        }
         lastFound = found;
         if (matchCount === targetOcc) {
           start = found;
-          end = found + plainPhrase.length;
+          end = foundEnd;
           break;
         }
         matchCount++;
-        searchFrom = found + plainPhrase.length;
+        searchFrom = foundEnd;
       }
       if (start === -1 && lastFound !== -1) {
         start = lastFound;
         end = lastFound + plainPhrase.length;
       }
 
-      // Fallback: match phrase even when raw markdown has inline markers (**, *, ==, ~~, {tag}) inside it
+      // Fallback A: match phrase even when raw markdown has inline markers (**, *, ==, ~~, {tag}) inside it
       if (start === -1 && plainPhrase.length >= 2 && plainPhrase.length <= 240) {
         try {
           const escToken = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -4445,6 +4777,36 @@ flowchart TD
             if (start === -1 && lastMatch) {
               start = lastMatch.index;
               end = lastMatch.index + lastMatch[0].length;
+            }
+          }
+        } catch (e) {}
+      }
+
+      // Fallback B: preview selection spans inline KaTeX formulas (replace .katex nodes with math regex gap)
+      if (start === -1 && targetRange && readerOutput && readerOutput.contains(targetRange.commonAncestorContainer)) {
+        try {
+          const frag = targetRange.cloneContents();
+          const katexNodes = frag.querySelectorAll('.katex');
+          if (katexNodes.length > 0 && katexNodes.length <= 6) {
+            frag.querySelectorAll('.katex-mathml, [style*="color:transparent"]').forEach(n => n.remove());
+            katexNodes.forEach(kn => kn.replaceWith(document.createTextNode(' @@MATHGAP@@ ')));
+            const skeleton = (frag.textContent || '').replace(/\u200b/g, '').trim();
+            const plainOnly = skeleton.replace(/@@MATHGAP@@/g, '').replace(/\s+/g, '');
+            if (plainOnly.length >= 3 && skeleton.length <= 260) {
+              const escToken = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              const inlineGap = `(?:\\*\\*\\*|\\*\\*|\\*|__|_|==|~~|\\{(?:\\/?(?:${ALL_CUSTOM_TAG_NAMES}|size(?::\\d+(?:\\.\\d+)?)?))\\}|\\s)*`;
+              const mathPattern = `(?:\\$\\$[\\s\\S]+?\\$\\$|\\\\\\[[\\s\\S]+?\\\\\\]|\\\\\\([\\s\\S]+?\\\\\\)|\\$(?!\\$)[^$\\n]+?\\$|\\\\(?:ce|pu)\\{(?:[^{}]|\\{[^{}]*\\})+\\})`;
+              const tokens = skeleton.split(/\s+/).filter(Boolean);
+              const pattern = tokens.map(tok => tok === '@@MATHGAP@@' ? mathPattern : escToken(tok)).join(inlineGap);
+              const re = new RegExp(pattern, 'g');
+              const m = re.exec(raw);
+              if (m) {
+                start = m.index;
+                end = m.index + m[0].length;
+                if (raw.slice(0, start).endsWith('**') && ((m[0].match(/\*\*/g) || []).length % 2 === 1)) {
+                  start -= 2;
+                }
+              }
             }
           }
         } catch (e) {}
@@ -4563,10 +4925,27 @@ flowchart TD
 
       if (typeof start === 'number' && typeof end === 'number') {
         let replacement;
-        if (action === 'bold' && segment.startsWith('**') && segment.endsWith('**') && segment.length > 4) {
-          replacement = segment.slice(2, -2);
-        } else if (action === 'italic' && segment.startsWith('*') && segment.endsWith('*') && !segment.startsWith('**')) {
-          replacement = segment.slice(1, -1);
+        let isRemoved = false;
+        if (action === 'bold') {
+          if (segment.startsWith('**') && segment.endsWith('**') && segment.length > 4) {
+            replacement = segment.slice(2, -2);
+            isRemoved = true;
+          } else if (/\*\*([^*]+?)\*\*/.test(segment)) {
+            replacement = segment.replace(/\*\*([^*]+?)\*\*/g, '$1');
+            isRemoved = true;
+          } else {
+            replacement = `**${segment}**`;
+          }
+        } else if (action === 'italic') {
+          if (segment.startsWith('*') && segment.endsWith('*') && !segment.startsWith('**') && segment.length > 2) {
+            replacement = segment.slice(1, -1);
+            isRemoved = true;
+          } else if (/(^|[^*])\*([^*\n]+?)\*(?!\*)/.test(segment)) {
+            replacement = segment.replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g, '$1$2');
+            isRemoved = true;
+          } else {
+            replacement = `*${segment}*`;
+          }
         } else {
           replacement = `${marker}${segment}${marker}`;
         }
@@ -4578,7 +4957,7 @@ flowchart TD
         savedSelectionState.editorEnd = start + replacement.length;
         if (document.activeElement === rawInput) rawInput.setSelectionRange(start, start + replacement.length);
         floatingPenPopup.classList.add('hidden');
-        showToast(action === 'bold' ? 'Gras appliqué !' : 'Italique appliqué !');
+        showToast(action === 'bold' ? (isRemoved ? 'Gras retiré !' : 'Gras appliqué !') : (isRemoved ? 'Italique retiré !' : 'Italique appliqué !'));
         return;
       }
 
@@ -4590,6 +4969,15 @@ flowchart TD
       bindPress(btn, () => applyWordTextAction(btn.getAttribute('data-word-action')));
     });
 
+    function applyAlignToLine(rawLine, align) {
+      const cleanLine = rawLine.replace(/^(\s*(?:[-*•]|\\item|\d+\.)\s+)?\{align:(?:left|center|right)\}\s*/i, '$1');
+      const listPrefix = cleanLine.match(/^(\s*(?:[-*•]|\\item|\d+\.)\s+)(.*)$/);
+      if (listPrefix) {
+        return align === 'left' ? `${listPrefix[1]}${listPrefix[2]}` : `${listPrefix[1]}{align:${align}} ${listPrefix[2]}`;
+      }
+      return align === 'left' ? cleanLine : `{align:${align}} ${cleanLine}`;
+    }
+
     document.querySelectorAll('.align-btn').forEach((btn) => {
       bindPress(btn, () => {
         const align = btn.getAttribute('data-align');
@@ -4598,8 +4986,7 @@ flowchart TD
           const lineStart = rawInput.value.lastIndexOf('\n', Math.max(0, pos - 1)) + 1;
           let lineEnd = rawInput.value.indexOf('\n', pos);
           if (lineEnd === -1) lineEnd = rawInput.value.length;
-          let line = rawInput.value.substring(lineStart, lineEnd).replace(/^\{align:(left|center|right)\}\s*/i, '');
-          const updatedLine = align === 'left' ? line : `{align:${align}} ${line}`;
+          const updatedLine = applyAlignToLine(rawInput.value.substring(lineStart, lineEnd), align);
           replaceEditorRange(lineStart, lineEnd, updatedLine, lineStart, lineStart + updatedLine.length, document.activeElement !== rawInput);
           updateReader(false);
           pushHistoryState();
@@ -4609,13 +4996,16 @@ flowchart TD
         const searchSnippet = savedSelectionState.previewText || savedSelectionState.lastBlockText;
         if (searchSnippet) {
           const lines = rawInput.value.split(/\r?\n/);
-          const matchedLineIdx = lines.findIndex(l => l.includes(searchSnippet.slice(0, Math.min(28, searchSnippet.length))));
+          const probe = searchSnippet.slice(0, Math.min(28, searchSnippet.length)).trim();
+          const stripSyntax = (s) => s
+            .replace(/^\s*(?:[-*•]|\\item|\d+\.|#{1,6}|>\s*)\s+/, '')
+            .replace(/^\{align:(?:left|center|right)\}\s*/i, '')
+            .replace(new RegExp(`\\{(?:\\/?(?:${ALL_CUSTOM_TAG_NAMES}|size(?::\\d+(?:\\.\\d+)?)?))\\}`, 'gi'), '')
+            .replace(/\*\*\*|\*\*|\*|__|==|~~|`/g, '')
+            .trim();
+          const matchedLineIdx = lines.findIndex(l => l.includes(probe) || stripSyntax(l).includes(probe));
           if (matchedLineIdx !== -1) {
-            let cleanLine = lines[matchedLineIdx].replace(/^(\s*[-*•]\s+)?\{align:(left|center|right)\}\s*/i, '$1');
-            const bulletPrefix = cleanLine.match(/^(\s*(?:[-*•]|\\item)\s+)(.*)$/);
-            lines[matchedLineIdx] = bulletPrefix
-              ? (align === 'left' ? `${bulletPrefix[1]}${bulletPrefix[2]}` : `${bulletPrefix[1]}{align:${align}} ${bulletPrefix[2]}`)
-              : (align === 'left' ? cleanLine : `{align:${align}} ${cleanLine}`);
+            lines[matchedLineIdx] = applyAlignToLine(lines[matchedLineIdx], align);
             replaceEditorRange(0, rawInput.value.length, lines.join('\n'), null, null, true);
             updateReader(false);
             pushHistoryState();
@@ -4626,6 +5016,9 @@ flowchart TD
         showToast('Cliquez sur une phrase ou placez le curseur dans l’éditeur');
       });
     });
+
+    let clearAllFormattingArmed = false;
+    let clearAllFormattingTimer = null;
 
     function clearPhraseFormatting() {
       const stripTagsRegex = new RegExp(`\\{(?:${ALL_CUSTOM_TAG_NAMES}|size:\\d+(?:\\.\\d+)?)\\}([\\s\\S]*?)\\{\\/(?:${ALL_CUSTOM_TAG_NAMES}|size)\\}`, 'gi');
@@ -4640,6 +5033,8 @@ flowchart TD
       }
 
       if (typeof start === 'number' && typeof end === 'number' && segment) {
+        clearAllFormattingArmed = false;
+        clearTimeout(clearAllFormattingTimer);
         let cleaned = segment, prev;
         do { prev = cleaned; cleaned = cleaned.replace(stripTagsRegex, '$1'); } while (cleaned !== prev);
         cleaned = cleaned
@@ -4649,7 +5044,7 @@ flowchart TD
           .replace(/==([^=]+?)==/g, '$1')
           .replace(/~~([^~]+?)~~/g, '$1')
           .replace(/\*([^*]+?)\*/g, '$1')
-          .replace(/(?<![\w\\])_([^_\n]+?)_(?!\w)/g, '$1')
+          .replace(/(^|[^\w\\])_([^_\n]+?)_(?!\w)/g, '$1$2')
           .replace(/\\(?:textbf|textit|emph|underline|texttt)\{([^{}]+)\}/g, '$1');
         replaceEditorRange(start, end, cleaned, start, start + cleaned.length, target.source !== 'editor');
         updateReader(false);
@@ -4662,10 +5057,19 @@ flowchart TD
         return;
       }
 
-      if (stripTagsRegex.test(rawInput.value)) {
-        let cleaned = rawInput.value, prev;
-        do { prev = cleaned; cleaned = cleaned.replace(stripTagsRegex, '$1'); } while (cleaned !== prev);
-        replaceEditorRange(0, rawInput.value.length, cleaned, null, null, true);
+      let cleanedAll = rawInput.value, prevAll;
+      do { prevAll = cleanedAll; cleanedAll = cleanedAll.replace(stripTagsRegex, '$1'); } while (cleanedAll !== prevAll);
+      if (cleanedAll !== rawInput.value) {
+        if (!clearAllFormattingArmed) {
+          clearAllFormattingArmed = true;
+          clearTimeout(clearAllFormattingTimer);
+          clearAllFormattingTimer = setTimeout(() => { clearAllFormattingArmed = false; }, 3000);
+          showToast('Aucune sélection — recliquez sur la gomme (3s) pour réinitialiser tout le document');
+          return;
+        }
+        clearAllFormattingArmed = false;
+        clearTimeout(clearAllFormattingTimer);
+        replaceEditorRange(0, rawInput.value.length, cleanedAll, null, null, true);
         updateReader(false);
         pushHistoryState();
         floatingPenPopup.classList.add('hidden');
@@ -4694,13 +5098,13 @@ flowchart TD
       }
 
       if (typeof start === 'number' && typeof end === 'number') {
-        const sameTagRegex = new RegExp(`^\\{${tag}\\}([\\s\\S]*?)\\{\\/${tag}\\}$`, 'i');
-        const sameMatch = segment.match(sameTagRegex);
+        // Toggle off even when wrapped inside {size:XX}...{/size} or another orthogonal tag
+        const innerSameTagRe = new RegExp(`\\{${tag}\\}([\\s\\S]*?)\\{\\/${tag}\\}`, 'i');
         let replacement;
         let isRemoved = false;
 
-        if (sameMatch) {
-          replacement = sameMatch[1];
+        if (innerSameTagRe.test(segment)) {
+          replacement = segment.replace(new RegExp(`\\{${tag}\\}([\\s\\S]*?)\\{\\/${tag}\\}`, 'gi'), '$1');
           isRemoved = true;
         } else {
           let updatedSegment = segment;
@@ -4736,11 +5140,13 @@ flowchart TD
       bindPress(btn, () => applyPhraseColorTag(btn.getAttribute('data-tag')));
     });
 
+    let penPopupTimer = null;
     function positionFloatingPenPopup(e) {
       if (currentTheme !== 'theme-notebook') { floatingPenPopup.classList.add('hidden'); return; }
       if (floatingPenPopup.contains(e.target) || notebookCustomBar.contains(e.target)) return;
       const delay = e.type === 'touchend' ? 80 : 10;
-      setTimeout(() => {
+      clearTimeout(penPopupTimer);
+      penPopupTimer = setTimeout(() => {
         const sel = window.getSelection();
         if (sel && !sel.isCollapsed && readerOutput.contains(sel.anchorNode) && sel.toString().trim().length > 0) {
           capturePreviewSelection();
@@ -4838,8 +5244,15 @@ flowchart TD
     // =====================================================
     // STUDY TOOLS: OUTLINE, ACTIVE RECALL, POMODORO, PLUGINS MODAL
     // =====================================================
-    document.getElementById('btnToggleOutline')?.addEventListener('click', () => outlineDrawer.classList.toggle('hidden'));
-    document.getElementById('btnCloseOutline')?.addEventListener('click', () => outlineDrawer.classList.add('hidden'));
+    const btnToggleOutline = document.getElementById('btnToggleOutline');
+    btnToggleOutline?.addEventListener('click', () => {
+      const isHidden = outlineDrawer.classList.toggle('hidden');
+      btnToggleOutline.setAttribute('aria-pressed', String(!isHidden));
+    });
+    document.getElementById('btnCloseOutline')?.addEventListener('click', () => {
+      outlineDrawer.classList.add('hidden');
+      btnToggleOutline?.setAttribute('aria-pressed', 'false');
+    });
 
     // Active Recall Mode
     const btnActiveRecall = document.getElementById('btnActiveRecall');
@@ -4850,6 +5263,7 @@ flowchart TD
         return;
       }
       activeRecallMode = !activeRecallMode;
+      btnActiveRecall.setAttribute('aria-pressed', String(activeRecallMode));
       readerCard.classList.toggle('active-recall-on', activeRecallMode);
       activeRecallBar.classList.toggle('hidden', !activeRecallMode);
       btnActiveRecall.classList.toggle('bg-violet-500/25', activeRecallMode);
@@ -4858,10 +5272,16 @@ flowchart TD
       updateReader(false);
     });
     document.getElementById('btnRevealAllRecall')?.addEventListener('click', () => {
-      readerOutput.querySelectorAll('strong, .ink-encadre, .ink-encadre-vert, .ink-encadre-bleu, .hl-jaune, .hl-vert, .hl-rose, .hl-bleu, .hl-orange').forEach(el => el.classList.add('recall-revealed'));
+      readerOutput.querySelectorAll(RECALL_SELECTOR).forEach(el => {
+        el.classList.add('recall-revealed');
+        el.setAttribute('aria-pressed', 'true');
+      });
     });
     document.getElementById('btnResetRecall')?.addEventListener('click', () => {
-      readerOutput.querySelectorAll('.recall-revealed').forEach(el => el.classList.remove('recall-revealed'));
+      readerOutput.querySelectorAll('.recall-revealed').forEach(el => {
+        el.classList.remove('recall-revealed');
+        el.setAttribute('aria-pressed', 'false');
+      });
     });
 
     // Pomodoro Focus Timer (Popover with Pause, Resume & Reset)
@@ -5017,13 +5437,34 @@ flowchart TD
     btnPomoModeBreak?.addEventListener('click', () => resetPomo('break'));
     renderPomo();
 
+    // Accessible modal focus management
+    let lastModalTrigger = null;
+    function openStudioModal(modalEl, triggerEl = null) {
+      if (!modalEl) return;
+      lastModalTrigger = triggerEl || document.activeElement;
+      modalEl.classList.remove('hidden');
+      const focusTarget = modalEl.querySelector('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (focusTarget && typeof focusTarget.focus === 'function') {
+        try { focusTarget.focus(); } catch (e) {}
+      }
+    }
+    function closeStudioModal(modalEl) {
+      if (!modalEl || modalEl.classList.contains('hidden')) return;
+      modalEl.classList.add('hidden');
+      if (lastModalTrigger && document.contains(lastModalTrigger) && typeof lastModalTrigger.focus === 'function') {
+        try { lastModalTrigger.focus(); } catch (e) {}
+      }
+      lastModalTrigger = null;
+    }
+
     // Plugins Modal & Settings
-    document.getElementById('btnOpenPluginsModal')?.addEventListener('click', () => {
+    const btnOpenPluginsModal = document.getElementById('btnOpenPluginsModal');
+    btnOpenPluginsModal?.addEventListener('click', () => {
       renderPluginCards();
-      pluginModal.classList.remove('hidden');
+      openStudioModal(pluginModal, btnOpenPluginsModal);
     });
-    document.getElementById('btnClosePluginsModal')?.addEventListener('click', () => pluginModal.classList.add('hidden'));
-    pluginModal?.addEventListener('click', (e) => { if (e.target === pluginModal) pluginModal.classList.add('hidden'); });
+    document.getElementById('btnClosePluginsModal')?.addEventListener('click', () => closeStudioModal(pluginModal));
+    pluginModal?.addEventListener('click', (e) => { if (e.target === pluginModal) closeStudioModal(pluginModal); });
 
     optSpiralRings?.addEventListener('change', (e) => { pluginState.spiralRings = e.target.checked; savePluginSettings(); applyRealisticNotebookClasses(); });
     optPageStamp?.addEventListener('change', (e) => { pluginState.pageStamp = e.target.checked; savePluginSettings(); applyRealisticNotebookClasses(); });
@@ -5039,16 +5480,36 @@ flowchart TD
     });
 
     // Shortcuts Modal
-    document.getElementById('btnOpenShortcuts')?.addEventListener('click', () => shortcutsModal.classList.remove('hidden'));
-    document.getElementById('btnCloseShortcuts')?.addEventListener('click', () => shortcutsModal.classList.add('hidden'));
-    shortcutsModal?.addEventListener('click', (e) => { if (e.target === shortcutsModal) shortcutsModal.classList.add('hidden'); });
+    const btnOpenShortcuts = document.getElementById('btnOpenShortcuts');
+    btnOpenShortcuts?.addEventListener('click', () => openStudioModal(shortcutsModal, btnOpenShortcuts));
+    document.getElementById('btnCloseShortcuts')?.addEventListener('click', () => closeStudioModal(shortcutsModal));
+    shortcutsModal?.addEventListener('click', (e) => { if (e.target === shortcutsModal) closeStudioModal(shortcutsModal); });
 
-    // Global Keyboard Shortcuts
+    // Global Keyboard Shortcuts (including modal focus trap)
+    const MODAL_FOCUSABLE_SELECTOR = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
     document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        const activeModal = [exportModal, pluginModal, shortcutsModal].find(m => m && !m.classList.contains('hidden'));
+        if (activeModal) {
+          const focusables = Array.from(activeModal.querySelectorAll(MODAL_FOCUSABLE_SELECTOR)).filter(el => el.offsetParent !== null);
+          if (focusables.length > 0) {
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (e.shiftKey && (document.activeElement === first || !activeModal.contains(document.activeElement))) {
+              e.preventDefault();
+              last.focus();
+            } else if (!e.shiftKey && (document.activeElement === last || !activeModal.contains(document.activeElement))) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+          return;
+        }
+      }
       if (e.key === 'Escape') {
-        exportModal?.classList.add('hidden');
-        pluginModal?.classList.add('hidden');
-        shortcutsModal?.classList.add('hidden');
+        closeStudioModal(exportModal);
+        closeStudioModal(pluginModal);
+        closeStudioModal(shortcutsModal);
         pomodoroPopover?.classList.add('hidden');
         btnPomodoro?.setAttribute('aria-expanded', 'false');
         symbolsPopover?.classList.add('hidden');
@@ -5072,7 +5533,7 @@ flowchart TD
       }
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'e') {
         e.preventDefault();
-        exportModal.classList.remove('hidden');
+        openStudioModal(exportModal, btnOpenExportModal);
         return;
       }
       if (document.activeElement === rawInput && (e.ctrlKey || e.metaKey)) {
@@ -5119,17 +5580,6 @@ flowchart TD
       exportProgressBox.classList.add('hidden');
     }
 
-    function dataURLToBlob(dataURL) {
-      const parts = dataURL.split(',');
-      const mimeMatch = parts[0].match(/:(.*?);/);
-      const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
-      const bstr = atob(parts[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      while (n--) u8arr[n] = bstr.charCodeAt(n);
-      return new Blob([u8arr], { type: mime });
-    }
-
     function triggerBlobDownload(blob, filename) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -5141,9 +5591,9 @@ flowchart TD
       setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 2000);
     }
 
-    btnOpenExportModal?.addEventListener('click', () => exportModal.classList.remove('hidden'));
-    btnCloseExportModal?.addEventListener('click', () => exportModal.classList.add('hidden'));
-    exportModal?.addEventListener('click', (e) => { if (e.target === exportModal) exportModal.classList.add('hidden'); });
+    btnOpenExportModal?.addEventListener('click', () => openStudioModal(exportModal, btnOpenExportModal));
+    btnCloseExportModal?.addEventListener('click', () => closeStudioModal(exportModal));
+    exportModal?.addEventListener('click', (e) => { if (e.target === exportModal) closeStudioModal(exportModal); });
 
     // 1. Vector Print PDF
     document.getElementById('btnExportPrintPdf').addEventListener('click', () => {
@@ -5159,11 +5609,12 @@ flowchart TD
         document.head.appendChild(dynamicStyle);
       }
       dynamicStyle.textContent = `@media print { @page { size: ${size} ${orient}; margin: ${marginVal}; } }`;
-      exportModal.classList.add('hidden');
+      closeStudioModal(exportModal);
       setTimeout(() => window.print(), 120);
     });
 
     async function captureReaderCanvas() {
+      await flushPendingMermaid();
       if (document.fonts && document.fonts.ready) {
         try { await document.fonts.ready; } catch (e) {}
       }
@@ -5171,7 +5622,24 @@ flowchart TD
       const includeBg = exportIncludeBg.checked;
       const prevBgImage = readerCard.style.backgroundImage;
       const prevBgColor = readerCard.style.backgroundColor;
+      const wasDarkWithoutBg = !includeBg && currentTheme === 'theme-dark';
+      const wasReaderHidden = readerContainer && readerContainer.classList.contains('hidden');
+      const prevContainerCss = wasReaderHidden ? readerContainer.style.cssText : '';
 
+      if (wasReaderHidden) {
+        readerContainer.classList.remove('hidden');
+        readerContainer.style.position = 'fixed';
+        readerContainer.style.left = '-99999px';
+        readerContainer.style.top = '0';
+        readerContainer.style.width = `${Math.min(920, Math.max(360, window.innerWidth - 24))}px`;
+        readerContainer.style.visibility = 'visible';
+        readerContainer.style.pointerEvents = 'none';
+      }
+
+      if (wasDarkWithoutBg) {
+        readerCard.classList.remove('theme-dark');
+        readerCard.classList.add('theme-light');
+      }
       if (!includeBg) {
         readerCard.style.backgroundImage = 'none';
         readerCard.style.backgroundColor = '#ffffff';
@@ -5205,10 +5673,11 @@ flowchart TD
           backgroundColor: bgColor,
           logging: false,
           scrollX: 0,
-          scrollY: -window.scrollY,
+          scrollY: 0,
           onclone: (clonedDoc) => {
             const clonedCard = clonedDoc.getElementById('readerCard');
             if (clonedCard) {
+              clonedCard.classList.remove('active-recall-on');
               clonedCard.style.minHeight = 'auto';
               clonedCard.style.height = 'auto';
               clonedCard.style.transform = 'none';
@@ -5260,14 +5729,25 @@ flowchart TD
 
       try {
         try {
-          return await runHtml2Canvas(safeScale);
+          const canvas = await runHtml2Canvas(safeScale);
+          return { canvas, appliedScale: safeScale, bgColor };
         } catch (firstErr) {
           console.warn('Retrying html2canvas at reduced scale:', firstErr);
-          return await runHtml2Canvas(Math.min(1.5, safeScale));
+          const fallbackScale = Math.min(1.5, safeScale);
+          const canvas = await runHtml2Canvas(fallbackScale);
+          return { canvas, appliedScale: fallbackScale, bgColor };
         }
       } finally {
+        if (wasDarkWithoutBg) {
+          readerCard.classList.remove('theme-light');
+          readerCard.classList.add('theme-dark');
+        }
         readerCard.style.backgroundImage = prevBgImage;
         readerCard.style.backgroundColor = prevBgColor;
+        if (wasReaderHidden) {
+          readerContainer.style.cssText = prevContainerCss;
+          readerContainer.classList.add('hidden');
+        }
       }
     }
 
@@ -5276,7 +5756,7 @@ flowchart TD
       if (!window.html2canvas || !window.jspdf) { showToast('Bibliothèque PDF en cours de chargement...'); return; }
       try {
         showExportProgress('Génération du fichier PDF en cours...');
-        const canvas = await captureReaderCanvas();
+        const { canvas, appliedScale, bgColor } = await captureReaderCanvas();
         const { jsPDF } = window.jspdf;
         const pageSize = exportPageSize.value;
         const orientation = exportOrientation.value;
@@ -5286,10 +5766,12 @@ flowchart TD
         if (pageSize === 'auto') {
           const imgData = canvas.toDataURL('image/jpeg', 0.95);
           const pxToMm = 0.264583;
-          const pdfW = Math.max(50, canvas.width * pxToMm);
-          const pdfH = Math.max(50, canvas.height * pxToMm);
+          const contentW = Math.max(50, (canvas.width / appliedScale) * pxToMm);
+          const contentH = Math.max(50, (canvas.height / appliedScale) * pxToMm);
+          const pdfW = contentW + marginMm * 2;
+          const pdfH = contentH + marginMm * 2;
           pdf = new jsPDF({ orientation: pdfW > pdfH ? 'l' : 'p', unit: 'mm', format: [pdfW, pdfH] });
-          pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH);
+          pdf.addImage(imgData, 'JPEG', marginMm, marginMm, contentW, contentH);
         } else {
           pdf = new jsPDF({ orientation: orientation === 'landscape' ? 'l' : 'p', unit: 'mm', format: pageSize === 'letter' ? 'letter' : 'a4' });
           const pageWidth = pdf.internal.pageSize.getWidth();
@@ -5308,7 +5790,7 @@ flowchart TD
           while (offsetY < canvas.height) {
             const currentSliceH = Math.min(sliceMaxH, canvas.height - offsetY);
             sliceCanvas.height = currentSliceH;
-            sliceCtx.fillStyle = '#ffffff';
+            sliceCtx.fillStyle = bgColor || '#ffffff';
             sliceCtx.fillRect(0, 0, sliceCanvas.width, currentSliceH);
             sliceCtx.drawImage(canvas, 0, offsetY, canvas.width, currentSliceH, 0, 0, canvas.width, currentSliceH);
             const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.95);
@@ -5318,7 +5800,11 @@ flowchart TD
             offsetY += currentSliceH;
             pageIdx++;
           }
+          sliceCanvas.width = 0;
+          sliceCanvas.height = 0;
         }
+        canvas.width = 0;
+        canvas.height = 0;
         triggerBlobDownload(pdf.output('blob'), getSafeExportFilename('pdf'));
         hideExportProgress();
         showToast('Fichier PDF téléchargé !');
@@ -5329,15 +5815,19 @@ flowchart TD
       }
     });
 
-    // 3 & 4. High-Res PNG & JPG
+    // 3 & 4. High-Res PNG & JPG (streamed directly via canvas.toBlob to avoid mobile OOM spikes)
     async function exportAsImage(format) {
       if (!window.html2canvas) { showToast('Bibliothèque image non chargée'); return; }
       try {
         const ext = format === 'png' ? 'png' : 'jpg';
         showExportProgress(`Rendu de l'image ${ext.toUpperCase()} (${exportScale.value}x DPI)...`);
-        const canvas = await captureReaderCanvas();
+        const { canvas } = await captureReaderCanvas();
         const mime = format === 'png' ? 'image/png' : 'image/jpeg';
-        triggerBlobDownload(dataURLToBlob(canvas.toDataURL(mime, 0.95)), getSafeExportFilename(ext));
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, mime, 0.95));
+        canvas.width = 0;
+        canvas.height = 0;
+        if (!blob) throw new Error('Canvas toBlob returned null');
+        triggerBlobDownload(blob, getSafeExportFilename(ext));
         hideExportProgress();
         showToast(`Image ${ext.toUpperCase()} téléchargée !`);
       } catch (err) {
@@ -5350,7 +5840,7 @@ flowchart TD
     document.getElementById('btnExportPng').addEventListener('click', () => exportAsImage('png'));
     document.getElementById('btnExportJpg').addEventListener('click', () => exportAsImage('jpeg'));
 
-    // Clipboard Copy PNG & Rich HTML
+    // Clipboard Copy PNG & Rich HTML (uses Promise inside ClipboardItem to preserve Safari/iOS user gesture)
     document.getElementById('btnCopyPng')?.addEventListener('click', async () => {
       if (!window.html2canvas || !navigator.clipboard || !window.ClipboardItem) {
         showToast('Copie image non supportée par ce navigateur');
@@ -5358,9 +5848,15 @@ flowchart TD
       }
       try {
         showExportProgress('Capture PNG vers le presse-papier...');
-        const canvas = await captureReaderCanvas();
-        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        const pngBlobPromise = captureReaderCanvas().then(({ canvas }) => new Promise((resolve, reject) => {
+          canvas.toBlob((blob) => {
+            canvas.width = 0;
+            canvas.height = 0;
+            if (blob) resolve(blob);
+            else reject(new Error('PNG blob generation failed'));
+          }, 'image/png');
+        }));
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': pngBlobPromise })]);
         hideExportProgress();
         showToast('Image PNG copiée dans le presse-papier !');
       } catch (err) {
@@ -5396,6 +5892,7 @@ flowchart TD
       const rootStyle = document.documentElement.style;
       const coreCss = document.getElementById('inktexCoreStyles')?.textContent || '';
       const clonedCard = readerCard.cloneNode(true);
+      clonedCard.classList.remove('active-recall-on');
       const subjInput = clonedCard.querySelector('#nbSubjectInput');
       const dateInput = clonedCard.querySelector('#nbDateInput');
       if (subjInput && nbSubjectInput) subjInput.setAttribute('value', nbSubjectInput.value);
@@ -5413,9 +5910,12 @@ flowchart TD
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(exportFilename.value || 'Notes InkTeX')}</title>
   <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@500;700&family=Courgette&family=Gloria+Hallelujah&family=Gochi+Hand&family=Handlee&family=Indie+Flower&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Kalam:wght@400;700&family=Mali:wght@400;600;700&family=Neucha&family=Patrick+Hand&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    ${coreCss}
     :root {
       --reader-font-size: ${rootStyle.getPropertyValue('--reader-font-size') || '16.5px'};
       --reader-line-height: ${rootStyle.getPropertyValue('--reader-line-height') || '1.78'};
@@ -5426,7 +5926,6 @@ flowchart TD
       --nb-bold-color: ${rootStyle.getPropertyValue('--nb-bold-color') || '#1850b8'};
       --nb-math-color: ${rootStyle.getPropertyValue('--nb-math-color') || '#1b7a34'};
     }
-    ${coreCss}
     body { margin: 0; padding: 2rem 1rem; background: #0e0f11; display: flex; justify-content: center; }
     .reader-card { max-width: 920px; width: 100%; padding: 3rem; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
     .inktex-copy-code-btn, .page-guide-overlay { display: none !important; }
@@ -5477,29 +5976,50 @@ flowchart TD
         }
       }
 
+      const TEX_UNICODE_MAP = {
+        'α': '\\ensuremath{\\alpha}', 'β': '\\ensuremath{\\beta}', 'γ': '\\ensuremath{\\gamma}',
+        'δ': '\\ensuremath{\\delta}', 'Δ': '\\ensuremath{\\Delta}', 'ε': '\\ensuremath{\\varepsilon}',
+        'θ': '\\ensuremath{\\theta}', 'λ': '\\ensuremath{\\lambda}', 'μ': '\\ensuremath{\\mu}',
+        'µ': '\\ensuremath{\\mu}', 'π': '\\ensuremath{\\pi}', 'σ': '\\ensuremath{\\sigma}',
+        'τ': '\\ensuremath{\\tau}', 'φ': '\\ensuremath{\\varphi}', 'ω': '\\ensuremath{\\omega}',
+        'Ω': '\\ensuremath{\\Omega}', '±': '\\ensuremath{\\pm}', '×': '\\ensuremath{\\times}',
+        '÷': '\\ensuremath{\\div}', '·': '\\ensuremath{\\cdot}', '≤': '\\ensuremath{\\leq}',
+        '≥': '\\ensuremath{\\geq}', '≠': '\\ensuremath{\\neq}', '≈': '\\ensuremath{\\approx}',
+        '→': '\\ensuremath{\\rightarrow}', '←': '\\ensuremath{\\leftarrow}', '↔': '\\ensuremath{\\leftrightarrow}',
+        '⇌': '\\ensuremath{\\rightleftharpoons}', '⇒': '\\ensuremath{\\Rightarrow}', '⇔': '\\ensuremath{\\Leftrightarrow}',
+        '↑': '\\ensuremath{\\uparrow}', '↓': '\\ensuremath{\\downarrow}', '∞': '\\ensuremath{\\infty}',
+        '∫': '\\ensuremath{\\int}', '∑': '\\ensuremath{\\sum}', '√': '\\ensuremath{\\surd}',
+        '∂': '\\ensuremath{\\partial}', '∇': '\\ensuremath{\\nabla}', '°': '\\ensuremath{^{\\circ}}',
+        '²': '\\ensuremath{^{2}}', '³': '\\ensuremath{^{3}}'
+      };
+      const TEX_UNICODE_RE = new RegExp('[' + Object.keys(TEX_UNICODE_MAP).join('') + ']', 'g');
+      function replaceUnicodeForPdflatex(str) {
+        return String(str).replace(TEX_UNICODE_RE, (ch) => TEX_UNICODE_MAP[ch] || ch);
+      }
+
       function escapeTexLiteral(str) {
-        return String(str)
-          .replace(/\\/g, '\\textbackslash{}')
-          .replace(/&/g, '\\&')
-          .replace(/%/g, '\\%')
-          .replace(/#/g, '\\#')
-          .replace(/_/g, '\\_')
-          .replace(/\{/g, '\\{')
-          .replace(/\}/g, '\\}')
-          .replace(/\$/g, '\\$')
-          .replace(/~/g, '\\textasciitilde{}')
-          .replace(/\^/g, '\\textasciicircum{}');
+        return replaceUnicodeForPdflatex(
+          String(str)
+            .replace(/\\/g, '\\textbackslash{}')
+            .replace(/&/g, '\\&')
+            .replace(/%/g, '\\%')
+            .replace(/#/g, '\\#')
+            .replace(/_/g, '\\_')
+            .replace(/\{/g, '\\{')
+            .replace(/\}/g, '\\}')
+            .replace(/\$/g, '\\$')
+            .replace(/~/g, '\\textasciitilde{}')
+            .replace(/\^/g, '\\textasciicircum{}')
+        );
       }
 
       function escapeTexProse(str) {
-        return String(str)
-          .replace(/(?<!\\)&/g, '\\&')
-          .replace(/(?<!\\)%/g, '\\%')
-          .replace(/(?<!\\)#/g, '\\#')
-          .replace(/(?<!\\)_/g, '\\_')
-          .replace(/(?<!\\)\$/g, '\\$')
-          .replace(/~/g, '\\textasciitilde{}')
-          .replace(/\^/g, '\\textasciicircum{}');
+        return replaceUnicodeForPdflatex(
+          String(str)
+            .replace(/\\([&%#_$])|([&%#_$])/g, (full, alreadyEscaped, bare) => (bare ? `\\${bare}` : full))
+            .replace(/~/g, '\\textasciitilde{}')
+            .replace(/\^/g, '\\textasciicircum{}')
+        );
       }
 
       const MATH_OR_CHEM_SEG_RE = /(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$\n]+?\$|\\(?:ce|pu)\{(?:[^{}]|\{[^{}]*\})+\})/g;
@@ -5564,7 +6084,7 @@ flowchart TD
         t = t.replace(/__([^_]+?)__/g, (_, inner) => `${stash('\\textbf{')}${inner}${stash('}')}`);
         t = t.replace(/~~([^~]+?)~~/g, (_, inner) => inner);
         t = t.replace(/\*([^*\n]+?)\*/g, (_, inner) => `${stash('\\textit{')}${inner}${stash('}')}`);
-        t = t.replace(/(?<![\w\\])_([^_\n]+?)_(?!\w)/g, (_, inner) => `${stash('\\textit{')}${inner}${stash('}')}`);
+        t = t.replace(/(^|[^\w\\])_([^_\n]+?)_(?!\w)/g, (_, pre, inner) => `${pre}${stash('\\textit{')}${inner}${stash('}')}`);
 
         // 5. Escape LaTeX specials in remaining plain prose
         t = escapeTexProse(t);
@@ -5674,16 +6194,18 @@ flowchart TD
           texLines.push('\\end{quote}');
           continue;
         }
-        if (trimmed.includes('|') && i + 1 < lines.length && /^[:|\-\s]+$/.test(lines[i + 1].trim())) {
+        if (trimmed.includes('|') && i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
           closeTexList();
-          const cols = trimmed.replace(/^\||\|$/g, '').split('|').map(c => formatInlineToLatex(c.trim()));
-          const colSpec = 'l'.repeat(cols.length);
+          const cols = splitMarkdownTableRow(trimmed, true).map(c => formatInlineToLatex(c));
+          const colCount = Math.max(1, cols.length);
+          const colSpec = 'l'.repeat(colCount);
           texLines.push(`\\begin{center}\\begin{tabular}{|${colSpec.split('').join('|')}|}\\hline`);
           texLines.push(`${cols.join(' & ')} \\\\ \\hline`);
           i += 2;
           while (i < lines.length && lines[i].trim().includes('|') && lines[i].trim() !== '') {
-            const row = lines[i].trim().replace(/^\||\|$/g, '').split('|').map(c => formatInlineToLatex(c.trim()));
-            texLines.push(`${row.join(' & ')} \\\\ \\hline`);
+            const rawCells = splitMarkdownTableRow(lines[i], true).map(c => formatInlineToLatex(c));
+            const normalizedRow = Array.from({ length: colCount }, (_, idx) => rawCells[idx] || '');
+            texLines.push(`${normalizedRow.join(' & ')} \\\\ \\hline`);
             i++;
           }
           i--;
@@ -5773,11 +6295,25 @@ ${texLines.join('\n')}
       showToast('Document LaTeX (.tex) téléchargé !');
     });
 
-    // Strip dynamic Netlify badges
+    // Strip injected Netlify badges strictly on direct <body> children (never touch user notes)
+    const PROTECTED_BODY_IDS = new Set(['workspaceGrid', 'floatingPenPopup', 'outlineDrawer', 'activeRecallBar', 'statusToast', 'mobileViewSwitcher', 'exportModal', 'pluginModal', 'shortcutsModal']);
+    function isInjectedNetlifyNode(el) {
+      if (!el || el.nodeType !== 1 || el.parentElement !== document.body) return false;
+      if (el.id && PROTECTED_BODY_IDS.has(el.id)) return false;
+      const tag = el.tagName.toUpperCase();
+      if (tag === 'HEADER' || tag === 'MAIN' || tag === 'FOOTER' || tag === 'SCRIPT' || tag === 'STYLE') return false;
+      const href = (el.getAttribute('href') || '').toLowerCase();
+      const cls = (typeof el.className === 'string' ? el.className : '').toLowerCase();
+      const id = (el.id || '').toLowerCase();
+      if (href.includes('netlify.com') || href.includes('netlify.app')) return true;
+      if (cls.includes('netlify') || id.includes('netlify')) return true;
+      if ((tag === 'A' || tag === 'DIV' || tag === 'ASIDE') && (el.textContent || '').toLowerCase().includes('powered by netlify')) return true;
+      return false;
+    }
+
     function removeNetlifyBadges() {
-      document.querySelectorAll('a[href*="netlify.com"], a[href*="netlify.app"], div[class*="netlify"], div[id*="netlify"], aside[class*="netlify"]').forEach((el) => el.remove());
-      document.querySelectorAll('body > a, body > div:not(#floatingPenPopup):not(#exportModal):not(#pluginModal):not(#shortcutsModal):not(#activeRecallBar)').forEach((el) => {
-        if (el.textContent && el.textContent.toLowerCase().includes('powered by netlify')) el.remove();
+      Array.from(document.body.children).forEach((el) => {
+        if (isInjectedNetlifyNode(el)) el.remove();
       });
     }
 
@@ -5797,8 +6333,26 @@ ${texLines.join('\n')}
       updateCursorLineCol();
 
       removeNetlifyBadges();
-      const badgeObserver = new MutationObserver(() => removeNetlifyBadges());
+      const badgeObserver = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+          for (const node of m.addedNodes) {
+            if (isInjectedNetlifyNode(node)) node.remove();
+          }
+        }
+      });
       badgeObserver.observe(document.body, { childList: true, subtree: false });
+    });
+
+    // Retry deferred Highlight.js / Mermaid / Lucide once assets finish loading (or show code fallback if offline)
+    window.addEventListener('load', () => {
+      if (window.lucide && document.querySelector('i[data-lucide]')) {
+        lucide.createIcons();
+      }
+      const hasPendingMermaid = Array.from(readerOutput.querySelectorAll('.inktex-mermaid-wrap')).some(w => !w.querySelector('svg'));
+      const hasUnhighlightedCode = window.hljs && window.InkTeX.isPluginEnabled('code-highlight') && readerOutput.querySelector('.inktex-code-wrap pre code:not(.hljs)');
+      if (hasPendingMermaid || hasUnhighlightedCode) {
+        runPostRenderPlugins({ offlineFallback: true });
+      }
     });
   </script>
 </body>
