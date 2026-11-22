@@ -75,6 +75,11 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
+    :focus-visible {
+      outline: 2px solid #38bdf8;
+      outline-offset: 2px;
+    }
+
     /* =====================================================
        READER THEMES (DARK READER, CLAIR, CAHIER MANUSCRIT)
        Standard hex/rgb/rgba colors ONLY (for html2canvas safety)
@@ -1768,13 +1773,14 @@
       <div id="editorDropZone" class="relative flex-1 min-h-0 flex flex-col overflow-hidden">
         <textarea
           id="rawInput"
+          aria-label="Éditeur Markdown et LaTeX"
           spellcheck="false"
           placeholder="Collez votre cours IA (ChatGPT / Gemini / NotebookLM), équations LaTeX \(\Delta G\), réactions chimiques \ce{H2O}, tableaux Markdown ou schémas ```mermaid..."
           class="mono-editor flex-1 min-h-0 w-full overflow-y-auto bg-[#0e0f11] text-zinc-200 p-4 text-[13px] leading-relaxed focus:outline-none resize-none"
         ></textarea>
 
         <!-- Non-blocking Toast -->
-        <div id="statusToast" class="hidden absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-medium shadow-lg flex items-center gap-1.5 z-30">
+        <div id="statusToast" role="status" aria-live="polite" class="hidden absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-medium shadow-lg flex items-center gap-1.5 z-30">
           <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
           <span id="statusToastText">Action effectuée</span>
         </div>
@@ -2341,7 +2347,8 @@ flowchart TD
       pageStamp: true,
       pageGuides: false,
       subject: 'Cours & Révisions',
-      date: new Date().toLocaleDateString('fr-FR')
+      date: new Date().toLocaleDateString('fr-FR'),
+      dateCustomized: false
     };
 
     BUILTIN_PLUGINS.forEach(p => {
@@ -2353,7 +2360,16 @@ flowchart TD
       version: '3.0.0',
       registerPlugin(pluginDef) {
         if (!pluginDef || !pluginDef.id) return false;
-        registeredExternalPlugins.push(pluginDef);
+        const existingIdx = registeredExternalPlugins.findIndex(p => p.id === pluginDef.id);
+        if (existingIdx !== -1) {
+          registeredExternalPlugins[existingIdx] = pluginDef;
+        } else {
+          registeredExternalPlugins.push(pluginDef);
+        }
+        if (typeof pluginState.enabled[pluginDef.id] === 'undefined') {
+          pluginState.enabled[pluginDef.id] = pluginDef.defaultEnabled !== false;
+        }
+        if (typeof renderPluginCards === 'function') renderPluginCards();
         if (typeof updateReader === 'function') updateReader(false);
         return true;
       },
@@ -2361,7 +2377,7 @@ flowchart TD
         return !!pluginState.enabled[id];
       },
       getPlugins() {
-        return BUILTIN_PLUGINS.map(p => ({ ...p, active: !!pluginState.enabled[p.id] }));
+        return [...BUILTIN_PLUGINS, ...registeredExternalPlugins].map(p => ({ ...p, active: !!pluginState.enabled[p.id] }));
       }
     };
 
@@ -2380,7 +2396,8 @@ flowchart TD
         if (typeof parsed.subject === 'string') {
           pluginState.subject = parsed.subject === 'FMPT • Cours & Révisions' ? 'Cours & Révisions' : parsed.subject;
         }
-        if (typeof parsed.date === 'string') pluginState.date = parsed.date;
+        if (typeof parsed.dateCustomized === 'boolean') pluginState.dateCustomized = parsed.dateCustomized;
+        if (pluginState.dateCustomized && typeof parsed.date === 'string') pluginState.date = parsed.date;
       } catch (e) {
         console.warn('Plugin settings restore error:', e);
       }
@@ -2427,24 +2444,25 @@ flowchart TD
 
     function renderPluginCards() {
       if (!pluginCardsGrid) return;
-      const activeCount = BUILTIN_PLUGINS.filter(p => pluginState.enabled[p.id]).length;
+      const allPlugins = [...BUILTIN_PLUGINS, ...registeredExternalPlugins];
+      const activeCount = allPlugins.filter(p => pluginState.enabled[p.id]).length;
       if (activePluginCountBadge) activePluginCountBadge.textContent = String(activeCount);
       if (customMacrosInput) customMacrosInput.value = pluginState.macrosText;
 
-      pluginCardsGrid.innerHTML = BUILTIN_PLUGINS.map(p => {
+      pluginCardsGrid.innerHTML = allPlugins.map(p => {
         const isOn = !!pluginState.enabled[p.id];
         return `
           <div class="p-3.5 rounded-xl border ${isOn ? 'bg-violet-500/10 border-violet-500/40' : 'bg-[#0e1015] border-zinc-800'} flex items-start justify-between gap-3 transition">
             <div class="space-y-1">
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-semibold text-zinc-100">${escapeHtml(p.name)}</span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-mono">v${escapeHtml(p.version)}</span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/15 text-sky-300">${escapeHtml(p.category)}</span>
+                <span class="font-semibold text-zinc-100">${escapeHtml(p.name || p.id)}</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-mono">v${escapeHtml(p.version || '1.0')}</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/15 text-sky-300">${escapeHtml(p.category || 'Externe')}</span>
               </div>
-              <p class="text-[11px] text-zinc-400 leading-relaxed">${escapeHtml(p.description)}</p>
+              <p class="text-[11px] text-zinc-400 leading-relaxed">${escapeHtml(p.description || '')}</p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer flex-shrink-0 mt-0.5">
-              <input type="checkbox" class="plugin-toggle-cb sr-only peer" data-plugin-id="${p.id}" ${isOn ? 'checked' : ''} />
+              <input type="checkbox" class="plugin-toggle-cb sr-only peer" data-plugin-id="${escapeHtml(p.id)}" ${isOn ? 'checked' : ''} />
               <div class="w-9 h-5 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-violet-500"></div>
             </label>
           </div>
@@ -2562,11 +2580,18 @@ flowchart TD
           const now = new Date();
           const hhmmss = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
           autoSaveLabel.textContent = `Sauvegardé • ${hhmmss}`;
+          autoSaveLabel.classList.remove('text-amber-300', 'bg-amber-500/15', 'border-amber-500/40');
         }
       } catch (e) {
         console.warn('LocalStorage save error:', e);
+        if (autoSaveLabel) {
+          autoSaveLabel.textContent = 'Sauvegarde impossible (stockage plein)';
+          autoSaveLabel.classList.add('text-amber-300', 'bg-amber-500/15', 'border-amber-500/40');
+        }
       }
     }
+
+    window.addEventListener('pagehide', saveToLocalStorage);
 
     function restoreFromLocalStorage() {
       try {
@@ -2737,16 +2762,39 @@ flowchart TD
         .replace(/"/g, '&quot;');
     }
 
+    const LATEX_KNOWN_CMD_NAMES =
+      'frac|dfrac|tfrac|cfrac|binom|sqrt|sum|prod|coprod|int|iint|iiint|oint|lim|limsup|liminf|sup|inf|max|min|arg|det|dim|gcd|hom|ker|deg|' +
+      'infty|partial|nabla|Delta|Gamma|Lambda|Omega|Theta|Phi|Psi|Pi|Sigma|Upsilon|Xi|' +
+      'alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|vartheta|iota|kappa|lambda|mu|nu|xi|pi|varpi|rho|varrho|sigma|varsigma|tau|upsilon|phi|varphi|chi|psi|omega|' +
+      'pm|mp|times|div|cdot|cdots|ldots|vdots|ddots|quad|qquad|enspace|thinspace|hspace|vspace|' +
+      'Rightarrow|Leftarrow|Leftrightarrow|Longrightarrow|Longleftarrow|Longleftrightarrow|rightarrow|leftarrow|leftrightarrow|longrightarrow|longleftarrow|longleftrightarrow|to|mapsto|implies|iff|' +
+      'approx|simeq|cong|equiv|neq|ne|leq|le|geq|ge|ll|gg|propto|sim|subset|supset|subseteq|supseteq|in|notin|ni|cup|cap|setminus|emptyset|varnothing|' +
+      'forall|exists|nexists|neg|lnot|land|lor|wedge|vee|perp|parallel|angle|triangle|circ|degree|' +
+      'log|ln|lg|exp|sin|cos|tan|cot|sec|csc|arcsin|arccos|arctan|sinh|cosh|tanh|coth|' +
+      'mathrm|mathbf|mathit|mathcal|mathbb|mathfrak|mathsf|mathtt|boldsymbol|bm|text|textbf|textit|textrm|textsf|texttt|emph|underline|textcolor|color|colorbox|boxed|fbox|' +
+      'hat|widehat|bar|vec|overrightarrow|tilde|widetilde|dot|ddot|overline|overbrace|underbrace|overset|underset|stackrel|' +
+      'left|right|big|Big|bigg|Bigg|middle|begin|end|displaystyle|textstyle|scriptstyle|scriptscriptstyle|limits|nolimits|not|operatorname|' +
+      'ce|pu|url|href|phantom|hphantom|vphantom|cancel|bcancel|xcancel|sout|tag|label|ref|eqref';
+    const LATEX_MATH_CMD_RE = new RegExp('\\\\(?:' + LATEX_KNOWN_CMD_NAMES + ')\\b');
+    const DOUBLED_LATEX_CMD_RE = new RegExp('(?<!\\\\)\\\\{2}(?=(?:' + LATEX_KNOWN_CMD_NAMES + ')\\b)', 'g');
+    const DOUBLED_OPEN_BRACKET_RE = /\\{2,}\[(?!\s*[-+]?[\d.]+\s*(?:pt|mm|cm|em|ex|in|bp|px)\s*\])/g;
+
     /**
      * Cleans double-escaped LaTeX commands (e.g., \\Delta -> \Delta)
-     * while preserving genuine LaTeX matrix/align line breaks (\\\\ or \\ followed by space/newline/[).
+     * while preserving genuine LaTeX matrix/align line breaks (\\, \\[4pt], x=1\\y=2).
      */
-    function cleanInnerMath(mathExpr) {
-      return mathExpr
-        .trim()
-        .replace(/\\\\(?=\s|$|\[)/g, '@@LATEX_NL@@')
-        .replace(/\\{2,}([a-zA-Z]+)/g, '\\$1')
-        .replace(/@@LATEX_NL@@/g, '\\\\');
+    function cleanInnerMath(mathExpr, extraCmdNames = []) {
+      let cleaned = mathExpr.trim().replace(DOUBLED_LATEX_CMD_RE, '\\');
+      if (extraCmdNames && extraCmdNames.length > 0) {
+        const safeNames = extraCmdNames
+          .filter(n => typeof n === 'string' && n.length >= 2 && /^[a-zA-Z]+$/.test(n))
+          .map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        if (safeNames.length > 0) {
+          const extraRe = new RegExp('(?<!\\\\)\\\\{2}(?=(?:' + safeNames.join('|') + ')\\b)', 'g');
+          cleaned = cleaned.replace(extraRe, '\\');
+        }
+      }
+      return cleaned;
     }
 
     // =====================================================
@@ -2754,6 +2802,8 @@ flowchart TD
     // =====================================================
     let mermaidQueue = [];
     let currentOutline = [];
+    const katexCache = new Map();
+    const KATEX_CACHE_MAX = 1200;
 
     function renderMarkdownAndLatex(rawText, options = { updateGlobals: true }) {
       const updateGlobals = options && options.updateGlobals !== false;
@@ -2774,7 +2824,7 @@ flowchart TD
 
       // Plugin hook: beforeNormalize
       for (const ext of registeredExternalPlugins) {
-        if (typeof ext.beforeNormalize === 'function') {
+        if (window.InkTeX.isPluginEnabled(ext.id) && typeof ext.beforeNormalize === 'function') {
           try { normalized = ext.beforeNormalize(normalized); } catch (e) { console.warn(e); }
         }
       }
@@ -2793,7 +2843,7 @@ flowchart TD
         normalized = normalized
           .replace(/\\{2,}\(/g, '\\(')
           .replace(/\\{2,}\)/g, '\\)')
-          .replace(/\\{2,}\[/g, '\\[')
+          .replace(DOUBLED_OPEN_BRACKET_RE, '\\[')
           .replace(/\\{2,}\]/g, '\\]');
 
         // Convert standalone ChatGPT-style [ \frac{a}{b} ] math blocks (single or multi-line) into $$...$$
@@ -2801,7 +2851,6 @@ flowchart TD
         normalized = normalized.replace(/^\[\r?\n([^\[\]]*\\[a-zA-Z]+[^\[\]]*)\r?\n\]$/gm, (_, inner) => `$$${inner.trim()}$$`);
 
         // Unwrap Gemini / NotebookLM / ChatGPT inline backticked or quoted LaTeX formulas (e.g. `"D = \frac{\Delta E}{\Delta m} ..."`)
-        const LATEX_MATH_CMD_RE = /\\(?:frac|dfrac|tfrac|sqrt|sum|prod|int|oint|lim|infty|partial|nabla|Delta|Gamma|Lambda|Omega|Theta|Phi|Psi|Pi|Sigma|alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon|phi|varphi|chi|psi|omega|pm|mp|times|div|cdot|quad|qquad|Rightarrow|Leftarrow|Leftrightarrow|rightarrow|leftarrow|leftrightarrow|to|mapsto|approx|equiv|neq|ne|leq|le|geq|ge|propto|subset|supset|in|notin|cup|cap|forall|exists|neg|wedge|vee|perp|parallel|angle|triangle|circ|degree|log|ln|exp|sin|cos|tan|cot|sec|csc|arcsin|arccos|arctan|sinh|cosh|tanh|mathrm|mathbf|mathit|mathcal|mathbb|hat|bar|vec|tilde|dot|ddot|overline|overbrace|underbrace|left|right|ce|pu)\b/;
         const LATEX_SCRIPT_RE = /[A-Za-z0-9)\]}]\s*(?:\^\{[^}\r\n]+\}|_\{[^}\r\n]+\})|\b[A-Za-z]_[A-Za-z0-9]\b(?=[^`\r\n]*=)/;
         const CODE_NOISE_RE = /[A-Za-z]:\\|https?:\/\/|\b(?:function|const|let|var|return|import|export|class|console\.log|document\.|window\.)\b/;
 
@@ -2810,7 +2859,7 @@ flowchart TD
           let openQ = '';
           let closeQ = '';
           let core = rawSpan.trim();
-          const quoteWrap = core.match(/^([""«])\s*([\s\S]*?)\s*([""»])(\.?)$/);
+          const quoteWrap = core.match(/^([\u201c"«])\s*([\s\S]*?)\s*([\u201d"»])(\.?)$/);
           if (quoteWrap) {
             openQ = quoteWrap[1];
             core = quoteWrap[2].trim();
@@ -2848,10 +2897,11 @@ flowchart TD
           return converted !== null ? converted : full;
         });
 
-        // 2b. Wrap un-backticked quoted OCR formulas: "D = \frac{\Delta E}{\Delta m} ..."
-        normalized = normalized.replace(/"([^"\r\n]+?)"/g, (full, inner) => {
+        // 2b. Wrap un-backticked quoted OCR formulas: "D = \frac{\Delta E}{\Delta m} ..." or “...”
+        normalized = normalized.replace(/(["\u201c])([^"\u201d\r\n]+?)(["\u201d])/g, (full, openQ, inner, closeQ) => {
+          if ((openQ === '"' && closeQ !== '"') || (openQ === '\u201c' && closeQ !== '\u201d')) return full;
           if (inner.includes('$') || inner.includes('\\(') || inner.includes('\\[')) return full;
-          const converted = convertAiMathSpan(`"${inner}"`, false);
+          const converted = convertAiMathSpan(`${openQ}${inner}${closeQ}`, false);
           return converted !== null ? converted : full;
         });
       }
@@ -2870,27 +2920,38 @@ flowchart TD
       // 3. Extract Math Blocks into KaTeX tokens
       const mathStash = [];
       const customMacros = parseCustomMacros();
+      const customMacroNames = Object.keys(customMacros).map(k => k.replace(/^\\/, ''));
+      const macroSig = Object.keys(customMacros).sort().map(k => `${k}=${customMacros[k]}`).join(';');
       const useMhchem = window.InkTeX.isPluginEnabled('mhchem');
 
       function storeMath(expr, displayMode) {
         const id = `@@KATEXTOKEN-${mathStash.length}@@`;
-        let cleaned = cleanInnerMath(expr);
+        let cleaned = cleanInnerMath(expr, customMacroNames);
         if (!useMhchem && /\\ce\{/.test(cleaned)) {
           cleaned = cleaned.replace(/\\ce\{([^}]+)\}/g, '\\text{$1}');
         }
         let rendered = escapeHtml(expr);
         if (window.katex) {
-          try {
-            rendered = window.katex.renderToString(cleaned, {
-              displayMode: displayMode,
-              throwOnError: false,
-              strict: false,
-              minRuleThickness: 0.06,
-              macros: { ...customMacros },
-              trust: (ctx) => ['\\url', '\\href'].includes(ctx.command) && ['http', 'https', '_relative'].includes(ctx.protocol)
-            });
-          } catch (e) {
-            console.error('KaTeX error:', e);
+          const cacheKey = `${displayMode ? 'D' : 'I'}|${macroSig}|${cleaned}`;
+          if (katexCache.has(cacheKey)) {
+            rendered = katexCache.get(cacheKey);
+          } else {
+            try {
+              rendered = window.katex.renderToString(cleaned, {
+                displayMode: displayMode,
+                throwOnError: false,
+                strict: false,
+                minRuleThickness: 0.06,
+                macros: { ...customMacros },
+                trust: (ctx) => ['\\url', '\\href'].includes(ctx.command) && ['http', 'https', '_relative'].includes(ctx.protocol)
+              });
+              if (katexCache.size >= KATEX_CACHE_MAX) {
+                katexCache.clear();
+              }
+              katexCache.set(cacheKey, rendered);
+            } catch (e) {
+              console.error('KaTeX error:', e);
+            }
           }
         }
         mathStash.push(rendered);
@@ -2899,16 +2960,15 @@ flowchart TD
 
       normalized = normalized.replace(/\$\$([\s\S]*?)\$\$/g, (_, m) => storeMath(m, true));
       normalized = normalized.replace(/\\\[([\s\S]*?)\\\]/g, (_, m) => storeMath(m, true));
-
-      // Auto-wrap bare \begin{cases|aligned|pmatrix|bmatrix|vmatrix|Bmatrix|matrix} outside $$...$$
-      normalized = normalized.replace(/\\begin\{(cases|aligned|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)\}([\s\S]*?)\\end\{\1\}/g, (full) => storeMath(full, true));
-
       normalized = normalized.replace(/\\\(([\s\S]*?)\\\)/g, (_, m) => storeMath(m, false));
       normalized = normalized.replace(/\$(?!\$)([^\$\n]+?)\$/g, (full, m) => {
         // Avoid treating prose between two currency amounts (e.g., "$15 and $30") as inline math
         if (/^\d+(?:[.,]\d+)?\s[\s\S]*\s$/.test(m)) return full;
         return storeMath(m, false);
       });
+
+      // Auto-wrap bare \begin{cases|aligned|pmatrix|bmatrix|vmatrix|Bmatrix|matrix} outside $...$ / \(...\) / $$...$$
+      normalized = normalized.replace(/\\begin\{(cases|aligned|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)\}([\s\S]*?)\\end\{\1\}/g, (full) => storeMath(full, true));
 
       // Auto-render bare \ce{...} / \pu{...} outside math delimiters when mhchem + ai-fixer active
       if (useMhchem && window.InkTeX.isPluginEnabled('ai-fixer')) {
@@ -3053,6 +3113,8 @@ flowchart TD
         IMPORTANT: { cls: 'callout-clinical', icon: '❗', label: 'Important' }
       };
 
+      let headingSeq = 0;
+
       function parseBlockLines(blockLines, depth = 0) {
         const blockHtml = [];
         const listStack = []; // Array of { tag: 'ul' | 'ol', level: number }
@@ -3165,7 +3227,7 @@ flowchart TD
               level = latexLevelMap[headingMatch[1]] || 3;
               headingText = headingMatch[2];
             }
-            const headingId = `sec-${localOutline.length}`;
+            const headingId = `sec-${headingSeq++}`;
             if (depth === 0) {
               localOutline.push({ id: headingId, level, text: headingText.replace(/\{[^}]+\}/g, '').replace(/\*\*/g, '') });
             }
@@ -3270,12 +3332,14 @@ flowchart TD
 
       let finalHtml = parseBlockLines(normalized.split(/\r?\n/), 0);
 
-      // Sanitize Markdown HTML via DOMPurify BEFORE restoring KaTeX tokens
+      // Sanitize Markdown HTML via DOMPurify (or offline strict DOM fallback) BEFORE restoring KaTeX tokens
       if (window.DOMPurify) {
         finalHtml = window.DOMPurify.sanitize(finalHtml, {
           USE_PROFILES: { html: true },
           ADD_ATTR: ['style', 'class', 'data-pt-size', 'data-line-idx', 'data-task-idx', 'data-mermaid-idx', 'data-lang', 'target', 'rel', 'type', 'checked', 'start', 'src', 'alt', 'loading']
         });
+      } else {
+        finalHtml = sanitizeHtmlFallback(finalHtml);
       }
 
       // Restore KaTeX tokens
@@ -3284,8 +3348,54 @@ flowchart TD
       return finalHtml;
     }
 
+    function sanitizeHtmlFallback(html) {
+      const tpl = document.createElement('template');
+      tpl.innerHTML = html;
+      const blockedTags = new Set(['SCRIPT', 'IFRAME', 'OBJECT', 'EMBED', 'STYLE', 'LINK', 'META', 'BASE', 'FORM', 'MATH', 'SVG']);
+      const walk = (node) => {
+        for (const child of Array.from(node.childNodes)) {
+          if (child.nodeType === 1) {
+            if (blockedTags.has(child.tagName.toUpperCase())) {
+              child.remove();
+              continue;
+            }
+            for (const attr of Array.from(child.attributes)) {
+              const name = attr.name.toLowerCase();
+              const val = (attr.value || '').replace(/[\u0000-\u0020]+/g, '');
+              if (name.startsWith('on') || name === 'srcdoc') {
+                child.removeAttribute(attr.name);
+              } else if ((name === 'href' || name === 'src' || name === 'xlink:href') && /^(?:javascript|vbscript|data:text\/html)/i.test(val)) {
+                child.removeAttribute(attr.name);
+              }
+            }
+            walk(child);
+          }
+        }
+      };
+      walk(tpl.content);
+      return tpl.innerHTML;
+    }
+
+    function buildOutlineFromDom() {
+      if (!readerOutput) return [];
+      return Array.from(readerOutput.querySelectorAll('h1, h2, h3, h4, h5, h6'))
+        .filter(h => !h.closest('.inktex-callout, blockquote'))
+        .map(h => {
+          const clone = h.cloneNode(true);
+          clone.querySelectorAll('.katex-mathml, [style*="color:transparent"]').forEach(n => n.remove());
+          return {
+            id: h.id,
+            level: Number(h.tagName[1]) || 1,
+            text: (clone.textContent || '').replace(/\u200b/g, '').replace(/\s+/g, ' ').trim()
+          };
+        })
+        .filter(item => item.id && item.text);
+    }
+
     // Post-Render Plugins (Mermaid async SVG, Highlight.js, Interactive Checkboxes, Copy Code, Active Recall, Outline)
     let mermaidRenderDebounce = null;
+    const mermaidSvgCache = new Map();
+    const MERMAID_CACHE_MAX = 60;
 
     function renderOutlineDrawer() {
       if (!outlineList) return;
@@ -3372,69 +3482,91 @@ flowchart TD
       }
 
       // 4. Outline Drawer
+      currentOutline = buildOutlineFromDom();
       renderOutlineDrawer();
 
-      // 5. Mermaid v11 Diagrams (Hand-drawn look in Cahier Manuscrit!)
-      if (mermaidQueue.length > 0 && window.mermaid && window.InkTeX.isPluginEnabled('mermaid')) {
-        clearTimeout(mermaidRenderDebounce);
-        mermaidRenderDebounce = setTimeout(async () => {
-          try {
-            const isNotebook = currentTheme === 'theme-notebook';
-            const isDark = currentTheme === 'theme-dark';
-            window.mermaid.initialize({
-              startOnLoad: false,
-              securityLevel: 'strict',
-              htmlLabels: false,
-              look: isNotebook ? 'handDrawn' : 'classic',
-              theme: isNotebook ? 'neutral' : (isDark ? 'dark' : 'default')
-            });
-            const wrappers = readerOutput.querySelectorAll('.inktex-mermaid-wrap[data-mermaid-idx]');
-            for (const wrap of wrappers) {
-              const idx = Number(wrap.getAttribute('data-mermaid-idx'));
-              const diagramSrc = mermaidQueue[idx];
-              if (!diagramSrc) continue;
-              const renderId = `inktex-mmd-${Date.now()}-${idx}`;
-              try {
-                const { svg } = await window.mermaid.render(renderId, diagramSrc);
-                wrap.innerHTML = svg;
-                const svgEl = wrap.querySelector('svg');
-                if (svgEl) {
-                  try {
-                    const bbox = svgEl.getBBox();
-                    if (bbox && bbox.width > 0 && bbox.height > 0) {
-                      const pad = 16;
-                      const vx = Math.floor(bbox.x - pad);
-                      const vy = Math.floor(bbox.y - pad);
-                      const vw = Math.ceil(bbox.width + pad * 2);
-                      const vh = Math.ceil(bbox.height + pad * 2);
-                      svgEl.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
-                      svgEl.setAttribute('width', String(vw));
-                      svgEl.setAttribute('height', String(vh));
-                      svgEl.style.maxWidth = '100%';
-                      svgEl.style.height = 'auto';
-                      svgEl.style.overflow = 'visible';
-                    }
-                  } catch (bboxErr) {}
-                }
-              } catch (err) {
-                wrap.innerHTML = `<div class="text-xs text-rose-400 font-mono p-2">Erreur de syntaxe Mermaid : ${escapeHtml(err.message || String(err))}</div>`;
-              }
-            }
-          } catch (e) {
-            console.warn('Mermaid init/render error:', e);
+      // 5. Mermaid v11 Diagrams (Hand-drawn look in Cahier Manuscrit, cached for flicker-free typing)
+      if (mermaidQueue.length > 0 && window.InkTeX.isPluginEnabled('mermaid')) {
+        const isNotebook = currentTheme === 'theme-notebook';
+        const isDark = currentTheme === 'theme-dark';
+        const mmdThemeKey = isNotebook ? 'nb' : (isDark ? 'dark' : 'light');
+        const wrappers = readerOutput.querySelectorAll('.inktex-mermaid-wrap[data-mermaid-idx]');
+        const pendingWrappers = [];
+
+        wrappers.forEach(wrap => {
+          const idx = Number(wrap.getAttribute('data-mermaid-idx'));
+          const diagramSrc = mermaidQueue[idx];
+          if (!diagramSrc) return;
+          const cacheKey = `${mmdThemeKey}|${diagramSrc}`;
+          if (mermaidSvgCache.has(cacheKey)) {
+            wrap.innerHTML = mermaidSvgCache.get(cacheKey);
+          } else {
+            pendingWrappers.push({ wrap, idx, diagramSrc, cacheKey });
           }
-        }, 120);
+        });
+
+        if (pendingWrappers.length > 0 && window.mermaid) {
+          clearTimeout(mermaidRenderDebounce);
+          mermaidRenderDebounce = setTimeout(async () => {
+            try {
+              window.mermaid.initialize({
+                startOnLoad: false,
+                securityLevel: 'strict',
+                htmlLabels: false,
+                look: isNotebook ? 'handDrawn' : 'classic',
+                theme: isNotebook ? 'neutral' : (isDark ? 'dark' : 'default')
+              });
+              for (const item of pendingWrappers) {
+                if (!item.wrap.isConnected) continue;
+                const renderId = `inktex-mmd-${Date.now()}-${item.idx}`;
+                try {
+                  const { svg } = await window.mermaid.render(renderId, item.diagramSrc);
+                  item.wrap.innerHTML = svg;
+                  const svgEl = item.wrap.querySelector('svg');
+                  if (svgEl) {
+                    try {
+                      const bbox = svgEl.getBBox();
+                      if (bbox && bbox.width > 0 && bbox.height > 0) {
+                        const pad = 16;
+                        const vx = Math.floor(bbox.x - pad);
+                        const vy = Math.floor(bbox.y - pad);
+                        const vw = Math.ceil(bbox.width + pad * 2);
+                        const vh = Math.ceil(bbox.height + pad * 2);
+                        svgEl.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
+                        svgEl.setAttribute('width', String(vw));
+                        svgEl.setAttribute('height', String(vh));
+                        svgEl.style.maxWidth = '100%';
+                        svgEl.style.height = 'auto';
+                        svgEl.style.overflow = 'visible';
+                      }
+                    } catch (bboxErr) {}
+                  }
+                  if (mermaidSvgCache.size >= MERMAID_CACHE_MAX) {
+                    mermaidSvgCache.clear();
+                  }
+                  mermaidSvgCache.set(item.cacheKey, item.wrap.innerHTML);
+                } catch (err) {
+                  item.wrap.innerHTML = `<div class="text-xs text-rose-400 font-mono p-2">Erreur de syntaxe Mermaid : ${escapeHtml(err.message || String(err))}</div>`;
+                }
+              }
+            } catch (e) {
+              console.warn('Mermaid init/render error:', e);
+            }
+          }, 120);
+        }
       }
 
       // 6. External Plugins afterRender
       for (const ext of registeredExternalPlugins) {
-        if (typeof ext.afterRender === 'function') {
+        if (window.InkTeX.isPluginEnabled(ext.id) && typeof ext.afterRender === 'function') {
           try { ext.afterRender(readerOutput, { theme: currentTheme }); } catch (e) { console.warn(e); }
         }
       }
     }
 
+    let readerInputDebounce = null;
     function updateReader(recordHistory = true) {
+      clearTimeout(readerInputDebounce);
       readerOutput.innerHTML = renderMarkdownAndLatex(rawInput.value);
       runPostRenderPlugins();
       saveToLocalStorage();
@@ -3446,22 +3578,60 @@ flowchart TD
       }
     }
 
+    /**
+     * Replaces a range in #rawInput while preserving native Ctrl+Z undo stack when possible.
+     */
+    function replaceEditorRange(start, end, replacement, newSelStart = null, newSelEnd = null, preserveFocus = true) {
+      const prevActive = document.activeElement;
+      const canExec = rawInput.offsetParent !== null && typeof document.execCommand === 'function';
+      let usedExec = false;
+      if (canExec) {
+        try {
+          const prevScroll = rawInput.scrollTop;
+          rawInput.focus({ preventScroll: true });
+          rawInput.setSelectionRange(start, end);
+          usedExec = document.execCommand('insertText', false, replacement);
+          rawInput.scrollTop = prevScroll;
+        } catch (e) {
+          usedExec = false;
+        }
+      }
+      if (!usedExec) {
+        if (typeof rawInput.setRangeText === 'function') {
+          rawInput.setRangeText(replacement, start, end, 'end');
+        } else {
+          rawInput.value = rawInput.value.substring(0, start) + replacement + rawInput.value.substring(end);
+        }
+      }
+      if (typeof newSelStart === 'number') {
+        const selEnd = typeof newSelEnd === 'number' ? newSelEnd : newSelStart;
+        if (document.activeElement === rawInput) {
+          rawInput.setSelectionRange(newSelStart, selEnd);
+        }
+      }
+      if (preserveFocus && prevActive && prevActive !== rawInput && typeof prevActive.focus === 'function') {
+        try { prevActive.focus({ preventScroll: true }); } catch (e) {}
+      }
+    }
+
     // =====================================================
     // EVENT LISTENERS: EDITOR, TEMPLATES, SEARCH, RESIZE, SCROLL
     // =====================================================
     rawInput.addEventListener('input', () => {
       updateCursorLineCol();
-      updateReader(true);
+      clearTimeout(readerInputDebounce);
+      readerInputDebounce = setTimeout(() => {
+        updateReader(true);
+      }, 110);
     });
 
-    // Tab indentation in textarea
+    // Tab indentation in textarea (undoable via native Ctrl+Z)
     rawInput.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
         e.preventDefault();
         const start = rawInput.selectionStart;
         const end = rawInput.selectionEnd;
-        rawInput.value = rawInput.value.substring(0, start) + '  ' + rawInput.value.substring(end);
-        rawInput.selectionStart = rawInput.selectionEnd = start + 2;
+        replaceEditorRange(start, end, '  ', start + 2, start + 2, false);
         updateReader(true);
       }
     });
@@ -3524,8 +3694,8 @@ flowchart TD
     function insertAtEditorCursor(text, cursorBackOffset = 0) {
       const start = rawInput.selectionStart || 0;
       const end = rawInput.selectionEnd || 0;
-      rawInput.value = rawInput.value.substring(0, start) + text + rawInput.value.substring(end);
       const pos = start + text.length - cursorBackOffset;
+      replaceEditorRange(start, end, text, pos, pos, false);
       rawInput.focus();
       rawInput.setSelectionRange(pos, pos);
       updateReader(true);
@@ -3567,17 +3737,20 @@ flowchart TD
     const replaceInput = document.getElementById('replaceInput');
     const findMatchLabel = document.getElementById('findMatchLabel');
 
+    function getFindMode(raw, q) {
+      const exactCount = raw.split(q).length - 1;
+      if (exactCount > 0) return { caseInsensitive: false, count: exactCount };
+      const ciCount = raw.toLowerCase().split(q.toLowerCase()).length - 1;
+      return { caseInsensitive: true, count: ciCount };
+    }
+
     function updateFindMatches() {
       const q = findInput.value;
       if (!q) {
         findMatchLabel.textContent = '0';
         return 0;
       }
-      const raw = rawInput.value;
-      let count = raw.split(q).length - 1;
-      if (count === 0) {
-        count = raw.toLowerCase().split(q.toLowerCase()).length - 1;
-      }
+      const { count } = getFindMode(rawInput.value, q);
       findMatchLabel.textContent = `${count} occ.`;
       return count;
     }
@@ -3586,8 +3759,9 @@ flowchart TD
       const q = findInput.value;
       if (!q) return;
       const raw = rawInput.value;
-      const hay = raw.includes(q) ? raw : raw.toLowerCase();
-      const needle = raw.includes(q) ? q : q.toLowerCase();
+      const { caseInsensitive } = getFindMode(raw, q);
+      const hay = caseInsensitive ? raw.toLowerCase() : raw;
+      const needle = caseInsensitive ? q.toLowerCase() : q;
       let idx = -1;
       if (backwards) {
         const beforePos = Math.max(0, (rawInput.selectionStart || 0) - 1);
@@ -3631,11 +3805,14 @@ flowchart TD
     document.getElementById('btnReplaceOne')?.addEventListener('click', () => {
       const q = findInput.value;
       if (!q) return;
-      const sel = rawInput.value.substring(rawInput.selectionStart, rawInput.selectionEnd);
-      if (sel === q) {
+      const raw = rawInput.value;
+      const { caseInsensitive } = getFindMode(raw, q);
+      const sel = raw.substring(rawInput.selectionStart, rawInput.selectionEnd);
+      const matches = caseInsensitive ? (sel.toLowerCase() === q.toLowerCase()) : (sel === q);
+      if (matches) {
         const s = rawInput.selectionStart;
-        rawInput.value = rawInput.value.substring(0, s) + replaceInput.value + rawInput.value.substring(rawInput.selectionEnd);
-        rawInput.setSelectionRange(s, s + replaceInput.value.length);
+        const rep = replaceInput.value;
+        replaceEditorRange(s, rawInput.selectionEnd, rep, s, s + rep.length, false);
         updateReader(true);
       } else {
         document.getElementById('btnFindNext').click();
@@ -3646,9 +3823,14 @@ flowchart TD
     document.getElementById('btnReplaceAll')?.addEventListener('click', () => {
       const q = findInput.value;
       if (!q) return;
-      const count = updateFindMatches();
+      const raw = rawInput.value;
+      const { caseInsensitive, count } = getFindMode(raw, q);
       if (count > 0) {
-        rawInput.value = rawInput.value.split(q).join(replaceInput.value);
+        const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const re = new RegExp(escaped, caseInsensitive ? 'gi' : 'g');
+        const rep = replaceInput.value;
+        const nextVal = raw.replace(re, () => rep);
+        replaceEditorRange(0, raw.length, nextVal, null, null, true);
         updateReader(true);
         updateFindMatches();
         showToast(`${count} remplacement(s) effectué(s)`);
@@ -4183,25 +4365,86 @@ flowchart TD
       return null;
     }
 
-    function findPhraseBoundsInRaw(plainPhrase) {
+    function bindPress(el, action) {
+      if (!el) return;
+      el.addEventListener('mousedown', (e) => e.preventDefault());
+      el.addEventListener('click', (e) => action(e));
+    }
+
+    function countOccurrencesBeforeRange(plainPhrase, targetRange) {
+      if (!plainPhrase || !targetRange || !readerOutput || !readerOutput.contains(targetRange.startContainer)) return 0;
+      try {
+        const preRange = document.createRange();
+        preRange.setStart(readerOutput, 0);
+        preRange.setEnd(targetRange.startContainer, targetRange.startOffset);
+        const frag = preRange.cloneContents();
+        frag.querySelectorAll('.katex-mathml, [style*="color:transparent"]').forEach(n => n.remove());
+        const preText = (frag.textContent || '').replace(/\u200b/g, '');
+        let occ = 0;
+        let pos = 0;
+        while ((pos = preText.indexOf(plainPhrase, pos)) !== -1) {
+          occ++;
+          pos += plainPhrase.length;
+        }
+        return occ;
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    function findPhraseBoundsInRaw(plainPhrase, targetRange = null) {
       if (!plainPhrase) return null;
       const raw = rawInput.value;
-      let idx = raw.indexOf(plainPhrase);
-      let start = idx;
-      let end = idx !== -1 ? idx + plainPhrase.length : -1;
+      const targetOcc = countOccurrencesBeforeRange(plainPhrase, targetRange);
+      let start = -1;
+      let end = -1;
+
+      // Locate the N-th exact occurrence matching the user's selected instance in the preview
+      let searchFrom = 0;
+      let matchCount = 0;
+      let lastFound = -1;
+      while (true) {
+        const found = raw.indexOf(plainPhrase, searchFrom);
+        if (found === -1) break;
+        lastFound = found;
+        if (matchCount === targetOcc) {
+          start = found;
+          end = found + plainPhrase.length;
+          break;
+        }
+        matchCount++;
+        searchFrom = found + plainPhrase.length;
+      }
+      if (start === -1 && lastFound !== -1) {
+        start = lastFound;
+        end = lastFound + plainPhrase.length;
+      }
 
       // Fallback: match phrase even when raw markdown has inline markers (**, *, ==, ~~, {tag}) inside it
-      if (idx === -1 && plainPhrase.length >= 2 && plainPhrase.length <= 240) {
+      if (start === -1 && plainPhrase.length >= 2 && plainPhrase.length <= 240) {
         try {
           const escToken = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           const inlineGap = `(?:\\*\\*\\*|\\*\\*|\\*|__|_|==|~~|\\{(?:\\/?(?:${ALL_CUSTOM_TAG_NAMES}|size(?::\\d+(?:\\.\\d+)?)?))\\}|\\s)*`;
           const words = plainPhrase.trim().split(/\s+/).filter(Boolean);
           if (words.length > 1) {
             const pattern = words.map(escToken).join(inlineGap);
-            const m = new RegExp(pattern).exec(raw);
-            if (m) {
-              start = m.index;
-              end = m.index + m[0].length;
+            const re = new RegExp(pattern, 'g');
+            let m;
+            let regexCount = 0;
+            let lastMatch = null;
+            while ((m = re.exec(raw)) !== null) {
+              lastMatch = m;
+              if (regexCount === targetOcc) {
+                start = m.index;
+                end = m.index + m[0].length;
+                break;
+              }
+              regexCount++;
+              if (m[0].length === 0) re.lastIndex++;
+            }
+            if (start === -1 && lastMatch) {
+              start = lastMatch.index;
+              end = lastMatch.index + lastMatch[0].length;
             }
           }
         } catch (e) {}
@@ -4260,7 +4503,7 @@ flowchart TD
       if (target.source === 'editor') {
         start = target.start; end = target.end; segment = rawInput.value.substring(start, end);
       } else {
-        const bounds = findPhraseBoundsInRaw(target.text);
+        const bounds = findPhraseBoundsInRaw(target.text, target.range);
         if (bounds) { start = bounds.start; end = bounds.end; segment = bounds.fullSegment; }
       }
 
@@ -4278,7 +4521,7 @@ flowchart TD
           replacement = `{size:${newSize}}${segment}{/size}`;
         }
 
-        rawInput.value = rawInput.value.substring(0, start) + replacement + rawInput.value.substring(end);
+        replaceEditorRange(start, end, replacement, start, start + replacement.length, target.source !== 'editor');
         updateReader(false);
         pushHistoryState();
 
@@ -4286,32 +4529,18 @@ flowchart TD
         savedSelectionState.editorStart = start;
         savedSelectionState.editorEnd = start + replacement.length;
         if (document.activeElement === rawInput) rawInput.setSelectionRange(start, start + replacement.length);
-        showToast(`Taille de la phrase : ${newSize} pt`);
+        showToast(`Taille de la phrase : ${newSize} px`);
         return;
       }
 
-      if (target.source === 'preview' && target.range && readerOutput.contains(target.range.commonAncestorContainer)) {
-        try {
-          const anchorEl = target.range.startContainer.nodeType === 3 ? target.range.startContainer.parentElement : target.range.startContainer;
-          const computedPx = parseFloat(window.getComputedStyle(anchorEl).fontSize) || 17;
-          const newSize = Math.max(10, Math.min(64, Math.round(isDelta ? computedPx + targetSizePtOrDelta : targetSizePtOrDelta)));
-          const span = document.createElement('span');
-          span.className = 'custom-sized-phrase';
-          span.style.fontSize = `${newSize}px`;
-          span.style.lineHeight = '1.35';
-          span.appendChild(target.range.extractContents());
-          target.range.insertNode(span);
-          pushHistoryState(readerOutput.innerHTML);
-          saveToLocalStorage();
-          showToast(`Taille de la phrase : ${newSize} pt`);
-        } catch (err) { console.warn(err); }
-      }
+      floatingPenPopup.classList.add('hidden');
+      showToast('Sélectionnez ce passage dans l’éditeur à gauche pour le styliser');
     }
 
-    document.getElementById('btnGrowPhrase').addEventListener('mousedown', (e) => { e.preventDefault(); applyPhraseSize(3, true); });
-    document.getElementById('btnShrinkPhrase').addEventListener('mousedown', (e) => { e.preventDefault(); applyPhraseSize(-2.5, true); });
-    document.getElementById('popupGrowBtn').addEventListener('mousedown', (e) => { e.preventDefault(); applyPhraseSize(3, true); });
-    document.getElementById('popupShrinkBtn').addEventListener('mousedown', (e) => { e.preventDefault(); applyPhraseSize(-2.5, true); });
+    bindPress(document.getElementById('btnGrowPhrase'), () => applyPhraseSize(3, true));
+    bindPress(document.getElementById('btnShrinkPhrase'), () => applyPhraseSize(-2.5, true));
+    bindPress(document.getElementById('popupGrowBtn'), () => applyPhraseSize(3, true));
+    bindPress(document.getElementById('popupShrinkBtn'), () => applyPhraseSize(-2.5, true));
 
     phraseSizeSelect?.addEventListener('change', (e) => {
       const val = parseFloat(e.target.value);
@@ -4328,7 +4557,7 @@ flowchart TD
       if (target.source === 'editor') {
         start = target.start; end = target.end; segment = rawInput.value.substring(start, end);
       } else {
-        const bounds = findPhraseBoundsInRaw(target.text);
+        const bounds = findPhraseBoundsInRaw(target.text, target.range);
         if (bounds) { start = bounds.start; end = bounds.end; segment = bounds.fullSegment; }
       }
 
@@ -4341,7 +4570,7 @@ flowchart TD
         } else {
           replacement = `${marker}${segment}${marker}`;
         }
-        rawInput.value = rawInput.value.substring(0, start) + replacement + rawInput.value.substring(end);
+        replaceEditorRange(start, end, replacement, start, start + replacement.length, target.source !== 'editor');
         updateReader(false);
         pushHistoryState();
         savedSelectionState.source = 'editor';
@@ -4353,29 +4582,16 @@ flowchart TD
         return;
       }
 
-      if (target.source === 'preview' && target.range && readerOutput.contains(target.range.commonAncestorContainer)) {
-        try {
-          const el = document.createElement(action === 'bold' ? 'strong' : 'em');
-          el.appendChild(target.range.extractContents());
-          target.range.insertNode(el);
-          pushHistoryState(readerOutput.innerHTML);
-          saveToLocalStorage();
-          floatingPenPopup.classList.add('hidden');
-          showToast(action === 'bold' ? 'Gras appliqué !' : 'Italique appliqué !');
-        } catch (err) { console.warn(err); }
-      }
+      floatingPenPopup.classList.add('hidden');
+      showToast('Sélectionnez ce passage dans l’éditeur à gauche pour le styliser');
     }
 
     document.querySelectorAll('.word-action-btn, .popup-word-btn').forEach((btn) => {
-      btn.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        applyWordTextAction(btn.getAttribute('data-word-action'));
-      });
+      bindPress(btn, () => applyWordTextAction(btn.getAttribute('data-word-action')));
     });
 
     document.querySelectorAll('.align-btn').forEach((btn) => {
-      btn.addEventListener('mousedown', (e) => {
-        e.preventDefault();
+      bindPress(btn, () => {
         const align = btn.getAttribute('data-align');
         if (document.activeElement === rawInput || savedSelectionState.source === 'editor') {
           const pos = document.activeElement === rawInput ? rawInput.selectionStart : savedSelectionState.editorStart;
@@ -4384,7 +4600,7 @@ flowchart TD
           if (lineEnd === -1) lineEnd = rawInput.value.length;
           let line = rawInput.value.substring(lineStart, lineEnd).replace(/^\{align:(left|center|right)\}\s*/i, '');
           const updatedLine = align === 'left' ? line : `{align:${align}} ${line}`;
-          rawInput.value = rawInput.value.substring(0, lineStart) + updatedLine + rawInput.value.substring(lineEnd);
+          replaceEditorRange(lineStart, lineEnd, updatedLine, lineStart, lineStart + updatedLine.length, document.activeElement !== rawInput);
           updateReader(false);
           pushHistoryState();
           showToast(`Alignement : ${align}`);
@@ -4400,7 +4616,7 @@ flowchart TD
             lines[matchedLineIdx] = bulletPrefix
               ? (align === 'left' ? `${bulletPrefix[1]}${bulletPrefix[2]}` : `${bulletPrefix[1]}{align:${align}} ${bulletPrefix[2]}`)
               : (align === 'left' ? cleanLine : `{align:${align}} ${cleanLine}`);
-            rawInput.value = lines.join('\n');
+            replaceEditorRange(0, rawInput.value.length, lines.join('\n'), null, null, true);
             updateReader(false);
             pushHistoryState();
             showToast(`Alignement : ${align}`);
@@ -4419,7 +4635,7 @@ flowchart TD
       if (target && target.source === 'editor') {
         start = target.start; end = target.end; segment = rawInput.value.substring(start, end);
       } else if (target && target.source === 'preview' && target.text) {
-        const bounds = findPhraseBoundsInRaw(target.text);
+        const bounds = findPhraseBoundsInRaw(target.text, target.range);
         if (bounds) { start = bounds.start; end = bounds.end; segment = bounds.fullSegment; }
       }
 
@@ -4435,7 +4651,7 @@ flowchart TD
           .replace(/\*([^*]+?)\*/g, '$1')
           .replace(/(?<![\w\\])_([^_\n]+?)_(?!\w)/g, '$1')
           .replace(/\\(?:textbf|textit|emph|underline|texttt)\{([^{}]+)\}/g, '$1');
-        rawInput.value = rawInput.value.substring(0, start) + cleaned + rawInput.value.substring(end);
+        replaceEditorRange(start, end, cleaned, start, start + cleaned.length, target.source !== 'editor');
         updateReader(false);
         pushHistoryState();
         savedSelectionState.source = 'editor';
@@ -4449,7 +4665,7 @@ flowchart TD
       if (stripTagsRegex.test(rawInput.value)) {
         let cleaned = rawInput.value, prev;
         do { prev = cleaned; cleaned = cleaned.replace(stripTagsRegex, '$1'); } while (cleaned !== prev);
-        rawInput.value = cleaned;
+        replaceEditorRange(0, rawInput.value.length, cleaned, null, null, true);
         updateReader(false);
         pushHistoryState();
         floatingPenPopup.classList.add('hidden');
@@ -4459,8 +4675,8 @@ flowchart TD
       }
     }
 
-    document.getElementById('btnClearFormatting').addEventListener('mousedown', (e) => { e.preventDefault(); clearPhraseFormatting(); });
-    document.getElementById('popupClearBtn').addEventListener('mousedown', (e) => { e.preventDefault(); clearPhraseFormatting(); });
+    bindPress(document.getElementById('btnClearFormatting'), () => clearPhraseFormatting());
+    bindPress(document.getElementById('popupClearBtn'), () => clearPhraseFormatting());
 
     function applyPhraseColorTag(tag) {
       const target = resolveTargetSelection();
@@ -4473,7 +4689,7 @@ flowchart TD
       if (target.source === 'editor') {
         start = target.start; end = target.end; segment = rawInput.value.substring(start, end);
       } else {
-        const bounds = findPhraseBoundsInRaw(target.text);
+        const bounds = findPhraseBoundsInRaw(target.text, target.range);
         if (bounds) { start = bounds.start; end = bounds.end; segment = bounds.fullSegment; }
       }
 
@@ -4500,7 +4716,7 @@ flowchart TD
           replacement = `{${tag}}${updatedSegment}{/${tag}}`;
         }
 
-        rawInput.value = rawInput.value.substring(0, start) + replacement + rawInput.value.substring(end);
+        replaceEditorRange(start, end, replacement, start, start + replacement.length, target.source !== 'editor');
         updateReader(false);
         pushHistoryState();
         savedSelectionState.source = 'editor';
@@ -4512,22 +4728,12 @@ flowchart TD
         return;
       }
 
-      if (target.source === 'preview' && target.range && readerOutput.contains(target.range.commonAncestorContainer)) {
-        try {
-          const span = document.createElement('span');
-          span.className = PHRASE_TAG_CLASSES[tag] || 'ink-rouge';
-          span.appendChild(target.range.extractContents());
-          target.range.insertNode(span);
-          pushHistoryState(readerOutput.innerHTML);
-          saveToLocalStorage();
-          floatingPenPopup.classList.add('hidden');
-          showToast('Style appliqué sur le cahier !');
-        } catch (err) { console.warn(err); }
-      }
+      floatingPenPopup.classList.add('hidden');
+      showToast('Sélectionnez ce passage dans l’éditeur à gauche pour le styliser');
     }
 
     document.querySelectorAll('.phrase-tag-btn').forEach((btn) => {
-      btn.addEventListener('mousedown', (e) => { e.preventDefault(); applyPhraseColorTag(btn.getAttribute('data-tag')); });
+      bindPress(btn, () => applyPhraseColorTag(btn.getAttribute('data-tag')));
     });
 
     function positionFloatingPenPopup(e) {
@@ -4563,7 +4769,7 @@ flowchart TD
     document.addEventListener('touchend', positionFloatingPenPopup);
 
     document.querySelectorAll('.popup-pen-btn').forEach((btn) => {
-      btn.addEventListener('mousedown', (e) => { e.preventDefault(); applyPhraseColorTag(btn.getAttribute('data-tag')); });
+      bindPress(btn, () => applyPhraseColorTag(btn.getAttribute('data-tag')));
     });
 
     // Font Size & Line Height Sliders
@@ -4601,13 +4807,30 @@ flowchart TD
       }
     });
 
-    document.getElementById('btnClearEditor').addEventListener('click', () => {
-      rawInput.value = '';
+    let clearConfirmTimer = null;
+    let clearArmed = false;
+    const btnClearEditor = document.getElementById('btnClearEditor');
+    btnClearEditor.addEventListener('click', () => {
+      if (rawInput.value.trim().length > 40 && !clearArmed) {
+        clearArmed = true;
+        btnClearEditor.classList.add('ring-2', 'ring-rose-500', 'text-rose-200');
+        showToast('Cliquez à nouveau sur 🗑️ (3s) pour confirmer la suppression');
+        clearTimeout(clearConfirmTimer);
+        clearConfirmTimer = setTimeout(() => {
+          clearArmed = false;
+          btnClearEditor.classList.remove('ring-2', 'ring-rose-500', 'text-rose-200');
+        }, 3000);
+        return;
+      }
+      clearArmed = false;
+      clearTimeout(clearConfirmTimer);
+      btnClearEditor.classList.remove('ring-2', 'ring-rose-500', 'text-rose-200');
+      replaceEditorRange(0, rawInput.value.length, '', 0, 0, false);
       savedSelectionState = { source: null, editorStart: 0, editorEnd: 0, previewRange: null, previewText: '', lastPlainPhrase: '', lastBlockText: '' };
       updateReader(false);
       pushHistoryState();
       rawInput.focus();
-      showToast('Éditeur vidé');
+      showToast('Éditeur vidé (Ctrl+Z pour annuler)');
     });
 
     document.getElementById('btnPrintPdf').addEventListener('click', () => window.print());
@@ -4718,29 +4941,39 @@ flowchart TD
       }
     }
 
+    let pomoEndAt = 0;
+
+    function syncPomoTick() {
+      if (!pomoInterval) return;
+      const remaining = Math.max(0, Math.ceil((pomoEndAt - Date.now()) / 1000));
+      pomoSeconds = remaining;
+      if (pomoSeconds > 0) {
+        renderPomo();
+      } else {
+        clearInterval(pomoInterval);
+        pomoInterval = null;
+        pomoEndAt = 0;
+        renderPomo();
+        showToast(pomoMode === 'focus' ? '⏰ Session terminée ! Passez en Pause 5 min.' : '⏰ Pause terminée ! Prêt pour Focus.');
+      }
+    }
+
     function startOrResumePomo() {
       if (pomoInterval) return;
       if (pomoSeconds <= 0) pomoSeconds = POMO_DURATIONS[pomoMode];
       const wasPaused = pomoSeconds < POMO_DURATIONS[pomoMode];
-      pomoInterval = setInterval(() => {
-        if (pomoSeconds > 0) {
-          pomoSeconds--;
-          renderPomo();
-        } else {
-          clearInterval(pomoInterval);
-          pomoInterval = null;
-          renderPomo();
-          showToast(pomoMode === 'focus' ? '⏰ Session terminée ! Passez en Pause 5 min.' : '⏰ Pause terminée ! Prêt pour Focus.');
-        }
-      }, 1000);
+      pomoEndAt = Date.now() + pomoSeconds * 1000;
+      pomoInterval = setInterval(syncPomoTick, 500);
       renderPomo();
       showToast(wasPaused ? 'Minuteur Pomodoro repris' : `Session ${pomoMode === 'focus' ? 'Focus (25 min)' : 'Pause (5 min)'} démarrée`);
     }
 
     function pausePomo() {
       if (!pomoInterval) return;
+      pomoSeconds = Math.max(0, Math.ceil((pomoEndAt - Date.now()) / 1000));
       clearInterval(pomoInterval);
       pomoInterval = null;
+      pomoEndAt = 0;
       renderPomo();
       showToast('Minuteur Pomodoro en pause');
     }
@@ -4750,6 +4983,7 @@ flowchart TD
         clearInterval(pomoInterval);
         pomoInterval = null;
       }
+      pomoEndAt = 0;
       if (newMode && POMO_DURATIONS[newMode]) {
         pomoMode = newMode;
       }
@@ -4757,6 +4991,10 @@ flowchart TD
       renderPomo();
       showToast(newMode ? `Mode ${newMode === 'focus' ? 'Focus (25 min)' : 'Pause (5 min)'} sélectionné` : 'Pomodoro réinitialisé');
     }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && pomoInterval) syncPomoTick();
+    });
 
     btnPomodoro?.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -4791,7 +5029,7 @@ flowchart TD
     optPageStamp?.addEventListener('change', (e) => { pluginState.pageStamp = e.target.checked; savePluginSettings(); applyRealisticNotebookClasses(); });
     optPageGuides?.addEventListener('change', (e) => { pluginState.pageGuides = e.target.checked; savePluginSettings(); applyRealisticNotebookClasses(); });
     nbSubjectInput?.addEventListener('input', (e) => { pluginState.subject = e.target.value; savePluginSettings(); });
-    nbDateInput?.addEventListener('input', (e) => { pluginState.date = e.target.value; savePluginSettings(); });
+    nbDateInput?.addEventListener('input', (e) => { pluginState.date = e.target.value; pluginState.dateCustomized = true; savePluginSettings(); });
 
     document.getElementById('btnSaveMacros')?.addEventListener('click', () => {
       pluginState.macrosText = customMacrosInput.value;
@@ -4825,10 +5063,12 @@ flowchart TD
         return;
       }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
-        e.preventDefault();
-        findReplaceBar.classList.remove('hidden');
-        findInput.focus();
-        return;
+        if (editorContainer && editorContainer.contains(document.activeElement)) {
+          e.preventDefault();
+          findReplaceBar.classList.remove('hidden');
+          findInput.focus();
+          return;
+        }
       }
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'e') {
         e.preventDefault();
@@ -4844,9 +5084,8 @@ flowchart TD
           const s = rawInput.selectionStart, en = rawInput.selectionEnd;
           const sel = rawInput.value.substring(s, en);
           const rep = `\\(${sel}\\)`;
-          rawInput.value = rawInput.value.substring(0, s) + rep + rawInput.value.substring(en);
           const cursor = sel ? s + rep.length : s + 2;
-          rawInput.setSelectionRange(cursor, cursor);
+          replaceEditorRange(s, en, rep, cursor, cursor, false);
           updateReader(true);
           return;
         }
@@ -4862,9 +5101,10 @@ flowchart TD
     // ADVANCED EXPORT CENTER (PDF, PNG, JPG, HTML, MD, TEX, CLIPBOARD)
     // =====================================================
     function getSafeExportFilename(ext) {
-      const base = (exportFilename && exportFilename.value.trim())
-        ? exportFilename.value.trim().replace(/[^a-zA-Z0-9_-]/g, '-')
-        : 'inktex-notes';
+      const base = (exportFilename?.value || '').trim().normalize('NFC')
+        .replace(/[\\/:*?"<>|\u0000-\u001f]+/g, '-')
+        .replace(/\s+/g, '-')
+        .replace(/^[-.]+|[-.]+$/g, '') || 'inktex-notes';
       return `${base}.${ext}`;
     }
 
@@ -4952,6 +5192,11 @@ flowchart TD
         return { w: Math.ceil(r.width), h: Math.ceil(r.height) };
       });
 
+      const cardRect = readerCard.getBoundingClientRect();
+      const maxCanvasPixels = 15000000; // Stay safely under iOS Safari's ~16.7M px canvas cap
+      const cardArea = Math.max(1, cardRect.width * cardRect.height);
+      const safeScale = Math.max(1, Math.min(requestedScale, Math.sqrt(maxCanvasPixels / cardArea)));
+
       async function runHtml2Canvas(scaleToUse) {
         return await window.html2canvas(readerCard, {
           scale: scaleToUse,
@@ -4969,6 +5214,7 @@ flowchart TD
               clonedCard.style.transform = 'none';
               clonedCard.style.boxShadow = 'none';
               clonedCard.querySelectorAll('.page-guide-overlay, .inktex-copy-code-btn').forEach(el => el.remove());
+              clonedCard.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
 
               // Replace <input> stamp fields with <span> so html2canvas never clips text vertically
               ['nbSubjectInput', 'nbDateInput'].forEach(inputId => {
@@ -5014,10 +5260,10 @@ flowchart TD
 
       try {
         try {
-          return await runHtml2Canvas(requestedScale);
+          return await runHtml2Canvas(safeScale);
         } catch (firstErr) {
-          console.warn('Retrying html2canvas at scale 1.5:', firstErr);
-          return await runHtml2Canvas(1.5);
+          console.warn('Retrying html2canvas at reduced scale:', firstErr);
+          return await runHtml2Canvas(Math.min(1.5, safeScale));
         }
       } finally {
         readerCard.style.backgroundImage = prevBgImage;
@@ -5031,7 +5277,6 @@ flowchart TD
       try {
         showExportProgress('Génération du fichier PDF en cours...');
         const canvas = await captureReaderCanvas();
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
         const { jsPDF } = window.jspdf;
         const pageSize = exportPageSize.value;
         const orientation = exportOrientation.value;
@@ -5039,6 +5284,7 @@ flowchart TD
 
         let pdf;
         if (pageSize === 'auto') {
+          const imgData = canvas.toDataURL('image/jpeg', 0.95);
           const pxToMm = 0.264583;
           const pdfW = Math.max(50, canvas.width * pxToMm);
           const pdfH = Math.max(50, canvas.height * pxToMm);
@@ -5050,16 +5296,27 @@ flowchart TD
           const pageHeight = pdf.internal.pageSize.getHeight();
           const usableW = pageWidth - marginMm * 2;
           const usableH = pageHeight - marginMm * 2;
-          const renderedH = (canvas.height * usableW) / canvas.width;
-          let heightLeft = renderedH;
-          let position = marginMm;
-          pdf.addImage(imgData, 'JPEG', marginMm, position, usableW, renderedH);
-          heightLeft -= usableH;
-          while (heightLeft > 2) {
-            position = heightLeft - renderedH + marginMm;
-            pdf.addPage();
-            pdf.addImage(imgData, 'JPEG', marginMm, position, usableW, renderedH);
-            heightLeft -= usableH;
+          const pxPerMm = canvas.width / usableW;
+          const sliceMaxH = Math.max(1, Math.floor(usableH * pxPerMm));
+
+          const sliceCanvas = document.createElement('canvas');
+          const sliceCtx = sliceCanvas.getContext('2d');
+          sliceCanvas.width = canvas.width;
+
+          let offsetY = 0;
+          let pageIdx = 0;
+          while (offsetY < canvas.height) {
+            const currentSliceH = Math.min(sliceMaxH, canvas.height - offsetY);
+            sliceCanvas.height = currentSliceH;
+            sliceCtx.fillStyle = '#ffffff';
+            sliceCtx.fillRect(0, 0, sliceCanvas.width, currentSliceH);
+            sliceCtx.drawImage(canvas, 0, offsetY, canvas.width, currentSliceH, 0, 0, canvas.width, currentSliceH);
+            const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.95);
+            const sliceMmH = currentSliceH / pxPerMm;
+            if (pageIdx > 0) pdf.addPage();
+            pdf.addImage(sliceData, 'JPEG', marginMm, marginMm, usableW, sliceMmH);
+            offsetY += currentSliceH;
+            pageIdx++;
           }
         }
         triggerBlobDownload(pdf.output('blob'), getSafeExportFilename('pdf'));
@@ -5187,7 +5444,7 @@ flowchart TD
     document.getElementById('btnExportMd').addEventListener('click', () => {
       let mdContent = rawInput.value
         .replace(/\\{2,}\(/g, '\\(').replace(/\\{2,}\)/g, '\\)')
-        .replace(/\\{2,}\[/g, '\\[').replace(/\\{2,}\]/g, '\\]');
+        .replace(DOUBLED_OPEN_BRACKET_RE, '\\[').replace(/\\{2,}\]/g, '\\]');
 
       if (exportCleanTags && exportCleanTags.checked) {
         const stripRegex = new RegExp(`\\{(?:${ALL_CUSTOM_TAG_NAMES}|size:\\d+(?:\\.\\d+)?)\\}([\\s\\S]*?)\\{\\/(?:${ALL_CUSTOM_TAG_NAMES}|size)\\}`, 'gi');
@@ -5199,16 +5456,19 @@ flowchart TD
       showToast('Fichier Markdown (.md) téléchargé !');
     });
 
-    // 7. Compilable LaTeX Export (.tex) with mhchem, tables, callouts, checklists & code support
-    document.getElementById('btnExportTex').addEventListener('click', () => {
-      let src = rawInput.value
+    // 7. Compilable LaTeX Export (.tex) with math-safe escaping, mhchem, hyperref, tables, callouts, checklists & code support
+    function convertMarkdownToTex(rawSrc, customMacrosMap = {}) {
+      const extraCmdNames = Object.keys(customMacrosMap).map(k => k.replace(/^\\/, ''));
+      const src = rawSrc
         .replace(/\\{2,}\(/g, '\\(').replace(/\\{2,}\)/g, '\\)')
-        .replace(/\\{2,}\[/g, '\\[').replace(/\\{2,}\]/g, '\\]')
-        .replace(/\\{2,}([a-zA-Z]+)/g, '\\$1');
+        .replace(DOUBLED_OPEN_BRACKET_RE, '\\[').replace(/\\{2,}\]/g, '\\]');
 
       const lines = src.split(/\r?\n/);
       const texLines = [];
       let activeListEnv = null; // 'itemize' | 'enumerate'
+      let inDisplayMath = false;
+      let displayMathEndRe = null;
+      let displayMathWrapEnd = '';
 
       function closeTexList() {
         if (activeListEnv) {
@@ -5217,36 +5477,166 @@ flowchart TD
         }
       }
 
+      function escapeTexLiteral(str) {
+        return String(str)
+          .replace(/\\/g, '\\textbackslash{}')
+          .replace(/&/g, '\\&')
+          .replace(/%/g, '\\%')
+          .replace(/#/g, '\\#')
+          .replace(/_/g, '\\_')
+          .replace(/\{/g, '\\{')
+          .replace(/\}/g, '\\}')
+          .replace(/\$/g, '\\$')
+          .replace(/~/g, '\\textasciitilde{}')
+          .replace(/\^/g, '\\textasciicircum{}');
+      }
+
+      function escapeTexProse(str) {
+        return String(str)
+          .replace(/(?<!\\)&/g, '\\&')
+          .replace(/(?<!\\)%/g, '\\%')
+          .replace(/(?<!\\)#/g, '\\#')
+          .replace(/(?<!\\)_/g, '\\_')
+          .replace(/(?<!\\)\$/g, '\\$')
+          .replace(/~/g, '\\textasciitilde{}')
+          .replace(/\^/g, '\\textasciicircum{}');
+      }
+
+      const MATH_OR_CHEM_SEG_RE = /(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$\n]+?\$|\\(?:ce|pu)\{(?:[^{}]|\{[^{}]*\})+\})/g;
+
       function formatInlineToLatex(text) {
-        let t = text;
-        t = t.replace(/\{rouge\}([\s\S]*?)\{\/rouge\}/gi, '\\textcolor{red}{$1}');
-        t = t.replace(/\{bleu\}([\s\S]*?)\{\/bleu\}/gi, '\\textcolor{blue}{$1}');
-        t = t.replace(/\{vert\}([\s\S]*?)\{\/vert\}/gi, '\\textcolor{teal}{$1}');
-        t = t.replace(/\{violet\}([\s\S]*?)\{\/violet\}/gi, '\\textcolor{violet}{$1}');
-        t = t.replace(/\{orange\}([\s\S]*?)\{\/orange\}/gi, '\\textcolor{orange}{$1}');
-        t = t.replace(/\{souligne\}([\s\S]*?)\{\/souligne\}/gi, '\\underline{$1}');
-        t = t.replace(/\{underline\}([\s\S]*?)\{\/underline\}/gi, '\\underline{$1}');
-        t = t.replace(/\{encadre(?:-vert|-bleu)?\}([\s\S]*?)\{\/encadre(?:-vert|-bleu)?\}/gi, '\\fbox{$1}');
-        const cleanOtherTags = new RegExp(`\\{(?:${ALL_CUSTOM_TAG_NAMES}|size:\\d+(?:\\.\\d+)?)\\}([\\s\\S]*?)\\{\\/(?:${ALL_CUSTOM_TAG_NAMES}|size)\\}`, 'gi');
+        const mathTokens = [];
+        const stashMath = (seg) => {
+          const idx = mathTokens.length;
+          mathTokens.push(cleanInnerMath(seg, extraCmdNames));
+          return `\u0001MTH${idx}\u0002`;
+        };
+
+        const tokens = [];
+        const stash = (val) => {
+          const idx = tokens.length;
+          tokens.push(val);
+          return `\u0001TXT${idx}\u0002`;
+        };
+
+        // 1. Stash math & chemistry expressions first so Markdown/prose escaping never touches them
+        let t = text.replace(/\\\$/g, () => stash('\\$'));
+        t = t.replace(MATH_OR_CHEM_SEG_RE, (seg) => stashMath(seg));
+
+        // 2. Inline code, images, and links
+        t = t.replace(/`([^`]+?)`/g, (_, code) => stash(`\\texttt{${escapeTexLiteral(code)}}`));
+        t = t.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, (_, alt) => stash(`\\textit{${escapeTexLiteral(alt || 'image')}}`));
+        t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, (_, label, url) => {
+          const safeUrl = url.replace(/%/g, '\\%').replace(/#/g, '\\#');
+          return stash(`\\href{${safeUrl}}{${escapeTexProse(label)}}`);
+        });
+
+        // 3. InkTeX custom styling tags -> tokenised LaTeX wrappers
+        const tagOpenMap = {
+          rouge: '\\textcolor{red}{',
+          bleu: '\\textcolor{blue}{',
+          vert: '\\textcolor{teal}{',
+          violet: '\\textcolor{violet}{',
+          orange: '\\textcolor{orange}{',
+          souligne: '\\underline{',
+          underline: '\\underline{',
+          encadre: '\\fbox{',
+          'encadre-vert': '\\fbox{',
+          'encadre-bleu': '\\fbox{'
+        };
+        const styledTagRe = /\{(rouge|bleu|vert|violet|orange|souligne|underline|encadre(?:-vert|-bleu)?)\}([\s\S]*?)\{\/\1\}/gi;
         let prev;
+        do {
+          prev = t;
+          t = t.replace(styledTagRe, (_, name, inner) => {
+            const openCmd = tagOpenMap[name.toLowerCase()] || '';
+            return openCmd ? `${stash(openCmd)}${inner}${stash('}')}` : inner;
+          });
+        } while (t !== prev);
+
+        const cleanOtherTags = new RegExp(`\\{(?:${ALL_CUSTOM_TAG_NAMES}|size:\\d+(?:\\.\\d+)?)\\}([\\s\\S]*?)\\{\\/(?:${ALL_CUSTOM_TAG_NAMES}|size)\\}`, 'gi');
         do { prev = t; t = t.replace(cleanOtherTags, '$1'); } while (t !== prev);
-        t = t.replace(/==([^=]+?)==/g, '\\textbf{$1}');
-        t = t.replace(/\*\*\*([^*]+?)\*\*\*/g, '\\textbf{\\textit{$1}}');
-        t = t.replace(/\*\*([^*]+?)\*\*/g, '\\textbf{$1}');
-        t = t.replace(/__([^_]+?)__/g, '\\textbf{$1}');
-        t = t.replace(/\*([^*]+?)\*/g, '\\textit{$1}');
-        t = t.replace(/`([^`]+?)`/g, '\\texttt{$1}');
+
+        // 4. Markdown emphasis in prose only
+        t = t.replace(/==([^=]+?)==/g, (_, inner) => `${stash('\\textbf{')}${inner}${stash('}')}`);
+        t = t.replace(/\*\*\*([^*]+?)\*\*\*/g, (_, inner) => `${stash('\\textbf{\\textit{')}${inner}${stash('}}')}`);
+        t = t.replace(/\*\*([^*]+?)\*\*/g, (_, inner) => `${stash('\\textbf{')}${inner}${stash('}')}`);
+        t = t.replace(/__([^_]+?)__/g, (_, inner) => `${stash('\\textbf{')}${inner}${stash('}')}`);
+        t = t.replace(/~~([^~]+?)~~/g, (_, inner) => inner);
+        t = t.replace(/\*([^*\n]+?)\*/g, (_, inner) => `${stash('\\textit{')}${inner}${stash('}')}`);
+        t = t.replace(/(?<![\w\\])_([^_\n]+?)_(?!\w)/g, (_, inner) => `${stash('\\textit{')}${inner}${stash('}')}`);
+
+        // 5. Escape LaTeX specials in remaining plain prose
+        t = escapeTexProse(t);
+
+        // 6. Restore formatting tokens and math segments
+        let guard = 0;
+        while (/\u0001TXT\d+\u0002/.test(t) && guard < 12) {
+          t = t.replace(/\u0001TXT(\d+)\u0002/g, (_, idx) => tokens[Number(idx)] || '');
+          guard++;
+        }
+        t = t.replace(/\u0001MTH(\d+)\u0002/g, (_, idx) => mathTokens[Number(idx)] || '');
         return t;
       }
 
       for (let i = 0; i < lines.length; i++) {
         const rawLine = lines[i];
         const trimmed = rawLine.trim().replace(/^\{align:(left|center|right)\}\s*/i, '');
+
+        // Multi-line display math blocks ($$...$$, \[...\], \begin{equation|align|cases|...})
+        if (inDisplayMath) {
+          texLines.push(cleanInnerMath(rawLine, extraCmdNames));
+          if (displayMathEndRe && displayMathEndRe.test(trimmed)) {
+            if (displayMathWrapEnd) texLines.push(displayMathWrapEnd);
+            inDisplayMath = false;
+            displayMathEndRe = null;
+            displayMathWrapEnd = '';
+          }
+          continue;
+        }
+
         if (!trimmed) {
           closeTexList();
           texLines.push('');
           continue;
         }
+
+        if (trimmed === '$$' || (trimmed.startsWith('$$') && trimmed.indexOf('$$', 2) === -1)) {
+          closeTexList();
+          texLines.push(cleanInnerMath(rawLine, extraCmdNames));
+          inDisplayMath = true;
+          displayMathEndRe = /\$\$/;
+          displayMathWrapEnd = '';
+          continue;
+        }
+
+        if (trimmed.startsWith('\\[') && !trimmed.includes('\\]')) {
+          closeTexList();
+          texLines.push(cleanInnerMath(rawLine, extraCmdNames));
+          inDisplayMath = true;
+          displayMathEndRe = /\\\]/;
+          displayMathWrapEnd = '';
+          continue;
+        }
+
+        const envStartMatch = trimmed.match(/^\\begin\{(equation\*?|align\*?|gather\*?|aligned|cases|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)\}/);
+        if (envStartMatch) {
+          closeTexList();
+          const envName = envStartMatch[1];
+          const needsMathWrap = /^(?:aligned|cases|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)$/.test(envName);
+          const endRe = new RegExp(`\\\\end\\{${envName.replace('*', '\\*')}\\}`);
+          if (needsMathWrap) texLines.push('\\[');
+          texLines.push(cleanInnerMath(rawLine, extraCmdNames));
+          if (endRe.test(trimmed)) {
+            if (needsMathWrap) texLines.push('\\]');
+          } else {
+            inDisplayMath = true;
+            displayMathEndRe = endRe;
+            displayMathWrapEnd = needsMathWrap ? '\\]' : '';
+          }
+          continue;
+        }
+
         // Fenced code / Mermaid blocks -> verbatim so &, _, #, <, > never break Overleaf
         if (/^```/.test(trimmed)) {
           closeTexList();
@@ -5271,9 +5661,13 @@ flowchart TD
           texLines.push('\\begin{quote}');
           const headerM = (qLines[0] || '').match(/^\[!([A-Z]+)\]\s*(.*)$/i);
           if (headerM) {
-            const title = headerM[2] ? formatInlineToLatex(headerM[2]) : headerM[1].toUpperCase();
+            const title = headerM[2] ? formatInlineToLatex(headerM[2]) : escapeTexProse(headerM[1].toUpperCase());
             texLines.push(`\\textbf{${title}}\\par`);
-            qLines.slice(1).forEach(ql => texLines.push(formatInlineToLatex(ql.replace(/^[-*•]\s+/, '\\textbullet\\ '))));
+            qLines.slice(1).forEach(ql => {
+              const isBullet = /^[-*•]\s+/.test(ql);
+              const body = isBullet ? ql.replace(/^[-*•]\s+/, '') : ql;
+              texLines.push((isBullet ? '\\textbullet\\ ' : '') + formatInlineToLatex(body));
+            });
           } else {
             qLines.forEach(ql => texLines.push(formatInlineToLatex(ql)));
           }
@@ -5345,21 +5739,25 @@ flowchart TD
       }
       closeTexList();
 
-      const customMacroDefs = Object.entries(parseCustomMacros()).map(([cmd, exp]) => {
+      const EXISTING_LATEX_CMDS = new Set(['\\vec', '\\div', '\\deg', '\\Re', '\\Im', '\\S', '\\P', '\\H', '\\L', '\\O', '\\a', '\\b', '\\c', '\\d', '\\i', '\\j', '\\k', '\\l', '\\o', '\\r', '\\t', '\\u', '\\v']);
+      const customMacroDefs = Object.entries(customMacrosMap).map(([cmd, exp]) => {
         const hasArg = exp.includes('#1');
-        return `\\providecommand{${cmd}}${hasArg ? '[1]' : ''}{${exp}}`;
+        const defCmd = EXISTING_LATEX_CMDS.has(cmd) ? '\\renewcommand' : '\\providecommand';
+        return `${defCmd}{${cmd}}${hasArg ? '[1]' : ''}{${exp}}`;
       }).join('\n');
 
-      const fullTex = `\\documentclass[12pt,a4paper]{article}
+      return `\\documentclass[12pt,a4paper]{article}
 \\usepackage[utf8]{inputenc}
 \\usepackage[T1]{fontenc}
 \\usepackage[french]{babel}
 \\usepackage{amsmath,amssymb,amsfonts}
 \\usepackage[version=4]{mhchem}
 \\usepackage{xcolor}
+\\usepackage{hyperref}
 \\usepackage[margin=1.8cm]{geometry}
 \\setlength{\\parskip}{0.5em}
 \\setlength{\\parindent}{0pt}
+\\providecommand{\\pu}[1]{\\text{#1}}
 ${customMacroDefs ? customMacroDefs + '\n' : ''}
 \\begin{document}
 
@@ -5367,6 +5765,10 @@ ${texLines.join('\n')}
 
 \\end{document}
 `;
+    }
+
+    document.getElementById('btnExportTex').addEventListener('click', () => {
+      const fullTex = convertMarkdownToTex(rawInput.value, parseCustomMacros());
       triggerBlobDownload(new Blob([fullTex], { type: 'application/x-tex;charset=utf-8' }), getSafeExportFilename('tex'));
       showToast('Document LaTeX (.tex) téléchargé !');
     });
@@ -5396,7 +5798,7 @@ ${texLines.join('\n')}
 
       removeNetlifyBadges();
       const badgeObserver = new MutationObserver(() => removeNetlifyBadges());
-      badgeObserver.observe(document.body, { childList: true, subtree: true });
+      badgeObserver.observe(document.body, { childList: true, subtree: false });
     });
   </script>
 </body>
