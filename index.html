@@ -4,45 +4,39 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>InkTeX Studio</title>
+  <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#0a0b0e" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlYTVlOSIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNGY0NmU1Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOTMzM2VhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTgiIGZpbGw9InVybCgjZykiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNCAxNCkgc2NhbGUoMS41KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuMTUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIxVjciLz48cGF0aCBkPSJtMTYgMTIgMiAyIDQtNCIvPjxwYXRoIGQ9Ik0yMiA2VjRhMSAxIDAgMCAwLTEtMWgtNWE0IDQgMCAwIDAtNCA0IDQgNCAwIDAgMC00LTRIM2ExIDEgMCAwIDAtMSAxdjEzYTEgMSAwIDAgMCAxIDFoNmEzIDMgMCAwIDEgMyAzIDMgMyAwIDAgMSAzLTNoNmExIDEgMCAwIDAgMS0xdi0xLjMiLz48L2c+PC9zdmc+" />
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlYTVlOSIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNGY0NmU1Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOTMzM2VhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTgiIGZpbGw9InVybCgjZykiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNCAxNCkgc2NhbGUoMS41KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuMTUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIxVjciLz48cGF0aCBkPSJtMTYgMTIgMiAyIDQtNCIvPjxwYXRoIGQ9Ik0yMiA2VjRhMSAxIDAgMCAwLTEtMWgtNWE0IDQgMCAwIDAtNCA0IDQgNCAwIDAgMC00LTRIM2ExIDEgMCAwIDAtMSAxdjEzYTEgMSAwIDAgMCAxIDFoNmEzIDMgMCAwIDEgMyAzIDMgMyAwIDAgMSAzLTNoNmExIDEgMCAwIDAgMS0xdi0xLjMiLz48L2c+PC9zdmc+" />
 
+  <!-- Resource Hints: Early DNS/TLS for Critical Origins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://unpkg.com">
+
   <!-- Tailwind CSS v3 -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google Fonts (12 Handwriting + Inter + JetBrains Mono) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@500;700&family=Courgette&family=Gloria+Hallelujah&family=Gochi+Hand&family=Handlee&family=Indie+Flower&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Kalam:wght@400;700&family=Mali:wght@400;600;700&family=Neucha&family=Patrick+Hand&family=Shadows+Into+Light&display=swap" rel="stylesheet">
-  <!-- Apple San Francisco Pro CDN Font -->
-  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+  <!-- Core UI & Editor Fonts ONLY (12 Handwriting Fonts + SF Pro load on-demand!) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- KaTeX 0.16.11 + mhchem (Chimie) + copy-tex -->
+  <!-- KaTeX 0.16.11 + mhchem (Chimie) + copy-tex (deferred: never blocks HTML parsing) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/mhchem.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/mhchem.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" crossorigin="anonymous"></script>
 
-  <!-- DOMPurify (XSS Protection) -->
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js" crossorigin="anonymous"></script>
+  <!-- DOMPurify 3.5.0 (XSS Protection — deferred) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.5.0/dist/purify.min.js" crossorigin="anonymous"></script>
 
-  <!-- Highlight.js (Code Syntax Highlighting) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" crossorigin="anonymous">
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" crossorigin="anonymous"></script>
-
-  <!-- Mermaid v11 (Diagrams & Hand-Drawn Sketches) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" crossorigin="anonymous"></script>
-
-  <!-- html2canvas & jsPDF for High-Resolution PNG/JPG & Direct PDF Export -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
-
-  <!-- Lucide Icons -->
-  <script defer src="https://unpkg.com/lucide@latest" crossorigin="anonymous"></script>
+  <!-- Lucide Icons 1.79.0 (deferred; Highlight.js, Mermaid, html2canvas & jsPDF lazy-load strictly on-demand!) -->
+  <script defer src="https://unpkg.com/lucide@1.79.0/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
 
   <style id="inktexCoreStyles">
     :root {
+      color-scheme: dark;
       --reader-font-size: 16.5px;
       --reader-line-height: 1.78;
       --reader-base-font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
@@ -54,13 +48,7 @@
       --paper-line-step: 34px;
       /* V2 Matte Obsidian Chrome Tokens */
       --v2-canvas: #0a0b0e;
-      --v2-surface: #12141a;
-      --v2-surface-2: #171a23;
-      --v2-border: rgba(255, 255, 255, 0.065);
-      --v2-border-strong: rgba(255, 255, 255, 0.11);
       --v2-text: #e6e8ee;
-      --v2-muted: #8b91a0;
-      --v2-accent: #38bdf8;
       --v2-ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
 
@@ -173,6 +161,11 @@
       color: #7dd3fc !important;
       border-color: rgba(56, 189, 248, 0.3) !important;
     }
+    #btnMobileRibbonToggle.v2-btn-active {
+      background-color: #132535 !important;
+      color: #7dd3fc !important;
+      border-color: rgba(56, 189, 248, 0.42) !important;
+    }
 
     .v2-surface-btn {
       display: inline-flex;
@@ -217,10 +210,12 @@
       box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
     }
     .theme-notebook.reader-card {
+      color-scheme: light;
       box-shadow: 0 28px 75px rgba(0, 0, 0, 0.6), 0 3px 10px rgba(0, 0, 0, 0.35);
       border-color: rgba(255, 255, 255, 0.12) !important;
     }
     .theme-light.reader-card {
+      color-scheme: light;
       box-shadow: 0 24px 65px rgba(0, 0, 0, 0.5);
       border-color: rgba(255, 255, 255, 0.1) !important;
     }
@@ -724,11 +719,21 @@
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      will-change: transform, opacity;
       transition:
         transform 240ms var(--v2-ease),
         opacity 180ms ease,
         visibility 240ms ease;
+    }
+
+    /* CSS Layout & Style Containment for Isolated Heavy Subtrees */
+    .inktex-code-wrap,
+    .inktex-mermaid-wrap,
+    .inktex-table-wrap,
+    #outlineDrawer,
+    #exportModal > div,
+    #pluginModal > div,
+    #shortcutsModal > div {
+      contain: layout style;
     }
 
     #notebookCustomBar.ribbon-collapsed {
@@ -781,6 +786,11 @@
     .nb-pen-dot:active {
       transform: scale(1.04);
     }
+    .nb-pen-dot.v2-pen-active {
+      box-shadow: 0 0 0 2px #12141a, 0 0 0 3.5px #38bdf8;
+      border-color: #ffffff;
+      transform: scale(1.14);
+    }
 
     .nb-hl-chip {
       width: 18px;
@@ -800,16 +810,91 @@
     .nb-hl-chip:active {
       transform: scale(1.02);
     }
+    .nb-hl-chip.v2-pen-active {
+      box-shadow: 0 0 0 2px #12141a, 0 0 0 3.5px #38bdf8;
+      transform: scale(1.1);
+    }
+
+    /* Horizontal Scrollability Fade Affordance on Floating Dock */
+    @property --dock-fade-start {
+      syntax: "<length>";
+      inherits: false;
+      initial-value: 0px;
+    }
+    @property --dock-fade-end {
+      syntax: "<length>";
+      inherits: false;
+      initial-value: 0px;
+    }
+    .nb-dock-scroller {
+      --dock-fade-size: 1.75rem;
+      scroll-padding-inline: var(--dock-fade-size);
+      mask:
+        linear-gradient(black, black) no-clip subtract,
+        linear-gradient(to right, black, transparent) 0 0 / var(--dock-fade-start) 100% no-repeat no-clip,
+        linear-gradient(to right, transparent, black) 100% 0 / var(--dock-fade-end) 100% no-repeat no-clip;
+      transition: --dock-fade-start 180ms ease, --dock-fade-end 180ms ease;
+    }
+    .nb-dock-scroller.more-start {
+      --dock-fade-start: var(--dock-fade-size);
+    }
+    .nb-dock-scroller.more-end {
+      --dock-fade-end: var(--dock-fade-size);
+    }
+    @supports (animation-timeline: scroll(self inline)) {
+      .nb-dock-scroller {
+        transition: none;
+        animation: dock-reveal-fade-start linear both, dock-hide-fade-end linear both;
+        animation-timeline: scroll(self inline);
+        animation-range: 0 var(--dock-fade-size), calc(100% - var(--dock-fade-size)) 100%;
+      }
+      @keyframes dock-reveal-fade-start {
+        to { --dock-fade-start: var(--dock-fade-size); }
+      }
+      @keyframes dock-hide-fade-end {
+        from { --dock-fade-end: var(--dock-fade-size); }
+      }
+    }
+
+    /* Slim Full-Reader Reading Progress Hairline (CSS Scroll-Driven Animation + JS Fallback) */
+    #readingProgressBar {
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.35), rgba(56, 189, 248, 0.72));
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease;
+    }
+    body.full-reader-active #readingProgressBar {
+      opacity: 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      @supports (animation-timeline: scroll()) {
+        @keyframes grow-reading-progress {
+          from { transform: scaleX(0); }
+          to { transform: scaleX(1); }
+        }
+        body.full-reader-active #readingProgressBar {
+          animation: grow-reading-progress auto linear;
+          animation-timeline: scroll(root block);
+        }
+      }
+    }
 
     /* Comfortable bottom scroll clearance so Floating Dock NEVER covers last lines or editor footer */
     #workspaceGrid.notebook-mode-spacing #readerCard {
       padding-bottom: 7.5rem;
     }
+    #workspaceGrid.full-reader #readerCard {
+      max-width: 920px;
+    }
     @media (min-width: 1024px) {
-      #editorContainer {
-        transition: height 220ms var(--v2-ease);
-      }
-      body.notebook-ribbon-open #editorContainer {
+      body.desk-notebook-mode #editorContainer {
         height: calc(100vh - 154px);
       }
     }
@@ -825,10 +910,6 @@
       #nbStyleDrawer {
         max-height: 55dvh;
         overflow-y: auto;
-      }
-      #showRibbonPillContainer {
-        bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)) !important;
-        right: 0.9rem !important;
       }
       #activeRecallBar {
         bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)) !important;
@@ -1112,17 +1193,31 @@
     .reader-content li.inktex-task-item {
       list-style-type: none;
       margin-left: -1.35rem;
-      display: flex;
+    }
+    .inktex-task-label {
+      display: inline-flex;
       align-items: flex-start;
       gap: 0.55rem;
+      cursor: pointer;
+      width: 100%;
     }
     .inktex-task-checkbox {
       margin-top: 0.32em;
-      width: 1rem;
-      height: 1rem;
+      inline-size: 1rem;
+      aspect-ratio: 1;
       accent-color: #0284c7;
       cursor: pointer;
       flex-shrink: 0;
+    }
+    @media (pointer: coarse) {
+      .inktex-task-label {
+        min-block-size: 44px;
+        align-items: center;
+      }
+      .inktex-task-checkbox {
+        margin-top: 0;
+        inline-size: 1.15rem;
+      }
     }
     .inktex-task-done {
       text-decoration: line-through;
@@ -1359,13 +1454,15 @@
       overscroll-behavior: contain;
     }
 
-    @media (max-width: 1024px), (hover: none) and (pointer: coarse) {
-      /* Prevent iOS & iPadOS Safari auto-zoom on focus (< 16px) */
-      input[type="text"],
-      input[type="search"],
-      input[type="number"],
-      textarea,
-      select {
+    @media (max-width: 767px) and (pointer: coarse) {
+      /* Prevent iOS Safari auto-zoom on text inputs without inflating compact dock selects */
+      #rawInput,
+      #findInput,
+      #replaceInput,
+      #exportFilename,
+      #customMacrosInput,
+      #nbSubjectInput,
+      #nbDateInput {
         font-size: 16px !important;
       }
     }
@@ -1592,11 +1689,12 @@
   <!-- =====================================================
        UNIFIED 52PX MATTE STUDIO TOP BAR (Linear + Craft Style)
        ===================================================== -->
-  <header class="no-print sticky top-0 z-40 bg-[#0b0c10]/90 backdrop-blur-xl border-b border-white/[0.065]">
+  <header class="no-print sticky top-0 z-[45] bg-[#0b0c10]/90 backdrop-blur-xl border-b border-white/[0.065]">
     <div class="max-w-[1680px] mx-auto px-2.5 sm:px-5 min-h-[52px] py-1.5 flex items-center justify-between gap-1.5 sm:gap-3">
 
       <!-- LEFT: Minimal Monogram + 3-Way Segmented Theme Pill -->
       <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+        <h1 class="sr-only">InkTeX Studio</h1>
         <div class="flex items-center gap-2 flex-shrink-0">
           <div class="w-7 h-7 rounded-lg bg-[#161923] border border-white/[0.09] flex items-center justify-center text-sky-400">
             <i data-lucide="feather" class="w-3.5 h-3.5" aria-hidden="true"></i>
@@ -1636,36 +1734,13 @@
 
         <span class="h-3.5 w-px bg-white/[0.07] mx-0.5" aria-hidden="true"></span>
 
-        <!-- Pomodoro Focus Timer Popover -->
+        <!-- Pomodoro Focus Timer Trigger -->
         <div class="relative" id="pomodoroContainer">
           <button id="btnPomodoro" type="button" aria-expanded="false" aria-controls="pomodoroPopover" class="v2-icon-btn !min-h-[28px] !px-2.5 !py-1 font-mono" title="Minuteur Pomodoro">
-            <span id="pomoStatusDot" class="w-1.5 h-1.5 rounded-full bg-[#646b7c]"></span>
+            <span id="pomoStatusDot" class="w-1.5 h-1.5 rounded-full bg-[#8a92a4]"></span>
             <i data-lucide="timer" class="w-3.5 h-3.5" aria-hidden="true"></i>
             <span id="pomodoroDisplay" class="tabular-nums text-[11.5px]">25:00</span>
           </button>
-
-          <div id="pomodoroPopover" class="hidden fixed left-3 right-3 top-14 w-auto sm:w-[276px] sm:left-auto sm:right-0 sm:top-auto sm:absolute mt-2 v2-popover p-4 z-[70] text-xs space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="font-medium text-[#e6e8ee]">Minuteur Focus</span>
-              <span id="pomoStateBadge" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.05] text-[#8b91a0] border border-white/[0.065]">Prêt</span>
-            </div>
-
-            <div class="text-center py-2.5 bg-[#0b0d12] border border-white/[0.06] rounded-xl">
-              <div id="pomoPopoverDisplay" class="text-2xl font-mono font-semibold tracking-wider text-[#e6e8ee] tabular-nums">25:00</div>
-              <div id="pomoModeLabel" class="text-[11px] text-[#8b91a0] mt-0.5">Session Focus (25 min)</div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-1.5">
-              <button id="btnPomoModeFocus" type="button" class="px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-sky-400/15 text-sky-300 border border-sky-400/30 cursor-pointer transition whitespace-nowrap">Focus 25 min</button>
-              <button id="btnPomoModeBreak" type="button" class="px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-[#171a23] text-[#8b91a0] border border-white/[0.065] hover:text-[#e6e8ee] cursor-pointer transition whitespace-nowrap">Pause 5 min</button>
-            </div>
-
-            <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-white/[0.065]">
-              <button id="btnPomoStartResume" type="button" class="px-2 py-1.5 rounded-lg bg-[#38bdf8] hover:bg-[#5ccbfa] text-[#080a0f] font-semibold cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed transition whitespace-nowrap">Démarrer</button>
-              <button id="btnPomoPause" type="button" disabled class="px-2 py-1.5 rounded-lg bg-[#1b1f2b] hover:bg-[#232838] text-[#e6e8ee] border border-white/[0.08] font-medium cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed transition whitespace-nowrap">Pause</button>
-              <button id="btnPomoReset" type="button" class="px-2 py-1.5 rounded-lg bg-[#151821] hover:bg-[#1e2230] text-[#a9b0be] border border-white/[0.065] font-medium cursor-pointer transition whitespace-nowrap">Reset</button>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -1679,27 +1754,28 @@
             <span class="hidden 2xl:inline">Apparence</span>
           </button>
 
-          <div id="appearancePopover" class="hidden fixed left-3 right-3 top-14 w-auto sm:w-72 sm:left-auto sm:right-0 sm:top-auto sm:absolute mt-2 v2-popover p-4 z-[70] text-xs space-y-4">
+          <div id="appearancePopover" class="hidden fixed left-3 right-3 top-14 w-auto sm:w-72 sm:left-auto sm:right-0 sm:top-auto sm:absolute mt-2 v2-popover p-4 z-[70] max-h-[calc(100dvh-72px)] overflow-y-auto text-xs space-y-4">
             <div class="flex items-center justify-between border-b border-white/[0.065] pb-2.5">
               <span class="font-medium text-[#e6e8ee] flex items-center gap-1.5">
                 <i data-lucide="type" class="w-3.5 h-3.5 text-sky-400" aria-hidden="true"></i>
                 <span>Apparence &amp; Lecture</span>
               </span>
-              <span class="text-[10px] text-[#7a8191]">Auto-sauvé</span>
+              <span class="text-[10px] text-[#949bad]">Auto-sauvé</span>
             </div>
 
             <div class="space-y-1.5">
-              <label for="baseFontSelect" class="block text-[11px] font-medium text-[#8b91a0]">Police principale</label>
+              <label for="baseFontSelect" class="block text-[11px] font-medium text-[#949bad]">Police principale (Dark &amp; Clair)</label>
               <select id="baseFontSelect" class="w-full bg-[#0c0e13] text-[#e6e8ee] border border-white/[0.08] hover:border-white/[0.15] rounded-xl px-2.5 py-2 text-xs font-medium focus:outline-none focus:border-sky-400/60 cursor-pointer">
                 <option value="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif">San Francisco Pro (Apple)</option>
                 <option value="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" selected>Inter (Studio)</option>
                 <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
               </select>
+              <p id="baseFontNotebookHint" class="hidden text-[10.5px] text-[#949bad]">Police manuscrite du cahier réglable dans le dock en bas.</p>
             </div>
 
             <div class="space-y-1.5">
               <div class="flex items-center justify-between">
-                <label for="fontSizeSlider" class="text-[11px] font-medium text-[#8b91a0]">Taille du texte</label>
+                <label for="fontSizeSlider" class="text-[11px] font-medium text-[#949bad]">Taille du texte</label>
                 <span id="fontSizeLabel" class="text-[#e6e8ee] font-mono text-[11px] tabular-nums">16.5px</span>
               </div>
               <input id="fontSizeSlider" type="range" min="14" max="26" step="0.5" value="16.5" class="w-full accent-sky-400 cursor-pointer" />
@@ -1707,21 +1783,30 @@
 
             <div class="space-y-1.5">
               <div class="flex items-center justify-between">
-                <label for="lineHeightSlider" class="text-[11px] font-medium text-[#8b91a0]">Interligne</label>
+                <label for="lineHeightSlider" class="text-[11px] font-medium text-[#949bad]">Interligne</label>
                 <span id="lineHeightLabel" class="text-[#e6e8ee] font-mono text-[11px] tabular-nums">1.78</span>
               </div>
               <input id="lineHeightSlider" type="range" min="1.4" max="2.4" step="0.05" value="1.78" class="w-full accent-sky-400 cursor-pointer" />
             </div>
 
-            <!-- Mobile-accessible Study tools inside Apparence menu on small phones (< md) -->
+            <!-- Mobile-accessible Study & Reference Tools (< md) -->
             <div class="md:hidden pt-2.5 border-t border-white/[0.065] grid grid-cols-2 gap-1.5">
-              <button type="button" onclick="document.getElementById('btnToggleOutline').click()" class="v2-surface-btn text-[11px]">
+              <button id="btnMobOutline" type="button" aria-pressed="false" class="v2-surface-btn text-[11px]">
                 <i data-lucide="list-tree" class="w-3.5 h-3.5" aria-hidden="true"></i>
                 <span>Sommaire</span>
               </button>
-              <button type="button" onclick="document.getElementById('btnActiveRecall').click()" class="v2-surface-btn text-[11px]">
+              <button id="btnMobRecall" type="button" aria-pressed="false" class="v2-surface-btn text-[11px]">
                 <i data-lucide="eye-off" class="w-3.5 h-3.5" aria-hidden="true"></i>
                 <span>Révision</span>
+              </button>
+              <button id="btnMobPomodoro" type="button" aria-expanded="false" aria-controls="pomodoroPopover" class="v2-surface-btn text-[11px] font-mono">
+                <span id="mobPomoStatusDot" class="w-1.5 h-1.5 rounded-full bg-[#8a92a4]"></span>
+                <i data-lucide="timer" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                <span id="mobPomodoroDisplay" class="tabular-nums">25:00</span>
+              </button>
+              <button id="btnMobShortcuts" type="button" class="v2-surface-btn text-[11px]">
+                <i data-lucide="help-circle" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                <span>Raccourcis</span>
               </button>
             </div>
           </div>
@@ -1735,7 +1820,7 @@
         </button>
 
         <!-- Split / Full Reader Toggle (Desktop) -->
-        <button id="btnToggleLayout" type="button" class="hidden lg:inline-flex v2-icon-btn" title="Basculer entre vue divisée et lecture plein écran">
+        <button id="btnToggleLayout" type="button" aria-pressed="false" class="hidden lg:inline-flex v2-icon-btn" title="Basculer entre vue divisée et lecture plein écran">
           <i data-lucide="panel-left-close" class="w-3.5 h-3.5" aria-hidden="true"></i>
           <span id="layoutBtnText">Plein écran</span>
         </button>
@@ -1758,7 +1843,39 @@
       </div>
 
     </div>
+
+    <!-- Subtle Full-Reader Reading Progress Hairline -->
+    <div id="readingProgressBar" aria-hidden="true"></div>
   </header>
+
+  <!-- Pomodoro Popover (Direct child of <body> so it never gets trapped inside <header>'s stacking context) -->
+  <div id="pomodoroPopover" class="no-print hidden fixed left-3 right-3 top-[60px] sm:left-auto sm:right-4 sm:w-[276px] v2-popover p-4 z-[75] text-xs space-y-3">
+    <div class="flex items-center justify-between gap-2">
+      <span class="font-medium text-[#e6e8ee]">Minuteur Focus</span>
+      <div class="flex items-center gap-1.5">
+        <button id="btnPomoMute" type="button" aria-pressed="false" aria-label="Activer ou couper le carillon de fin" class="v2-icon-btn !min-h-[24px] !min-w-[24px] !p-1 text-[#949bad]" title="Carillon sonore activé">
+          <i data-lucide="volume-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
+        </button>
+        <span id="pomoStateBadge" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.05] text-[#949bad] border border-white/[0.065]">Prêt</span>
+      </div>
+    </div>
+
+    <div class="text-center py-2.5 bg-[#0b0d12] border border-white/[0.06] rounded-xl">
+      <div id="pomoPopoverDisplay" class="text-2xl font-mono font-semibold tracking-wider text-[#e6e8ee] tabular-nums">25:00</div>
+      <div id="pomoModeLabel" class="text-[11px] text-[#949bad] mt-0.5">Session Focus (25 min)</div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-1.5">
+      <button id="btnPomoModeFocus" type="button" class="px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-sky-400/15 text-sky-300 border border-sky-400/30 cursor-pointer transition whitespace-nowrap">Focus 25 min</button>
+      <button id="btnPomoModeBreak" type="button" class="px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-[#171a23] text-[#949bad] border border-white/[0.065] hover:text-[#e6e8ee] cursor-pointer transition whitespace-nowrap">Pause 5 min</button>
+    </div>
+
+    <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-white/[0.065]">
+      <button id="btnPomoStartResume" type="button" class="px-2 py-1.5 rounded-lg bg-[#38bdf8] hover:bg-[#5ccbfa] text-[#080a0f] font-semibold cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed transition whitespace-nowrap">Démarrer</button>
+      <button id="btnPomoPause" type="button" disabled class="px-2 py-1.5 rounded-lg bg-[#1b1f2b] hover:bg-[#232838] text-[#e6e8ee] border border-white/[0.08] font-medium cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed transition whitespace-nowrap">Pause</button>
+      <button id="btnPomoReset" type="button" class="px-2 py-1.5 rounded-lg bg-[#151821] hover:bg-[#1e2230] text-[#a9b0be] border border-white/[0.065] font-medium cursor-pointer transition whitespace-nowrap">Reset</button>
+    </div>
+  </div>
 
   <!-- =====================================================
        FLOATING GOODNOTES / FIGMA CAHIER STUDIO DOCK
@@ -1860,7 +1977,7 @@
     <div role="toolbar" aria-label="Outils Cahier Manuscrit" class="flex items-center gap-1 text-xs">
 
       <!-- Scrollable Studio Clusters on compact viewports -->
-      <div class="flex flex-nowrap items-center gap-1 overflow-x-auto no-scrollbar min-w-0 py-0.5">
+      <div id="nbDockScroller" class="nb-dock-scroller flex flex-nowrap items-center gap-1 overflow-x-auto no-scrollbar min-w-0 py-0.5">
 
         <!-- Undo / Redo -->
         <div role="group" aria-label="Historique" class="flex items-center gap-0.5 flex-shrink-0">
@@ -1986,9 +2103,9 @@
           <span id="nbDrawerChevron" class="inline-block text-[10px] text-[#8b91a0] transition-transform duration-200">▴</span>
         </button>
 
-        <button id="btnPinRibbon" type="button" aria-pressed="false" aria-label="Épingler le dock Cahier" class="word-btn !px-1.5" title="Épingler le dock">
+        <button id="btnPinRibbon" type="button" aria-pressed="true" aria-label="Épingler le dock Cahier" class="word-btn v2-btn-active !px-1.5" title="Épingler le dock">
           <i data-lucide="pin" class="w-3.5 h-3.5" aria-hidden="true"></i>
-          <span id="pinRibbonText" class="sr-only">Épingler</span>
+          <span id="pinRibbonText" class="sr-only">Épinglé</span>
         </button>
 
         <button id="btnHideRibbon" type="button" aria-label="Réduire le dock en bouton flottant" class="word-btn !px-1.5 text-[#8b91a0] hover:text-[#e6e8ee]" title="Réduire en bouton flottant (Alt+T)">
@@ -2004,7 +2121,6 @@
     <button id="btnShowRibbonPill" type="button" aria-expanded="false" aria-label="Rouvrir le dock Cahier Manuscrit" class="w-11 h-11 rounded-2xl bg-[#12141a]/95 hover:bg-[#191d27] border border-white/[0.11] hover:border-sky-400/40 text-sky-400 shadow-[0_14px_38px_rgba(0,0,0,0.65)] backdrop-blur-xl flex items-center justify-center transition duration-200 cursor-pointer" title="Afficher les outils Cahier (Alt+T)">
       <i data-lucide="pen-tool" class="w-4 h-4" aria-hidden="true"></i>
       <span id="ribbonToggleLabel" class="sr-only">Outils Cahier</span>
-      <span id="ribbonToggleChevron" class="sr-only">▾</span>
     </button>
   </div>
 
@@ -2077,10 +2193,10 @@
   <main id="workspaceGrid" class="split-layout flex-1 max-w-[1680px] w-full mx-auto grid grid-cols-1 gap-3 px-2.5 sm:px-5 pt-3 sm:pt-5 pb-24 lg:pb-8">
 
     <!-- LEFT PANE: Decluttered Raw Markdown / LaTeX Editor -->
-    <section id="editorContainer" class="no-print split-pane min-w-0 min-h-0 max-w-full flex flex-col bg-[#12141a] border border-white/[0.065] rounded-[18px] overflow-hidden shadow-[0_14px_44px_rgba(0,0,0,0.42)] h-[300px] sm:h-[380px] lg:h-[calc(100vh-88px)] lg:sticky lg:top-[68px]">
+    <section id="editorContainer" class="no-print split-pane min-w-0 min-h-0 max-w-full flex flex-col bg-[#12141a] border border-white/[0.065] rounded-[18px] shadow-[0_14px_44px_rgba(0,0,0,0.42)] h-[300px] sm:h-[380px] lg:h-[calc(100vh-88px)] lg:sticky lg:top-[68px]">
 
       <!-- Minimal Editor Header -->
-      <div class="px-3.5 py-2.5 bg-[#12141a] border-b border-white/[0.06] flex items-center justify-between gap-2">
+      <div class="px-3.5 py-2.5 bg-[#12141a] rounded-t-[18px] border-b border-white/[0.06] flex items-center justify-between gap-2">
         <div class="flex items-center gap-2 min-w-0">
           <span class="w-2 h-2 rounded-full bg-emerald-400/85 flex-shrink-0" aria-hidden="true"></span>
           <h2 class="text-xs font-medium text-[#c7ccd8] truncate">Éditeur</h2>
@@ -2090,7 +2206,7 @@
         </div>
 
         <div class="flex items-center gap-0.5 flex-shrink-0">
-          <button id="btnToggleFind" type="button" aria-label="Rechercher et remplacer" class="v2-icon-btn !px-1.5" title="Rechercher & Remplacer (Ctrl+F)">
+          <button id="btnToggleFind" type="button" aria-expanded="false" aria-controls="findReplaceBar" aria-label="Rechercher et remplacer" class="v2-icon-btn !px-1.5" title="Rechercher & Remplacer (Ctrl+F)">
             <i data-lucide="search" class="w-3.5 h-3.5" aria-hidden="true"></i>
           </button>
 
@@ -2122,30 +2238,30 @@
             <button id="btnToggleInsertMenu" type="button" aria-expanded="false" aria-controls="insertMenuPopover" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11.5px] font-medium bg-[#181b24] hover:bg-[#1f2431] text-[#e6e8ee] border border-white/[0.08] transition cursor-pointer">
               <i data-lucide="plus" class="w-3 h-3 text-sky-400" aria-hidden="true"></i>
               <span>Insérer</span>
-              <i data-lucide="chevron-down" class="w-3 h-3 text-[#7a8191]" aria-hidden="true"></i>
+              <i data-lucide="chevron-down" class="w-3 h-3 text-[#949bad]" aria-hidden="true"></i>
             </button>
 
-            <div id="insertMenuPopover" class="hidden absolute left-0 top-full mt-2 z-50 w-[min(92vw,340px)] v2-popover p-3 text-xs space-y-3">
+            <div id="insertMenuPopover" class="hidden fixed z-[75] w-[min(92vw,320px)] max-h-[70dvh] overflow-y-auto v2-popover p-3 text-xs space-y-3">
               <div>
-                <div class="text-[10px] font-semibold uppercase tracking-wider text-[#7a8191] px-1.5 mb-1">Structure</div>
+                <div class="text-[10px] font-semibold uppercase tracking-wider text-[#949bad] px-1.5 mb-1">Structure</div>
                 <div class="grid grid-cols-2 gap-1">
                   <button type="button" data-snippet="h1" class="snippet-btn flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.06] text-[#d6dae4] text-left cursor-pointer transition">
-                    <span class="font-mono text-[10px] text-[#8b91a0] w-5">H1</span><span>Titre principal</span>
+                    <span class="font-mono text-[10px] text-[#949bad] w-5">H1</span><span>Titre principal</span>
                   </button>
                   <button type="button" data-snippet="h2" class="snippet-btn flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.06] text-[#d6dae4] text-left cursor-pointer transition">
-                    <span class="font-mono text-[10px] text-[#8b91a0] w-5">H2</span><span>Sous-titre</span>
+                    <span class="font-mono text-[10px] text-[#949bad] w-5">H2</span><span>Sous-titre</span>
                   </button>
                   <button type="button" data-snippet="table" class="snippet-btn flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.06] text-[#d6dae4] text-left cursor-pointer transition">
-                    <i data-lucide="table" class="w-3.5 h-3.5 text-[#8b91a0]" aria-hidden="true"></i><span>Tableau</span>
+                    <i data-lucide="table" class="w-3.5 h-3.5 text-[#949bad]" aria-hidden="true"></i><span>Tableau</span>
                   </button>
                   <button type="button" data-snippet="task" class="snippet-btn flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.06] text-[#d6dae4] text-left cursor-pointer transition">
-                    <i data-lucide="check-square" class="w-3.5 h-3.5 text-[#8b91a0]" aria-hidden="true"></i><span>Checklist</span>
+                    <i data-lucide="check-square" class="w-3.5 h-3.5 text-[#949bad]" aria-hidden="true"></i><span>Checklist</span>
                   </button>
                 </div>
               </div>
 
               <div class="border-t border-white/[0.06] pt-2.5">
-                <div class="text-[10px] font-semibold uppercase tracking-wider text-[#7a8191] px-1.5 mb-1">Maths &amp; Chimie</div>
+                <div class="text-[10px] font-semibold uppercase tracking-wider text-[#949bad] px-1.5 mb-1">Maths &amp; Chimie</div>
                 <div class="grid grid-cols-2 gap-1">
                   <button type="button" data-snippet="math-inline" class="snippet-btn flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.06] text-[#d6dae4] text-left cursor-pointer transition">
                     <span class="font-mono text-[10.5px] text-sky-400">\(x\)</span><span>Inline</span>
@@ -2154,7 +2270,7 @@
                     <span class="font-mono text-[10.5px] text-sky-400">$$</span><span>Bloc centré</span>
                   </button>
                   <button type="button" data-snippet="frac" class="snippet-btn flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.06] text-[#d6dae4] text-left cursor-pointer transition">
-                    <span class="font-mono text-[10.5px] text-[#8b91a0]">\frac</span><span>Fraction</span>
+                    <span class="font-mono text-[10.5px] text-[#949bad]">\frac</span><span>Fraction</span>
                   </button>
                   <button type="button" data-snippet="chem" class="snippet-btn flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.06] text-[#d6dae4] text-left cursor-pointer transition">
                     <span class="font-mono text-[10.5px] text-emerald-400">\ce{}</span><span>Chimie</span>
@@ -2163,47 +2279,14 @@
               </div>
 
               <div class="border-t border-white/[0.06] pt-2.5">
-                <div class="text-[10px] font-semibold uppercase tracking-wider text-[#7a8191] px-1.5 mb-1">Médical &amp; Schémas</div>
+                <div class="text-[10px] font-semibold uppercase tracking-wider text-[#949bad] px-1.5 mb-1">Médical &amp; Schémas</div>
                 <div class="grid grid-cols-2 gap-1">
                   <button type="button" data-snippet="callout" class="snippet-btn flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.06] text-[#d6dae4] text-left cursor-pointer transition">
-                    <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-[#8b91a0]" aria-hidden="true"></i><span>Encadré clinique</span>
+                    <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-[#949bad]" aria-hidden="true"></i><span>Encadré clinique</span>
                   </button>
                   <button type="button" data-snippet="mermaid" class="snippet-btn flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.06] text-[#d6dae4] text-left cursor-pointer transition">
-                    <i data-lucide="git-branch" class="w-3.5 h-3.5 text-[#8b91a0]" aria-hidden="true"></i><span>Schéma Mermaid</span>
+                    <i data-lucide="git-branch" class="w-3.5 h-3.5 text-[#949bad]" aria-hidden="true"></i><span>Schéma Mermaid</span>
                   </button>
-                </div>
-              </div>
-
-              <div class="border-t border-white/[0.06] pt-2.5">
-                <div class="text-[10px] font-semibold text-[#7a8191] px-1.5 mb-1.5 flex items-center gap-1.5">
-                  <span class="uppercase tracking-wider">Symboles</span>
-                  <span class="text-[#a9b0be] font-normal">α β Δ ⇌</span>
-                </div>
-                <div class="grid grid-cols-8 gap-1">
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">α</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">β</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">γ</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">Δ</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">λ</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">μ</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">π</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">σ</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">Ω</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">±</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">≤</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">≥</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">≈</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">→</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">⇌</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">↑</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">↓</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">°C</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">∞</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">∫</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">∑</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">√</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">≠</button>
-                  <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">µg</button>
                 </div>
               </div>
             </div>
@@ -2218,8 +2301,8 @@
         </div>
 
         <!-- Quick Symbols Picker Popover (preserved for fast 1-click access) -->
-        <button id="btnSymbolsPicker" type="button" class="px-2 py-1 rounded-lg text-[11px] text-[#8b91a0] hover:text-[#e6e8ee] hover:bg-white/[0.06] transition cursor-pointer flex-shrink-0" title="Palette symboles grecs & scientifiques">α β Δ</button>
-        <div id="symbolsPopover" class="hidden absolute right-3 top-full mt-1.5 z-50 v2-popover p-2.5 grid grid-cols-8 gap-1 w-64 text-xs">
+        <button id="btnSymbolsPicker" type="button" aria-expanded="false" aria-controls="symbolsPopover" aria-label="Palette symboles grecs et scientifiques" class="px-2 py-1 rounded-lg text-[11px] text-[#949bad] hover:text-[#e6e8ee] hover:bg-white/[0.06] transition cursor-pointer flex-shrink-0" title="Palette symboles grecs & scientifiques">α β Δ</button>
+        <div id="symbolsPopover" class="hidden fixed z-[75] v2-popover p-2.5 grid grid-cols-8 gap-1 w-[min(92vw,264px)] max-h-[70dvh] overflow-y-auto text-xs">
           <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">α</button>
           <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">β</button>
           <button type="button" class="sym-btn p-1 rounded-md hover:bg-white/[0.08] text-[#d6dae4] text-center cursor-pointer">γ</button>
@@ -2249,13 +2332,15 @@
 
       <!-- Find & Replace Bar -->
       <div id="findReplaceBar" class="hidden px-3 py-2 bg-[#101218] border-b border-white/[0.06] flex flex-wrap items-center gap-1.5 text-xs">
-        <input id="findInput" type="text" aria-label="Rechercher dans l'éditeur" placeholder="Rechercher..." class="flex-1 min-w-[110px] bg-[#0a0b0f] border border-white/[0.08] rounded-lg px-2.5 py-1 text-[#e6e8ee] placeholder-[#646b7c] focus:outline-none focus:border-sky-400/60" />
-        <input id="replaceInput" type="text" aria-label="Remplacer par" placeholder="Remplacer par..." class="flex-1 min-w-[110px] bg-[#0a0b0f] border border-white/[0.08] rounded-lg px-2.5 py-1 text-[#e6e8ee] placeholder-[#646b7c] focus:outline-none focus:border-sky-400/60" />
-        <span id="findMatchLabel" class="text-[11px] text-[#8b91a0] font-mono px-1">0</span>
+        <input id="findInput" type="text" aria-label="Rechercher dans l'éditeur" placeholder="Rechercher..." class="flex-1 min-w-[110px] bg-[#0a0b0f] border border-white/[0.08] rounded-lg px-2.5 py-1 text-[#e6e8ee] placeholder-[#8a92a4] focus:outline-none focus:border-sky-400/60" />
+        <input id="replaceInput" type="text" aria-label="Remplacer par" placeholder="Remplacer par..." class="flex-1 min-w-[110px] bg-[#0a0b0f] border border-white/[0.08] rounded-lg px-2.5 py-1 text-[#e6e8ee] placeholder-[#8a92a4] focus:outline-none focus:border-sky-400/60" />
+        <span id="findMatchLabel" class="text-[11px] text-[#949bad] font-mono tabular-nums px-1">0</span>
         <button id="btnFindNext" type="button" aria-label="Occurrence suivante" class="v2-surface-btn !min-h-[26px] !py-0.5 !px-2" title="Suivant">↓</button>
         <button id="btnReplaceOne" type="button" class="v2-surface-btn !min-h-[26px] !py-0.5 !px-2 text-sky-300">Rempl.</button>
         <button id="btnReplaceAll" type="button" class="v2-surface-btn !min-h-[26px] !py-0.5 !px-2">Tout</button>
-        <button id="btnCloseFind" type="button" aria-label="Fermer la barre de recherche" class="v2-icon-btn !min-h-[26px] !min-w-[26px] !p-1">✕</button>
+        <button id="btnCloseFind" type="button" aria-label="Fermer la barre de recherche" class="v2-icon-btn !min-h-[26px] !min-w-[26px] !p-1">
+          <i data-lucide="x" class="w-3.5 h-3.5" aria-hidden="true"></i>
+        </button>
       </div>
 
       <!-- Textarea -->
@@ -2265,14 +2350,14 @@
           aria-label="Éditeur Markdown et LaTeX"
           spellcheck="false"
           placeholder="Collez votre cours IA (ChatGPT / Gemini / NotebookLM), équations LaTeX \(\Delta G\), réactions chimiques \ce{H2O}, tableaux Markdown ou schémas ```mermaid..."
-          class="mono-editor flex-1 min-h-0 w-full overflow-y-auto bg-[#0d0f14] text-[#dce0ea] placeholder-[#555c6d] p-4 text-[13px] leading-relaxed focus:outline-none resize-none"
+          class="mono-editor flex-1 min-h-0 w-full overflow-y-auto bg-[#0d0f14] text-[#dce0ea] placeholder-[#7e8698] p-4 text-[13px] leading-relaxed focus:outline-none resize-none"
         ></textarea>
       </div>
 
       <!-- Quiet Editor Footer -->
-      <div class="px-3.5 py-2 bg-[#12141a] border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#7a8191]">
-        <span id="statsCounter">0 formules • 0 mots</span>
-        <span id="cursorStats" class="font-mono text-[#646b7c]">Ln 1, Col 1</span>
+      <div class="px-3.5 py-2 bg-[#12141a] rounded-b-[18px] border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#949bad]">
+        <span id="statsCounter" class="tabular-nums">0 formules • 0 mots</span>
+        <span id="cursorStats" class="font-mono tabular-nums text-[#8a92a4]">Ln 1, Col 1</span>
       </div>
     </section>
 
@@ -2322,14 +2407,14 @@
   <!-- =====================================================
        NATIVE BOTTOM MOBILE VIEW SWITCHER (< 1024px)
        ===================================================== -->
-  <nav id="mobileViewSwitcher" aria-label="Modes d'affichage mobile" class="no-print lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#0d0f14]/92 backdrop-blur-xl border-t border-white/[0.07] px-3 pt-2" style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));">
+  <nav id="mobileViewSwitcher" aria-label="Modes d'affichage mobile" class="no-print lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#0b0d12]/[0.97] backdrop-blur-xl border-t border-white/[0.08] px-3 pt-2" style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));">
     <div class="max-w-md mx-auto flex items-center gap-2">
       <div class="flex-1 grid grid-cols-3 gap-1 v2-seg-group">
         <button type="button" data-mob-view="editor" aria-pressed="false" class="mob-view-btn v2-seg-btn py-2 px-3 rounded-xl text-xs font-medium text-[#8b91a0] hover:text-[#e6e8ee] transition cursor-pointer truncate">Écrire</button>
         <button type="button" data-mob-view="reader" aria-pressed="false" class="mob-view-btn v2-seg-btn py-2 px-3 rounded-xl text-xs font-medium text-[#8b91a0] hover:text-[#e6e8ee] transition cursor-pointer truncate">Cahier</button>
         <button type="button" data-mob-view="split" aria-pressed="true" class="mob-view-btn v2-seg-btn v2-seg-active py-2 px-3 rounded-xl text-xs font-medium transition cursor-pointer truncate">Divisé</button>
       </div>
-      <button id="btnMobileRibbonToggle" type="button" aria-label="Afficher ou masquer les outils Cahier" class="hidden flex-shrink-0 w-10 h-10 rounded-xl bg-[#151822] hover:bg-[#1d2130] text-sky-400 border border-white/[0.08] flex items-center justify-center transition cursor-pointer" title="Outils Cahier">
+      <button id="btnMobileRibbonToggle" type="button" aria-expanded="false" aria-label="Afficher ou masquer les outils Cahier" class="hidden flex-shrink-0 w-10 h-10 rounded-xl bg-[#151822] hover:bg-[#1d2130] text-sky-400 border border-white/[0.08] flex items-center justify-center transition cursor-pointer" title="Outils Cahier">
         <i data-lucide="pen-tool" class="w-4 h-4" aria-hidden="true"></i>
       </button>
     </div>
@@ -2441,7 +2526,7 @@
       <!-- Modal Header -->
       <div class="px-5 py-4 border-b border-white/[0.065] flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-xl bg-sky-400/12 border border-sky-400/25 flex items-center justify-center text-sky-400">
+          <div class="w-8 h-8 rounded-xl bg-sky-400/[0.12] border border-sky-400/25 flex items-center justify-center text-sky-400">
             <i data-lucide="download" class="w-4 h-4" aria-hidden="true"></i>
           </div>
           <div>
@@ -2574,12 +2659,12 @@
               <div class="min-w-0">
                 <div class="font-medium text-[#e6e8ee] group-hover:text-sky-300 flex items-center gap-1.5 flex-wrap">
                   <span>PDF Vectoriel</span>
-                  <span class="text-[9.5px] px-1.5 py-0.5 rounded-md bg-sky-400/12 text-sky-300 font-medium">Recommandé</span>
+                  <span class="text-[9.5px] px-1.5 py-0.5 rounded-md bg-sky-400/[0.12] text-sky-300 font-medium">Recommandé</span>
                 </div>
                 <div class="text-[11px] text-[#8b91a0]">Texte sélectionnable &amp; maths vectorielles</div>
               </div>
             </div>
-            <i data-lucide="printer" class="w-4 h-4 text-[#646b7c] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
+            <i data-lucide="printer" class="w-4 h-4 text-[#8a92a4] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
           </button>
 
           <button id="btnExportDirectPdf" type="button" class="flex items-center justify-between p-3.5 rounded-2xl bg-[#0e1015] hover:bg-[#171b24] border border-white/[0.065] hover:border-sky-400/35 transition text-left group cursor-pointer">
@@ -2590,10 +2675,10 @@
                   <span>PDF Direct</span>
                   <span class="text-[9.5px] px-1.5 py-0.5 rounded-md bg-white/[0.05] text-[#a9b0be] font-medium">Sauts auto</span>
                 </div>
-                <div class="text-[11px] text-[#8b91a0]">Fidèle au papier, sans couper les blocs</div>
+                <div class="text-[11px] text-[#949bad]">Fidèle au papier, sans couper les blocs</div>
               </div>
             </div>
-            <i data-lucide="file-down" class="w-4 h-4 text-[#646b7c] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
+            <i data-lucide="file-down" class="w-4 h-4 text-[#8a92a4] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
           </button>
 
           <button id="btnExportPng" type="button" class="flex items-center justify-between p-3.5 rounded-2xl bg-[#0e1015] hover:bg-[#171b24] border border-white/[0.065] hover:border-sky-400/35 transition text-left group cursor-pointer">
@@ -2601,10 +2686,10 @@
               <div class="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-[#c7ccd8] font-semibold text-[11px] flex-shrink-0">PNG</div>
               <div class="min-w-0">
                 <div class="font-medium text-[#e6e8ee] group-hover:text-sky-300">Image PNG (HD)</div>
-                <div class="text-[11px] text-[#8b91a0]">Sans perte, idéal tablettes &amp; fiches</div>
+                <div class="text-[11px] text-[#949bad]">Sans perte, idéal tablettes &amp; fiches</div>
               </div>
             </div>
-            <i data-lucide="image" class="w-4 h-4 text-[#646b7c] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
+            <i data-lucide="image" class="w-4 h-4 text-[#8a92a4] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
           </button>
 
           <button id="btnExportJpg" type="button" class="flex items-center justify-between p-3.5 rounded-2xl bg-[#0e1015] hover:bg-[#171b24] border border-white/[0.065] hover:border-sky-400/35 transition text-left group cursor-pointer">
@@ -2612,10 +2697,10 @@
               <div class="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-[#c7ccd8] font-semibold text-[11px] flex-shrink-0">JPG</div>
               <div class="min-w-0">
                 <div class="font-medium text-[#e6e8ee] group-hover:text-sky-300">Image JPG</div>
-                <div class="text-[11px] text-[#8b91a0]">Léger et compatible partout</div>
+                <div class="text-[11px] text-[#949bad]">Léger et compatible partout</div>
               </div>
             </div>
-            <i data-lucide="file-image" class="w-4 h-4 text-[#646b7c] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
+            <i data-lucide="file-image" class="w-4 h-4 text-[#8a92a4] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
           </button>
 
           <button id="btnExportHtml" type="button" class="flex items-center justify-between p-3.5 rounded-2xl bg-[#0e1015] hover:bg-[#171b24] border border-white/[0.065] hover:border-sky-400/35 transition text-left group cursor-pointer">
@@ -2623,10 +2708,10 @@
               <div class="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-[#c7ccd8] font-semibold text-[11px] flex-shrink-0">HTML</div>
               <div class="min-w-0">
                 <div class="font-medium text-[#e6e8ee] group-hover:text-sky-300">Page Web Autonome</div>
-                <div class="text-[11px] text-[#8b91a0]">Conserve polices, schémas &amp; KaTeX</div>
+                <div class="text-[11px] text-[#949bad]">Conserve polices, schémas &amp; KaTeX</div>
               </div>
             </div>
-            <i data-lucide="code-2" class="w-4 h-4 text-[#646b7c] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
+            <i data-lucide="code-2" class="w-4 h-4 text-[#8a92a4] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
           </button>
 
           <button id="btnExportMd" type="button" class="flex items-center justify-between p-3.5 rounded-2xl bg-[#0e1015] hover:bg-[#171b24] border border-white/[0.065] hover:border-sky-400/35 transition text-left group cursor-pointer">
@@ -2634,10 +2719,10 @@
               <div class="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-[#c7ccd8] font-semibold text-[11px] flex-shrink-0">.MD</div>
               <div class="min-w-0">
                 <div class="font-medium text-[#e6e8ee] group-hover:text-sky-300">Markdown (.md)</div>
-                <div class="text-[11px] text-[#8b91a0]">Notion, Obsidian &amp; GitHub</div>
+                <div class="text-[11px] text-[#949bad]">Notion, Obsidian &amp; GitHub</div>
               </div>
             </div>
-            <i data-lucide="file-text" class="w-4 h-4 text-[#646b7c] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
+            <i data-lucide="file-text" class="w-4 h-4 text-[#8a92a4] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
           </button>
 
           <button id="btnExportTex" type="button" class="sm:col-span-2 flex items-center justify-between p-3.5 rounded-2xl bg-[#0e1015] hover:bg-[#171b24] border border-white/[0.065] hover:border-sky-400/35 transition text-left group cursor-pointer">
@@ -2645,18 +2730,18 @@
               <div class="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-[#c7ccd8] font-semibold text-[11px] flex-shrink-0">.TEX</div>
               <div class="min-w-0">
                 <div class="font-medium text-[#e6e8ee] group-hover:text-sky-300">LaTeX Compilable (.tex)</div>
-                <div class="text-[11px] text-[#8b91a0]">Prêt pour Overleaf avec mhchem, tableaux &amp; macros</div>
+                <div class="text-[11px] text-[#949bad]">Prêt pour Overleaf avec mhchem, tableaux &amp; macros</div>
               </div>
             </div>
-            <i data-lucide="file-code" class="w-4 h-4 text-[#646b7c] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
+            <i data-lucide="file-code" class="w-4 h-4 text-[#8a92a4] group-hover:text-sky-400 flex-shrink-0" aria-hidden="true"></i>
           </button>
 
         </div>
 
         <!-- Export Progress Status -->
-        <div id="exportProgressBox" class="hidden px-3.5 py-2.5 rounded-xl bg-sky-400/12 border border-sky-400/25 text-sky-300 flex items-center justify-between">
+        <div id="exportProgressBox" class="hidden px-3.5 py-2.5 rounded-xl bg-sky-400/[0.12] border border-sky-400/25 text-sky-300 flex items-center justify-between gap-2">
           <span id="exportProgressText" class="font-medium">Génération haute résolution en cours...</span>
-          <span class="animate-pulse font-mono">⏳</span>
+          <i data-lucide="loader-2" class="w-4 h-4 animate-spin flex-shrink-0" aria-hidden="true"></i>
         </div>
 
       </div>
@@ -2967,23 +3052,137 @@ flowchart TD
       if (nbDateInput) nbDateInput.value = pluginState.date;
     }
 
-    function parseCustomMacros() {
-      if (!window.InkTeX.isPluginEnabled('custom-macros')) return {};
+    // =====================================================
+    // PERFORMANCE ENGINE: ON-DEMAND LIBRARIES, FONTS & MAIN-THREAD YIELDING
+    // =====================================================
+    const _lazyAssetPromises = new Map();
+    const _loadedFontUrls = new Set();
+
+    function yieldToMain() {
+      if (typeof window !== 'undefined' && 'scheduler' in window && window.scheduler && typeof window.scheduler.yield === 'function') {
+        return window.scheduler.yield();
+      }
+      return new Promise(resolve => setTimeout(resolve, 0));
+    }
+
+    function loadScriptOnce(key, src, globalCheck) {
+      if (typeof globalCheck === 'function' && globalCheck()) return Promise.resolve(true);
+      if (_lazyAssetPromises.has(key)) return _lazyAssetPromises.get(key);
+      const p = new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.onload = () => resolve(true);
+        s.onerror = (err) => {
+          _lazyAssetPromises.delete(key);
+          reject(err || new Error(`Failed to load ${key}`));
+        };
+        document.head.appendChild(s);
+      });
+      _lazyAssetPromises.set(key, p);
+      return p;
+    }
+
+    function loadStylesheetOnce(key, href) {
+      if (_lazyAssetPromises.has(key)) return _lazyAssetPromises.get(key);
+      const p = new Promise((resolve) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.crossOrigin = 'anonymous';
+        link.onload = () => resolve(true);
+        link.onerror = () => { _lazyAssetPromises.delete(key); resolve(false); };
+        document.head.appendChild(link);
+      });
+      _lazyAssetPromises.set(key, p);
+      return p;
+    }
+
+    const ONDEMAND_FONT_URLS = {
+      'Kalam': 'https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap',
+      'Caveat': 'https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap',
+      'Patrick Hand': 'https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap',
+      'Indie Flower': 'https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap',
+      'Handlee': 'https://fonts.googleapis.com/css2?family=Handlee&display=swap',
+      'Gochi Hand': 'https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap',
+      'Shadows Into Light': 'https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap',
+      'Architects Daughter': 'https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap',
+      'Gloria Hallelujah': 'https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap',
+      'Mali': 'https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&display=swap',
+      'Neucha': 'https://fonts.googleapis.com/css2?family=Neucha&display=swap',
+      'Courgette': 'https://fonts.googleapis.com/css2?family=Courgette&display=swap',
+      'SF Pro Display': 'https://fonts.cdnfonts.com/css/sf-pro-display'
+    };
+
+    function getFontStylesheetUrl(fontStack) {
+      const s = String(fontStack || '');
+      for (const [name, url] of Object.entries(ONDEMAND_FONT_URLS)) {
+        if (s.includes(name)) return url;
+      }
+      return null;
+    }
+
+    function ensureFontLoaded(fontStack) {
+      const url = getFontStylesheetUrl(fontStack);
+      if (!url || _loadedFontUrls.has(url)) return Promise.resolve(true);
+      _loadedFontUrls.add(url);
+      return loadStylesheetOnce(`font:${url}`, url);
+    }
+
+    const ensureMermaid = () => loadScriptOnce('mermaid', 'https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.min.js', () => !!window.mermaid);
+    const ensureHighlightJs = () => Promise.all([
+      loadStylesheetOnce('hljs-css', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css'),
+      loadScriptOnce('hljs-js', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js', () => !!window.hljs)
+    ]);
+    const ensureHtml2Canvas = () => loadScriptOnce('html2canvas', 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js', () => !!window.html2canvas);
+    const ensureJsPdf = () => loadScriptOnce('jspdf', 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', () => !!window.jspdf);
+    const warmExportLibraries = () => {
+      ensureHtml2Canvas().catch(() => {});
+      ensureJsPdf().catch(() => {});
+    };
+
+    // Memoized Custom Macros bundle (avoids reparsing & rebuilding RegExp on every keystroke/formula)
+    let _macroCacheKey = null;
+    let _macroCacheBundle = { macros: {}, names: [], sig: '', extraDoubleCmdRe: null };
+
+    function getCustomMacrosBundle() {
+      const enabled = window.InkTeX.isPluginEnabled('custom-macros');
+      const rawText = enabled ? (pluginState.macrosText || '') : '';
+      const key = `${enabled ? '1' : '0'}|${rawText}`;
+      if (key === _macroCacheKey) return _macroCacheBundle;
+
       const macros = {};
-      const lines = (pluginState.macrosText || '').split(/\r?\n/);
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) continue;
-        const parts = trimmed.split('=>');
-        if (parts.length === 2) {
-          const cmd = parts[0].trim();
-          const exp = parts[1].trim();
-          if (cmd.startsWith('\\') && exp) {
-            macros[cmd] = exp;
+      if (enabled) {
+        const lines = rawText.split(/\r?\n/);
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) continue;
+          const parts = trimmed.split('=>');
+          if (parts.length === 2) {
+            const cmd = parts[0].trim();
+            const exp = parts[1].trim();
+            if (cmd.startsWith('\\') && exp) macros[cmd] = exp;
           }
         }
       }
-      return macros;
+      const sortedKeys = Object.keys(macros).sort();
+      const names = sortedKeys.map(k => k.replace(/^\\/, ''));
+      const sig = sortedKeys.map(k => `${k}=${macros[k]}`).join(';');
+      const safeNames = names
+        .filter(n => typeof n === 'string' && n.length >= 2 && /^[a-zA-Z]+$/.test(n))
+        .map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      const extraDoubleCmdRe = safeNames.length > 0
+        ? new RegExp('(^|[^\\\\])\\\\{2}(?=(?:' + safeNames.join('|') + ')\\b)', 'g')
+        : null;
+
+      _macroCacheKey = key;
+      _macroCacheBundle = { macros, names, sig, extraDoubleCmdRe };
+      return _macroCacheBundle;
+    }
+
+    function parseCustomMacros() {
+      return getCustomMacrosBundle().macros;
     }
 
     function renderPluginCards() {
@@ -3001,7 +3200,7 @@ flowchart TD
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="font-medium text-[#e6e8ee]">${escapeHtml(p.name || p.id)}</span>
                 <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#8b91a0] font-mono">v${escapeHtml(p.version || '1.0')}</span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded-md ${isOn ? 'bg-sky-400/12 text-sky-300' : 'bg-white/[0.04] text-[#8b91a0]'}">${escapeHtml(p.category || 'Externe')}</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-md ${isOn ? 'bg-sky-400/[0.12] text-sky-300' : 'bg-white/[0.04] text-[#8b91a0]'}">${escapeHtml(p.category || 'Externe')}</span>
               </div>
               <p class="text-[11px] text-[#8b91a0] leading-relaxed">${escapeHtml(p.description || '')}</p>
             </div>
@@ -3039,6 +3238,18 @@ flowchart TD
       lastBlockText: ''
     };
 
+    function resetSavedSelectionState() {
+      savedSelectionState = {
+        source: null,
+        editorStart: 0,
+        editorEnd: 0,
+        previewRange: null,
+        previewText: '',
+        lastPlainPhrase: '',
+        lastBlockText: ''
+      };
+    }
+
     function captureEditorSelection() {
       if (rawInput.selectionStart !== rawInput.selectionEnd) {
         savedSelectionState.source = 'editor';
@@ -3046,6 +3257,9 @@ flowchart TD
         savedSelectionState.editorEnd = rawInput.selectionEnd;
       }
       updateCursorLineCol();
+      if (currentTheme === 'theme-notebook' && typeof scheduleDockActiveSync === 'function') {
+        scheduleDockActiveSync();
+      }
     }
 
     function capturePreviewSelection() {
@@ -3061,13 +3275,25 @@ flowchart TD
       }
     }
 
+    let _lastCursorPos = -1;
+    let _lastCursorLen = -1;
     function updateCursorLineCol() {
       if (!cursorStats) return;
+      const val = rawInput.value;
       const pos = rawInput.selectionStart || 0;
-      const upToCursor = rawInput.value.slice(0, pos);
-      const lines = upToCursor.split('\n');
-      const ln = lines.length;
-      const col = lines[lines.length - 1].length + 1;
+      if (pos === _lastCursorPos && val.length === _lastCursorLen) return;
+      _lastCursorPos = pos;
+      _lastCursorLen = val.length;
+      // Zero-allocation line/column scan (avoids slice + split array allocation on every keystroke)
+      let ln = 1;
+      let lastNl = -1;
+      let idx = val.indexOf('\n');
+      while (idx !== -1 && idx < pos) {
+        ln++;
+        lastNl = idx;
+        idx = val.indexOf('\n', idx + 1);
+      }
+      const col = pos - lastNl;
       cursorStats.textContent = `Ln ${ln}, Col ${col}`;
     }
 
@@ -3092,7 +3318,79 @@ flowchart TD
       } else {
         capturePreviewSelection();
       }
+      if (currentTheme === 'theme-notebook' && typeof scheduleDockActiveSync === 'function') {
+        scheduleDockActiveSync();
+      }
     });
+
+    // Active Selection State Reflection in Floating Cahier Dock
+    let dockSyncRaf = null;
+    function scheduleDockActiveSync() {
+      if (dockSyncRaf || currentTheme !== 'theme-notebook') return;
+      dockSyncRaf = requestAnimationFrame(() => {
+        dockSyncRaf = null;
+        syncDockActiveStates();
+      });
+    }
+
+    function syncDockActiveStates() {
+      if (!notebookCustomBar || currentTheme !== 'theme-notebook') return;
+      const val = rawInput.value || '';
+      const isEditorFocused = document.activeElement === rawInput;
+      const rawStart = isEditorFocused ? (rawInput.selectionStart || 0) : (savedSelectionState.editorStart || 0);
+      const rawEnd = isEditorFocused ? (rawInput.selectionEnd || rawStart) : (savedSelectionState.editorEnd || rawStart);
+      const s = Math.max(0, Math.min(val.length, rawStart));
+      const e = Math.max(s, Math.min(val.length, rawEnd));
+      const lineStart = val.lastIndexOf('\n', Math.max(0, s - 1)) + 1;
+      const nextNl = val.indexOf('\n', e);
+      const lineEnd = nextNl === -1 ? val.length : nextNl;
+      const lineText = val.slice(lineStart, lineEnd);
+      const localStart = Math.max(0, s - lineStart);
+      const localEnd = Math.max(localStart, e - lineStart);
+      const before = lineText.slice(0, localStart);
+      const selected = lineText.slice(localStart, localEnd);
+      const after = lineText.slice(localEnd);
+      const probe = `${before.slice(-36)}${selected}${after.slice(0, 36)}`;
+
+      const isWrappedTag = (tag) => {
+        const openRe = new RegExp(`\\{${tag}\\}`, 'i');
+        const closeRe = new RegExp(`\\{\\/${tag}\\}`, 'i');
+        if (openRe.test(selected) && closeRe.test(selected)) return true;
+        const lastOpen = before.toLowerCase().lastIndexOf(`{${tag}}`);
+        const lastClose = before.toLowerCase().lastIndexOf(`{/${tag}}`);
+        return lastOpen !== -1 && lastOpen > lastClose && after.toLowerCase().includes(`{/${tag}}`);
+      };
+
+      const isBold = /\*\*[^*]+\*\*/.test(selected) || ((before.match(/\*\*/g) || []).length % 2 === 1 && after.includes('**'));
+      const strippedBoldSel = selected.replace(/\*\*/g, '');
+      const strippedBoldBefore = before.replace(/\*\*/g, '');
+      const strippedBoldAfter = after.replace(/\*\*/g, '');
+      const isItalic = /\*[^*\n]+\*/.test(strippedBoldSel) || ((strippedBoldBefore.match(/\*/g) || []).length % 2 === 1 && strippedBoldAfter.includes('*'));
+      const isUnderline = isWrappedTag('underline');
+      const isStrike = isWrappedTag('strike') || /~~[^~]+~~/.test(probe);
+
+      const wordMap = { bold: isBold, italic: isItalic, underline: isUnderline, strike: isStrike };
+      notebookCustomBar.querySelectorAll('.word-action-btn[data-word-action]').forEach(btn => {
+        const act = btn.getAttribute('data-word-action');
+        btn.classList.toggle('v2-btn-active', !!wordMap[act]);
+      });
+
+      const alignMatch = lineText.match(/^\s*(?:[-*•]\s+|\d+\.\s+)?\{align:(left|center|right)\}/i);
+      const activeAlign = alignMatch ? alignMatch[1].toLowerCase() : '';
+      notebookCustomBar.querySelectorAll('.align-btn[data-align]').forEach(btn => {
+        btn.classList.toggle('v2-btn-active', btn.getAttribute('data-align') === activeAlign);
+      });
+
+      notebookCustomBar.querySelectorAll('.phrase-tag-btn[data-tag]').forEach(btn => {
+        const tag = btn.getAttribute('data-tag');
+        const active = !!tag && isWrappedTag(tag);
+        if (btn.classList.contains('nb-pen-dot') || btn.classList.contains('nb-hl-chip')) {
+          btn.classList.toggle('v2-pen-active', active);
+        } else {
+          btn.classList.toggle('v2-btn-active', active);
+        }
+      });
+    }
 
     // =====================================================
     // AUTO-SAUVEGARDE ANTI-CRASH (LOCAL STORAGE)
@@ -3109,7 +3407,7 @@ flowchart TD
           nbPreset: nbInkPresetSelect ? nbInkPresetSelect.value : 'bic4',
           noRedMargin: noRedMargin,
           snapLines: snapLinesEnabled,
-          ribbonPinned: typeof isRibbonPinned === 'boolean' ? isRibbonPinned : false,
+          ribbonPinned: typeof isRibbonPinned === 'boolean' ? isRibbonPinned : true,
           fontSize: fontSizeSlider ? fontSizeSlider.value : '16.5',
           lineHeight: lineHeightSlider ? lineHeightSlider.value : '1.78',
           colors: {
@@ -3160,10 +3458,12 @@ flowchart TD
         if (data.baseFont && baseFontSelect) {
           baseFontSelect.value = data.baseFont;
           document.documentElement.style.setProperty('--reader-base-font', data.baseFont);
+          ensureFontLoaded(data.baseFont);
         }
         if (data.nbFont && nbFontSelect) {
           nbFontSelect.value = data.nbFont;
           document.documentElement.style.setProperty('--nb-font', data.nbFont);
+          if (data.theme === 'theme-notebook') ensureFontLoaded(data.nbFont);
         }
         if (data.nbPaper && nbPaperSelect) {
           nbPaperSelect.value = data.nbPaper;
@@ -3177,12 +3477,18 @@ flowchart TD
         if (typeof data.noRedMargin === 'boolean') {
           noRedMargin = data.noRedMargin;
           readerCard.classList.toggle('no-red-margin', noRedMargin);
-          if (btnToggleMargin) btnToggleMargin.classList.toggle('opacity-50', noRedMargin);
+          if (btnToggleMargin) {
+            btnToggleMargin.classList.toggle('opacity-50', noRedMargin);
+            btnToggleMargin.setAttribute('aria-pressed', String(noRedMargin));
+          }
         }
         if (typeof data.snapLines === 'boolean') {
           snapLinesEnabled = data.snapLines;
           readerCard.classList.toggle('snap-lines', snapLinesEnabled);
-          if (btnSnapLines) btnSnapLines.classList.toggle('v2-btn-active', snapLinesEnabled);
+          if (btnSnapLines) {
+            btnSnapLines.classList.toggle('v2-btn-active', snapLinesEnabled);
+            btnSnapLines.setAttribute('aria-pressed', String(snapLinesEnabled));
+          }
         }
         if (data.nbPreset && nbInkPresetSelect) {
           nbInkPresetSelect.value = data.nbPreset;
@@ -3260,12 +3566,19 @@ flowchart TD
         if (document.activeElement === rawInput) rawInput.setSelectionRange(s, e);
       }
       rawInput.scrollTop = prevScroll;
+      updateCursorLineCol();
       updateReader(false);
+      if (currentTheme === 'theme-notebook' && typeof scheduleDockActiveSync === 'function') {
+        scheduleDockActiveSync();
+      }
     }
 
     function performUndo() {
-      if (historyIndex <= 0) return;
       clearTimeout(historyDebounce);
+      if (historyIndex >= 0 && historyStack[historyIndex] && historyStack[historyIndex].raw !== rawInput.value) {
+        pushHistoryState();
+      }
+      if (historyIndex <= 0) return;
       isRestoringHistory = true;
       historyIndex--;
       restoreHistorySnapshot(historyStack[historyIndex]);
@@ -3335,7 +3648,6 @@ flowchart TD
       'hat|widehat|bar|vec|overrightarrow|tilde|widetilde|dot|ddot|overline|overbrace|underbrace|overset|underset|stackrel|' +
       'left|right|big|Big|bigg|Bigg|middle|begin|end|displaystyle|textstyle|scriptstyle|scriptscriptstyle|limits|nolimits|not|operatorname|' +
       'ce|pu|url|href|phantom|hphantom|vphantom|cancel|bcancel|xcancel|sout|tag|label|ref|eqref';
-    const LATEX_MATH_CMD_RE = new RegExp('\\\\(?:' + LATEX_KNOWN_CMD_NAMES + ')\\b');
     const DOUBLED_LATEX_CMD_RE = new RegExp('(^|[^\\\\])\\\\{2}(?=(?:' + LATEX_KNOWN_CMD_NAMES + ')\\b)', 'g');
     const DOUBLED_OPEN_BRACKET_RE = /\\{2,}\[(?!\s*[-+]?[\d.]+\s*(?:pt|mm|cm|em|ex|in|bp|px)\s*\])/g;
 
@@ -3350,10 +3662,41 @@ flowchart TD
     const KATEX_REPEAT_SUB_RE = new RegExp(`(_${KATEX_SCRIPT_ARG})\\s*_`, 'g');
     const KATEX_REPEAT_SUP_RE = new RegExp(`(\\^${KATEX_SCRIPT_ARG})\\s*\\^`, 'g');
 
-    function cleanInnerMath(mathExpr, extraCmdNames = []) {
+    const CUSTOM_SIZE_RE = /\{size:(\d+(?:\.\d+)?)\}([\s\S]*?)\{\/size\}/gi;
+    const CUSTOM_TAG_RE = new RegExp(`\\{(${ALL_CUSTOM_TAG_NAMES})\\}([\\s\\S]*?)\\{\\/\\1\\}`, 'gi');
+
+    function countPlainWords(text) {
+      if (!text) return 0;
+      const len = text.length;
+      let words = 0;
+      let inWord = false;
+      let inFence = false;
+      for (let i = 0; i < len; i++) {
+        if (text[i] === '`' && text[i + 1] === '`' && text[i + 2] === '`') {
+          inFence = !inFence;
+          inWord = false;
+          i += 2;
+          continue;
+        }
+        if (inFence) continue;
+        const c = text.charCodeAt(i);
+        const isWs = c === 32 || c === 9 || c === 10 || c === 13 || c === 160;
+        if (isWs) {
+          inWord = false;
+        } else if (!inWord) {
+          inWord = true;
+          words++;
+        }
+      }
+      return words;
+    }
+
+    function cleanInnerMath(mathExpr, extraCmdNamesOrRe = []) {
       let cleaned = mathExpr.trim().replace(DOUBLED_LATEX_CMD_RE, '$1\\');
-      if (extraCmdNames && extraCmdNames.length > 0) {
-        const safeNames = extraCmdNames
+      if (extraCmdNamesOrRe instanceof RegExp) {
+        cleaned = cleaned.replace(extraCmdNamesOrRe, '$1\\');
+      } else if (Array.isArray(extraCmdNamesOrRe) && extraCmdNamesOrRe.length > 0) {
+        const safeNames = extraCmdNamesOrRe
           .filter(n => typeof n === 'string' && n.length >= 2 && /^[a-zA-Z]+$/.test(n))
           .map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
         if (safeNames.length > 0) {
@@ -3825,15 +4168,16 @@ flowchart TD
 
       // 3. Extract Math Blocks into KaTeX tokens
       const mathStash = [];
-      const customMacros = parseCustomMacros();
-      const customMacroNames = Object.keys(customMacros).map(k => k.replace(/^\\/, ''));
-      const macroSig = Object.keys(customMacros).sort().map(k => `${k}=${customMacros[k]}`).join(';');
+      const macroBundle = getCustomMacrosBundle();
+      const customMacros = macroBundle.macros;
+      const macroSig = macroBundle.sig;
+      const extraMacroRe = macroBundle.extraDoubleCmdRe;
       const useMhchem = window.InkTeX.isPluginEnabled('mhchem');
 
       function storeMath(expr, displayMode) {
         const id = `@@${T_KATEX}-${mathStash.length}@@`;
         let restoredExpr = expr.replace(escDollarRe, '\\$');
-        let cleaned = cleanInnerMath(restoredExpr, customMacroNames);
+        let cleaned = cleanInnerMath(restoredExpr, extraMacroRe);
         if (!useMhchem && /\\(?:ce|pu)\{/.test(cleaned)) {
           cleaned = replaceBalancedCmd(cleaned, 'ce|pu', (_, __, inner) => `\\text{${inner}}`);
         }
@@ -3901,9 +4245,9 @@ flowchart TD
         normalized = replaceBalancedCmd(normalized, 'ce|pu', (full) => storeMath(full, false));
       }
 
-      // Word & Read-Time Stats
+      // Word & Read-Time Stats (zero-allocation word count)
       if (updateGlobals) {
-        const plainWords = rawText.replace(/```[\s\S]*?```/g, ' ').trim().split(/\s+/).filter(Boolean).length;
+        const plainWords = countPlainWords(rawText);
         const readMins = Math.max(1, Math.ceil(plainWords / 180));
         statsCounter.textContent = `${mathStash.length} formule${mathStash.length !== 1 ? 's' : ''} • ${plainWords} mots (~${readMins} min)`;
       }
@@ -3991,24 +4335,25 @@ flowchart TD
         safe = safe.replace(/\*([^\s*\n](?:[^*\n]*[^\s*\n])?)\*/g, '<em>$1</em>');
         safe = safe.replace(/(^|[^\w\\])_([^_\n]+?)_(?!\w)/g, '$1<em>$2</em>');
 
-        // Process {size:XX} and {tag}...{/tag} in any nesting order
-        const sizePattern = /\{size:(\d+(?:\.\d+)?)\}([\s\S]*?)\{\/size\}/gi;
-        const tagPattern = new RegExp(`\\{(${ALL_CUSTOM_TAG_NAMES})\\}([\\s\\S]*?)\\{\\/\\1\\}`, 'gi');
-
-        let prevSafe;
-        let safetyCounter = 0;
-        do {
-          prevSafe = safe;
-          safe = safe.replace(sizePattern, (_, ptSize, innerText) => {
-            const clamped = Math.max(9, Math.min(72, parseFloat(ptSize)));
-            return `<span class="custom-sized-phrase" data-pt-size="${clamped}" style="font-size:${clamped}px; line-height:1.35;">${innerText}</span>`;
-          });
-          safe = safe.replace(tagPattern, (_, tag, innerText) => {
-            const cssClass = PHRASE_TAG_CLASSES[tag.toLowerCase()] || '';
-            return `<span class="${cssClass}">${innerText}</span>`;
-          });
-          safetyCounter++;
-        } while (safe !== prevSafe && safetyCounter < 15);
+        // Process {size:XX} and {tag}...{/tag} in any nesting order (hoisted RegExps)
+        if (safe.includes('{')) {
+          let prevSafe;
+          let safetyCounter = 0;
+          do {
+            prevSafe = safe;
+            CUSTOM_SIZE_RE.lastIndex = 0;
+            safe = safe.replace(CUSTOM_SIZE_RE, (_, ptSize, innerText) => {
+              const clamped = Math.max(9, Math.min(72, parseFloat(ptSize)));
+              return `<span class="custom-sized-phrase" data-pt-size="${clamped}" style="font-size:${clamped}px; line-height:1.35;">${innerText}</span>`;
+            });
+            CUSTOM_TAG_RE.lastIndex = 0;
+            safe = safe.replace(CUSTOM_TAG_RE, (_, tag, innerText) => {
+              const cssClass = PHRASE_TAG_CLASSES[tag.toLowerCase()] || '';
+              return `<span class="${cssClass}">${innerText}</span>`;
+            });
+            safetyCounter++;
+          } while (safe !== prevSafe && safetyCounter < 15);
+        }
 
         // Citation Badges [1], [2] (controlled by ai-fixer plugin)
         if (window.InkTeX.isPluginEnabled('ai-fixer')) {
@@ -4211,7 +4556,7 @@ flowchart TD
               listStack.push({ tag: 'ul', level });
             }
             blockHtml.push(
-              `<li class="inktex-task-item"><input type="checkbox" class="inktex-task-checkbox" data-task-idx="${taskCounter++}" ${isChecked ? 'checked' : ''} /><span class="${isChecked ? 'inktex-task-done' : ''}">${formatInlineMarkdown(taskMatch[3])}</span></li>`
+              `<li class="inktex-task-item"><label class="inktex-task-label"><input type="checkbox" class="inktex-task-checkbox" data-task-idx="${taskCounter++}" ${isChecked ? 'checked' : ''} /><span class="${isChecked ? 'inktex-task-done' : ''}">${formatInlineMarkdown(taskMatch[3])}</span></label></li>`
             );
             continue;
           }
@@ -4402,8 +4747,7 @@ flowchart TD
             lines[li] = cb.checked
               ? lines[li].replace(/\[[ ]\]/, '[x]')
               : lines[li].replace(/\[[xX]\]/, '[ ]');
-            pushHistoryState();
-            rawInput.value = lines.join('\n');
+            replaceEditorRange(0, rawInput.value.length, lines.join('\n'), null, null, true);
             updateReader(true);
             break;
           }
@@ -4412,35 +4756,51 @@ flowchart TD
       }
     });
 
-    function renderOutlineDrawer() {
+    let lastOutlineSig = '';
+    let outlineDirty = true;
+
+    outlineList?.addEventListener('click', (e) => {
+      const btn = e.target.closest?.('.outline-jump-btn');
+      if (!btn) return;
+      const target = document.getElementById(btn.getAttribute('data-jump'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    function renderOutlineDrawer(forceBuild = false) {
       if (!outlineList) return;
+      if (!forceBuild && outlineDrawer && outlineDrawer.classList.contains('hidden')) {
+        outlineDirty = true;
+        return;
+      }
+      currentOutline = buildOutlineFromDom();
+      outlineDirty = false;
+      const sig = currentOutline.map(h => `${h.id}|${h.level}|${h.text}`).join('\n');
+      if (sig === lastOutlineSig) return;
+      lastOutlineSig = sig;
       if (currentOutline.length === 0) {
-        outlineList.innerHTML = `<div class="p-3 text-zinc-500 italic">Ajoutez des titres (# à ######) pour générer le sommaire.</div>`;
+        outlineList.innerHTML = `<div class="p-3 text-[#949bad] italic">Ajoutez des titres (# à ######) pour générer le sommaire.</div>`;
         return;
       }
       const outlinePadMap = {
         1: 'pl-2.5 font-medium text-[#e6e8ee]',
         2: 'pl-4 text-[#c7ccd8]',
         3: 'pl-6 text-[#a4abbb]',
-        4: 'pl-8 text-[#8b91a0]',
-        5: 'pl-10 text-[#7a8090] text-[11px]',
-        6: 'pl-12 text-[#6b7180] text-[11px]'
+        4: 'pl-8 text-[#949bad]',
+        5: 'pl-10 text-[#949bad] text-[11px]',
+        6: 'pl-12 text-[#8a92a4] text-[11px]'
       };
       outlineList.innerHTML = currentOutline.map(h => {
         const pad = outlinePadMap[h.level] || 'pl-8 text-[#8b91a0]';
         return `<button type="button" data-jump="${h.id}" class="outline-jump-btn w-full text-left py-1.5 pr-2.5 rounded-lg hover:bg-white/[0.06] hover:text-sky-300 truncate transition cursor-pointer ${pad}">${escapeHtml(h.text)}</button>`;
       }).join('');
-
-      outlineList.querySelectorAll('.outline-jump-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const target = document.getElementById(btn.getAttribute('data-jump'));
-          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-      });
     }
 
     async function renderPendingMermaidItems(pendingWrappers, isNotebook, isDark) {
-      if (!pendingWrappers || pendingWrappers.length === 0 || !window.mermaid) return;
+      if (!pendingWrappers || pendingWrappers.length === 0) return;
+      if (!window.mermaid) {
+        try { await ensureMermaid(); } catch (e) { return; }
+      }
+      if (!window.mermaid) return;
       try {
         window.mermaid.initialize({
           startOnLoad: false,
@@ -4449,8 +4809,10 @@ flowchart TD
           look: isNotebook ? 'handDrawn' : 'classic',
           theme: isNotebook ? 'neutral' : (isDark ? 'dark' : 'default')
         });
-        for (const item of pendingWrappers) {
+        for (let idxItem = 0; idxItem < pendingWrappers.length; idxItem++) {
+          const item = pendingWrappers[idxItem];
           if (!item.wrap.isConnected) continue;
+          if (idxItem > 0) await yieldToMain();
           const renderId = `inktex-mmd-${Date.now()}-${item.idx}`;
           try {
             const { svg } = await window.mermaid.render(renderId, item.diagramSrc);
@@ -4478,6 +4840,7 @@ flowchart TD
               mermaidSvgCache.delete(mermaidSvgCache.keys().next().value);
             }
             mermaidSvgCache.set(item.cacheKey, item.wrap.innerHTML);
+            item.wrap.setAttribute('data-mermaid-rendered-key', item.cacheKey);
           } catch (err) {
             item.wrap.innerHTML = `<div class="text-xs text-rose-400 font-mono p-2">Erreur de syntaxe Mermaid : ${escapeHtml(err.message || String(err))}</div>`;
           }
@@ -4497,25 +4860,36 @@ flowchart TD
     }
 
     async function runPostRenderPlugins(options = { offlineFallback: false }) {
-      // 1. Highlight.js (with FIFO cache to avoid re-tokenizing unchanged code blocks on every keystroke)
-      if (window.hljs && window.InkTeX.isPluginEnabled('code-highlight')) {
-        readerOutput.querySelectorAll('.inktex-code-wrap pre code').forEach(block => {
-          const lang = (block.getAttribute('data-lang') || '').trim();
-          const code = block.textContent || '';
-          const hKey = `${lang}|${code}`;
-          if (hljsCache.has(hKey)) {
-            block.innerHTML = hljsCache.get(hKey);
-            block.classList.add('hljs');
-            return;
+      // 1. Highlight.js (lazy-loaded on-demand ONLY when fenced code blocks exist + FIFO cache + main-thread yielding)
+      if (window.InkTeX.isPluginEnabled('code-highlight')) {
+        const codeBlocks = Array.from(readerOutput.querySelectorAll('.inktex-code-wrap pre code')).filter(b => !b.classList.contains('hljs'));
+        if (codeBlocks.length > 0) {
+          if (!window.hljs) {
+            try { await ensureHighlightJs(); } catch (e) {}
           }
-          try {
-            window.hljs.highlightElement(block);
-            if (hljsCache.size >= HLJS_CACHE_MAX) {
-              hljsCache.delete(hljsCache.keys().next().value);
+          if (window.hljs) {
+            for (let bIdx = 0; bIdx < codeBlocks.length; bIdx++) {
+              const block = codeBlocks[bIdx];
+              if (!block.isConnected) continue;
+              const lang = (block.getAttribute('data-lang') || '').trim();
+              const code = block.textContent || '';
+              const hKey = `${lang}|${code}`;
+              if (hljsCache.has(hKey)) {
+                block.innerHTML = hljsCache.get(hKey);
+                block.classList.add('hljs');
+                continue;
+              }
+              if (bIdx > 0 && bIdx % 3 === 0) await yieldToMain();
+              try {
+                window.hljs.highlightElement(block);
+                if (hljsCache.size >= HLJS_CACHE_MAX) {
+                  hljsCache.delete(hljsCache.keys().next().value);
+                }
+                hljsCache.set(hKey, block.innerHTML);
+              } catch (e) {}
             }
-            hljsCache.set(hKey, block.innerHTML);
-          } catch (e) {}
-        });
+          }
+        }
       }
 
       // 2. Active Recall Keyboard Accessibility attributes (events handled via delegation)
@@ -4525,13 +4899,19 @@ flowchart TD
           el.setAttribute('role', 'button');
           el.setAttribute('aria-pressed', String(el.classList.contains('recall-revealed')));
         });
+      } else {
+        readerOutput.querySelectorAll('[role="button"][aria-pressed]').forEach(el => {
+          el.classList.remove('recall-revealed');
+          el.removeAttribute('tabindex');
+          el.removeAttribute('role');
+          el.removeAttribute('aria-pressed');
+        });
       }
 
-      // 3. Outline Drawer
-      currentOutline = buildOutlineFromDom();
-      renderOutlineDrawer();
+      // 3. Outline Drawer (lazy — skipped while drawer is closed, rebuilt immediately on open)
+      renderOutlineDrawer(false);
 
-      // 4. Mermaid v11 Diagrams (Hand-drawn look in Cahier Manuscrit, cached for flicker-free typing)
+      // 4. Mermaid v11 Diagrams (lazy-loaded strictly on-demand when mermaid blocks exist, cached for flicker-free typing)
       if (mermaidQueue.length > 0 && window.InkTeX.isPluginEnabled('mermaid')) {
         const isNotebook = currentTheme === 'theme-notebook';
         const isDark = currentTheme === 'theme-dark';
@@ -4544,24 +4924,34 @@ flowchart TD
           const diagramSrc = mermaidQueue[idx];
           if (!diagramSrc) return;
           const cacheKey = `${mmdThemeKey}|${diagramSrc}`;
+          if (wrap.getAttribute('data-mermaid-rendered-key') === cacheKey && wrap.querySelector('svg')) {
+            return;
+          }
           if (mermaidSvgCache.has(cacheKey)) {
             wrap.innerHTML = mermaidSvgCache.get(cacheKey);
+            wrap.setAttribute('data-mermaid-rendered-key', cacheKey);
           } else {
             pendingWrappers.push({ wrap, idx, diagramSrc, cacheKey });
           }
         });
 
-        if (pendingWrappers.length > 0 && window.mermaid) {
+        if (pendingWrappers.length > 0) {
           clearTimeout(mermaidRenderDebounce);
           pendingMermaidTask = { pendingWrappers, isNotebook, isDark };
           mermaidRenderDebounce = setTimeout(async () => {
             pendingMermaidTask = null;
+            if (!window.mermaid) {
+              try { await ensureMermaid(); } catch (e) {
+                pendingWrappers.forEach(item => {
+                  if (item.wrap.isConnected) {
+                    item.wrap.innerHTML = `<pre class="w-full text-left text-xs font-mono opacity-80 whitespace-pre-wrap p-2">${escapeHtml(item.diagramSrc)}</pre>`;
+                  }
+                });
+                return;
+              }
+            }
             await renderPendingMermaidItems(pendingWrappers, isNotebook, isDark);
           }, 120);
-        } else if (pendingWrappers.length > 0 && options && options.offlineFallback && !window.mermaid) {
-          pendingWrappers.forEach(item => {
-            item.wrap.innerHTML = `<pre class="w-full text-left text-xs font-mono opacity-80 whitespace-pre-wrap p-2">${escapeHtml(item.diagramSrc)}</pre>`;
-          });
         }
       }
 
@@ -4573,11 +4963,65 @@ flowchart TD
       }
     }
 
+    const renderedBlockSourceMap = new WeakMap();
+    function patchReaderOutput(nextHtml, forceFullReplace = false) {
+      const tpl = document.createElement('template');
+      tpl.innerHTML = nextHtml;
+      const incoming = Array.from(tpl.content.childNodes);
+
+      if (forceFullReplace || readerOutput.childNodes.length === 0) {
+        readerOutput.textContent = '';
+        const frag = document.createDocumentFragment();
+        for (const node of incoming) {
+          const sig = node.nodeType === 1 ? node.outerHTML : (node.textContent || '');
+          renderedBlockSourceMap.set(node, sig);
+          frag.appendChild(node);
+        }
+        readerOutput.appendChild(frag);
+        return;
+      }
+
+      const existing = Array.from(readerOutput.childNodes);
+      const maxLen = Math.max(existing.length, incoming.length);
+      for (let i = 0; i < maxLen; i++) {
+        const oldNode = existing[i];
+        const newNode = incoming[i];
+        if (!newNode) {
+          if (oldNode && oldNode.parentNode === readerOutput) readerOutput.removeChild(oldNode);
+          continue;
+        }
+        const nextSig = newNode.nodeType === 1 ? newNode.outerHTML : (newNode.textContent || '');
+        if (!oldNode) {
+          renderedBlockSourceMap.set(newNode, nextSig);
+          readerOutput.appendChild(newNode);
+          continue;
+        }
+        const prevSig = renderedBlockSourceMap.get(oldNode);
+        if (prevSig === nextSig && oldNode.nodeType === newNode.nodeType) {
+          continue; // Keep untouched block mounted (preserves Active Recall state, scroll stability, SVGs & focus)
+        }
+        renderedBlockSourceMap.set(newNode, nextSig);
+        readerOutput.replaceChild(newNode, oldNode);
+      }
+    }
+
     let readerInputDebounce = null;
+    let lastRenderedHtml = null;
+    let lastRenderStateSig = null;
+    let lastRenderThemeSig = null;
     function updateReader(recordHistory = true, immediateSave = !recordHistory) {
       clearTimeout(readerInputDebounce);
-      readerOutput.innerHTML = renderMarkdownAndLatex(rawInput.value);
-      runPostRenderPlugins();
+      const nextHtml = renderMarkdownAndLatex(rawInput.value);
+      const themeSig = `${currentTheme}|${window.InkTeX.isPluginEnabled('code-highlight') ? 1 : 0}`;
+      const stateSig = `${themeSig}|${activeRecallMode ? 1 : 0}`;
+      if (nextHtml !== lastRenderedHtml || stateSig !== lastRenderStateSig) {
+        const forceFull = themeSig !== lastRenderThemeSig;
+        lastRenderedHtml = nextHtml;
+        lastRenderStateSig = stateSig;
+        lastRenderThemeSig = themeSig;
+        patchReaderOutput(nextHtml, forceFull);
+        runPostRenderPlugins();
+      }
       if (immediateSave) {
         clearTimeout(storageSaveDebounce);
         saveToLocalStorage();
@@ -4593,40 +5037,34 @@ flowchart TD
     }
 
     /**
-     * Replaces a range in #rawInput while flushing pending undo snapshots and preserving native Ctrl+Z when possible.
+     * Replaces a range in #rawInput cleanly using setRangeText while keeping undo history synchronized.
      */
     function replaceEditorRange(start, end, replacement, newSelStart = null, newSelEnd = null, preserveFocus = true) {
       clearTimeout(historyDebounce);
       pushHistoryState();
       const prevActive = document.activeElement;
-      const canExec = rawInput.offsetParent !== null && typeof document.execCommand === 'function';
-      let usedExec = false;
-      if (canExec) {
-        try {
-          const prevScroll = rawInput.scrollTop;
-          rawInput.focus({ preventScroll: true });
-          rawInput.setSelectionRange(start, end);
-          usedExec = document.execCommand('insertText', false, replacement);
-          rawInput.scrollTop = prevScroll;
-        } catch (e) {
-          usedExec = false;
-        }
+      const prevScroll = rawInput.scrollTop;
+      if (typeof rawInput.setRangeText === 'function') {
+        rawInput.setRangeText(replacement, start, end, 'end');
+      } else {
+        rawInput.value = rawInput.value.substring(0, start) + replacement + rawInput.value.substring(end);
       }
-      if (!usedExec) {
-        if (typeof rawInput.setRangeText === 'function') {
-          rawInput.setRangeText(replacement, start, end, 'end');
-        } else {
-          rawInput.value = rawInput.value.substring(0, start) + replacement + rawInput.value.substring(end);
-        }
-      }
+      rawInput.scrollTop = prevScroll;
       if (typeof newSelStart === 'number') {
         const selEnd = typeof newSelEnd === 'number' ? newSelEnd : newSelStart;
-        if (document.activeElement === rawInput) {
+        if (!preserveFocus) {
+          rawInput.focus({ preventScroll: true });
+        }
+        if (document.activeElement === rawInput && typeof rawInput.setSelectionRange === 'function') {
           rawInput.setSelectionRange(newSelStart, selEnd);
         }
       }
       if (preserveFocus && prevActive && prevActive !== rawInput && typeof prevActive.focus === 'function') {
         try { prevActive.focus({ preventScroll: true }); } catch (e) {}
+      }
+      updateCursorLineCol();
+      if (currentTheme === 'theme-notebook' && typeof scheduleDockActiveSync === 'function') {
+        scheduleDockActiveSync();
       }
     }
 
@@ -4683,13 +5121,15 @@ flowchart TD
     function loadImportedFile(file) {
       const reader = new FileReader();
       reader.onload = () => {
-        rawInput.value = String(reader.result || '');
+        const importedText = String(reader.result || '');
+        replaceEditorRange(0, rawInput.value.length, importedText, 0, 0, false);
+        resetSavedSelectionState();
         if (exportFilename) {
           exportFilename.value = file.name.replace(/\.[^.]+$/, '') || 'inktex-notes';
         }
         updateReader(false);
         pushHistoryState();
-        showToast(`Fichier chargé : ${file.name}`);
+        showToast(`Fichier chargé : ${file.name} (Ctrl+Z pour annuler)`);
       };
       reader.readAsText(file);
     }
@@ -4731,17 +5171,19 @@ flowchart TD
     if (btnSymbolsPicker && symbolsPopover) {
       btnSymbolsPicker.addEventListener('click', (e) => {
         e.stopPropagation();
-        symbolsPopover.classList.toggle('hidden');
-      });
-      document.addEventListener('click', (e) => {
-        if (!symbolsPopover.contains(e.target) && e.target !== btnSymbolsPicker) {
-          symbolsPopover.classList.add('hidden');
+        const willOpen = symbolsPopover.classList.contains('hidden');
+        if (typeof closeV2Popovers === 'function') closeV2Popovers(willOpen ? 'symbols' : null);
+        symbolsPopover.classList.toggle('hidden', !willOpen);
+        btnSymbolsPicker.setAttribute('aria-expanded', String(willOpen));
+        btnSymbolsPicker.classList.toggle('v2-btn-active', willOpen);
+        if (willOpen && typeof positionFixedPopover === 'function') {
+          positionFixedPopover(btnSymbolsPicker, symbolsPopover, true);
         }
       });
       symbolsPopover.querySelectorAll('.sym-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           insertAtEditorCursor(btn.textContent || '');
-          symbolsPopover.classList.add('hidden');
+          if (typeof closeV2Popovers === 'function') closeV2Popovers();
         });
       });
     }
@@ -4796,11 +5238,23 @@ flowchart TD
       updateFindMatches();
     }
 
-    document.getElementById('btnToggleFind')?.addEventListener('click', () => {
-      findReplaceBar.classList.toggle('hidden');
-      if (!findReplaceBar.classList.contains('hidden')) findInput.focus();
+    const btnToggleFind = document.getElementById('btnToggleFind');
+    function setFindBarOpen(open, returnFocus = false) {
+      if (!findReplaceBar) return;
+      findReplaceBar.classList.toggle('hidden', !open);
+      btnToggleFind?.setAttribute('aria-expanded', String(!!open));
+      btnToggleFind?.classList.toggle('v2-btn-active', !!open);
+      if (open) {
+        findInput?.focus();
+      } else if (returnFocus) {
+        rawInput?.focus({ preventScroll: true });
+      }
+    }
+
+    btnToggleFind?.addEventListener('click', () => {
+      setFindBarOpen(findReplaceBar.classList.contains('hidden'));
     });
-    document.getElementById('btnCloseFind')?.addEventListener('click', () => findReplaceBar.classList.add('hidden'));
+    document.getElementById('btnCloseFind')?.addEventListener('click', () => setFindBarOpen(false, true));
     findInput?.addEventListener('input', updateFindMatches);
     findInput?.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
@@ -4853,7 +5307,6 @@ flowchart TD
     });
 
     // Synchronized Scrolling
-    let isSyncingScroll = false;
     document.getElementById('btnSyncScroll')?.addEventListener('click', (e) => {
       syncScrollEnabled = !syncScrollEnabled;
       const btn = e.currentTarget;
@@ -4862,18 +5315,21 @@ flowchart TD
       showToast(syncScrollEnabled ? 'Défilement synchronisé activé' : 'Défilement indépendant');
     });
 
+    let scrollSyncRaf = false;
     rawInput.addEventListener('scroll', () => {
-      if (!syncScrollEnabled || isSyncingScroll || isFullReaderMode || window.innerWidth < 1024) return;
-      const maxEd = rawInput.scrollHeight - rawInput.clientHeight;
-      if (maxEd <= 0) return;
-      const ratio = rawInput.scrollTop / maxEd;
-      const maxWin = document.documentElement.scrollHeight - window.innerHeight;
-      if (maxWin > 0) {
-        isSyncingScroll = true;
-        window.scrollTo({ top: ratio * maxWin, behavior: 'auto' });
-        setTimeout(() => { isSyncingScroll = false; }, 50);
-      }
-    });
+      if (!syncScrollEnabled || scrollSyncRaf || isFullReaderMode || window.innerWidth < 1024) return;
+      scrollSyncRaf = true;
+      window.requestAnimationFrame(() => {
+        scrollSyncRaf = false;
+        const maxEd = rawInput.scrollHeight - rawInput.clientHeight;
+        if (maxEd <= 0) return;
+        const ratio = rawInput.scrollTop / maxEd;
+        const maxWin = document.documentElement.scrollHeight - window.innerHeight;
+        if (maxWin > 0) {
+          window.scrollTo({ top: ratio * maxWin, behavior: 'auto' });
+        }
+      });
+    }, { passive: true });
 
     // Draggable Split Resizer (Mouse + iPad Touch / Apple Pencil + Keyboard Arrow Keys)
     const splitResizer = document.getElementById('splitResizer');
@@ -4927,15 +5383,15 @@ flowchart TD
     // =====================================================
     // BASE FONT, PAPER, MARGIN, SNAP-LINES & LAYOUT CONTROLS
     // =====================================================
+    const baseFontNotebookHint = document.getElementById('baseFontNotebookHint');
     if (baseFontSelect) {
       baseFontSelect.addEventListener('change', (e) => {
+        ensureFontLoaded(e.target.value);
         document.documentElement.style.setProperty('--reader-base-font', e.target.value);
-        if (currentTheme === 'theme-notebook') {
-          document.documentElement.style.setProperty('--nb-font', e.target.value);
-          nbFontSelect.value = e.target.value;
-        }
         saveToLocalStorage();
-        showToast('Police mise à jour !');
+        showToast(currentTheme === 'theme-notebook'
+          ? 'Police principale (Dark & Clair) enregistrée'
+          : 'Police mise à jour !');
       });
     }
 
@@ -4978,7 +5434,12 @@ flowchart TD
       const layoutBtnText = document.getElementById('layoutBtnText');
       isFullReaderMode = (normalizedView === 'reader');
       workspaceGrid.classList.toggle('full-reader', isFullReaderMode);
+      document.body.classList.toggle('full-reader-active', isFullReaderMode);
+      if (isFullReaderMode && typeof updateReadingProgressFallback === 'function') {
+        updateReadingProgressFallback();
+      }
 
+      const btnToggleLayoutEl = document.getElementById('btnToggleLayout');
       if (normalizedView === 'reader') {
         editorContainer.classList.add('hidden');
         editorContainer.classList.remove('h-[calc(100dvh-140px)]', 'min-h-[280px]');
@@ -4986,21 +5447,24 @@ flowchart TD
         if (splitResizer) splitResizer.classList.add('lg:hidden');
         readerContainer.classList.remove('hidden');
         if (layoutBtnText) layoutBtnText.textContent = 'Éditeur';
-        document.getElementById('btnToggleLayout')?.classList.add('v2-btn-active');
+        btnToggleLayoutEl?.classList.add('v2-btn-active');
+        btnToggleLayoutEl?.setAttribute('aria-pressed', 'true');
       } else if (normalizedView === 'editor') {
         editorContainer.classList.remove('hidden', 'h-[300px]', 'sm:h-[380px]');
         editorContainer.classList.add('h-[calc(100dvh-140px)]', 'min-h-[280px]');
         if (splitResizer) splitResizer.classList.remove('lg:hidden');
         readerContainer.classList.add('hidden');
         if (layoutBtnText) layoutBtnText.textContent = 'Plein écran';
-        document.getElementById('btnToggleLayout')?.classList.remove('v2-btn-active');
+        btnToggleLayoutEl?.classList.remove('v2-btn-active');
+        btnToggleLayoutEl?.setAttribute('aria-pressed', 'false');
       } else {
         editorContainer.classList.remove('hidden', 'h-[calc(100dvh-140px)]', 'min-h-[280px]');
         editorContainer.classList.add('h-[300px]', 'sm:h-[380px]');
         if (splitResizer) splitResizer.classList.remove('lg:hidden');
         readerContainer.classList.remove('hidden');
         if (layoutBtnText) layoutBtnText.textContent = 'Plein écran';
-        document.getElementById('btnToggleLayout')?.classList.remove('v2-btn-active');
+        btnToggleLayoutEl?.classList.remove('v2-btn-active');
+        btnToggleLayoutEl?.setAttribute('aria-pressed', 'false');
       }
 
       document.querySelectorAll('.mob-view-btn').forEach((btn) => {
@@ -5015,6 +5479,12 @@ flowchart TD
     window.addEventListener('resize', () => {
       if (window.innerWidth >= 1024 && currentWorkspaceView === 'editor') {
         setWorkspaceView('split');
+      }
+      if (typeof syncRibbonToggleUI === 'function' && notebookCustomBar) {
+        syncRibbonToggleUI(!notebookCustomBar.classList.contains('ribbon-collapsed'));
+      }
+      if (typeof closeV2Popovers === 'function') {
+        closeV2Popovers();
       }
     });
 
@@ -5038,7 +5508,6 @@ flowchart TD
     const btnToggleNbDrawer = document.getElementById('btnToggleNbDrawer');
     const nbDrawerChevron = document.getElementById('nbDrawerChevron');
     const nbActivePaperLabel = document.getElementById('nbActivePaperLabel');
-    const ribbonToggleChevron = document.getElementById('ribbonToggleChevron');
     const btnMobileRibbonToggle = document.getElementById('btnMobileRibbonToggle');
 
     const PAPER_SHORT_LABELS = {
@@ -5051,7 +5520,7 @@ flowchart TD
       'paper-vierge': 'Blanche'
     };
 
-    let isRibbonPinned = false;
+    let isRibbonPinned = true;
     let isManuallyHidden = false;
     let isRibbonHovered = false;
     let isNbDrawerOpen = false;
@@ -5096,22 +5565,21 @@ flowchart TD
 
     function syncRibbonToggleUI(isOpen) {
       const activeNotebook = currentTheme === 'theme-notebook';
+      const isDesktop = window.innerWidth >= 1024;
       document.body.classList.toggle('notebook-ribbon-open', activeNotebook && isOpen);
-      // Show compact corner Pen FAB only when Cahier dock is collapsed
+      // Show compact corner Pen FAB ONLY on desktop when Cahier dock is collapsed (mobile uses #btnMobileRibbonToggle)
       if (showRibbonPillContainer) {
-        const showFab = activeNotebook && !isOpen;
+        const showFab = activeNotebook && !isOpen && isDesktop;
         showRibbonPillContainer.classList.toggle('hidden', !showFab);
         showRibbonPillContainer.classList.toggle('flex', showFab);
       }
       if (btnShowRibbonPill) {
         btnShowRibbonPill.setAttribute('aria-expanded', String(isOpen));
       }
-      if (ribbonToggleChevron) {
-        ribbonToggleChevron.classList.toggle('rotate-180', isOpen);
-      }
       if (btnMobileRibbonToggle) {
         btnMobileRibbonToggle.classList.toggle('hidden', !activeNotebook);
         btnMobileRibbonToggle.classList.toggle('v2-btn-active', isOpen);
+        btnMobileRibbonToggle.setAttribute('aria-expanded', String(activeNotebook && isOpen));
       }
     }
 
@@ -5127,14 +5595,19 @@ flowchart TD
       readerCard.classList.remove('theme-dark', 'theme-light', 'theme-notebook');
       readerCard.classList.add(selectedTheme);
       document.body.classList.toggle('desk-notebook-mode', selectedTheme === 'theme-notebook');
+      if (baseFontNotebookHint) {
+        baseFontNotebookHint.classList.toggle('hidden', selectedTheme !== 'theme-notebook');
+      }
 
       if (selectedTheme === 'theme-notebook') {
+        ensureFontLoaded(nbFontSelect ? nbFontSelect.value : "'Kalam', cursive");
         isManuallyHidden = false;
         setNbStyleDrawer(false);
         notebookCustomBar.classList.remove('hidden', 'ribbon-collapsed');
         workspaceGrid.classList.add('notebook-mode-spacing');
         syncRibbonToggleUI(true);
         if (nbPaperSelect) updateActivePaperLabel(nbPaperSelect.value);
+        if (typeof syncDockActiveStates === 'function') syncDockActiveStates();
       } else {
         setNbStyleDrawer(false);
         notebookCustomBar.classList.add('hidden');
@@ -5199,13 +5672,9 @@ flowchart TD
     btnToggleNbDrawer?.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      setNbStyleDrawer(!isNbDrawerOpen);
-    });
-
-    document.addEventListener('click', (e) => {
-      if (isNbDrawerOpen && notebookCustomBar && !notebookCustomBar.contains(e.target)) {
-        setNbStyleDrawer(false);
-      }
+      const willOpen = !isNbDrawerOpen;
+      if (typeof closeV2Popovers === 'function') closeV2Popovers(willOpen ? 'nbDrawer' : null);
+      setNbStyleDrawer(willOpen);
     });
 
     // Smooth rAF directional scroll hysteresis (works with wheel, trackpad, scrollbar & keys; zero layout jump)
@@ -5288,6 +5757,7 @@ flowchart TD
     });
 
     nbFontSelect.addEventListener('change', (e) => {
+      ensureFontLoaded(e.target.value);
       document.documentElement.style.setProperty('--nb-font', e.target.value);
       saveToLocalStorage();
       showToast('Police du cahier appliquée !');
@@ -5625,6 +6095,7 @@ flowchart TD
         savedSelectionState.editorStart = start;
         savedSelectionState.editorEnd = start + replacement.length;
         if (document.activeElement === rawInput) rawInput.setSelectionRange(start, start + replacement.length);
+        if (currentTheme === 'theme-notebook' && typeof scheduleDockActiveSync === 'function') scheduleDockActiveSync();
         showToast(`Taille de la phrase : ${newSize} px`);
         return;
       }
@@ -5690,6 +6161,7 @@ flowchart TD
         savedSelectionState.editorStart = start;
         savedSelectionState.editorEnd = start + replacement.length;
         if (document.activeElement === rawInput) rawInput.setSelectionRange(start, start + replacement.length);
+        if (currentTheme === 'theme-notebook' && typeof scheduleDockActiveSync === 'function') scheduleDockActiveSync();
         floatingPenPopup.classList.add('hidden');
         showToast(action === 'bold' ? (isRemoved ? 'Gras retiré !' : 'Gras appliqué !') : (isRemoved ? 'Italique retiré !' : 'Italique appliqué !'));
         return;
@@ -5786,6 +6258,7 @@ flowchart TD
         savedSelectionState.source = 'editor';
         savedSelectionState.editorStart = start;
         savedSelectionState.editorEnd = start + cleaned.length;
+        if (currentTheme === 'theme-notebook' && typeof scheduleDockActiveSync === 'function') scheduleDockActiveSync();
         floatingPenPopup.classList.add('hidden');
         showToast('Formatage effacé !');
         return;
@@ -5861,6 +6334,7 @@ flowchart TD
         savedSelectionState.editorStart = start;
         savedSelectionState.editorEnd = start + replacement.length;
         if (document.activeElement === rawInput) rawInput.setSelectionRange(start, start + replacement.length);
+        if (currentTheme === 'theme-notebook' && typeof scheduleDockActiveSync === 'function') scheduleDockActiveSync();
         floatingPenPopup.classList.add('hidden');
         showToast(isRemoved ? `Style {${tag}} retiré !` : `Style {${tag}} appliqué !`);
         return;
@@ -5935,10 +6409,22 @@ flowchart TD
         if (navigator.clipboard?.readText) {
           const text = await navigator.clipboard.readText();
           if (text) {
-            rawInput.value = text;
-            updateReader(false);
-            pushHistoryState();
-            showToast('Texte collé avec succès !');
+            const trimmedCurrent = rawInput.value.trim();
+            const shouldReplaceAll = !trimmedCurrent || trimmedCurrent === DEFAULT_SHOWCASE_TEXT.trim();
+            if (shouldReplaceAll) {
+              replaceEditorRange(0, rawInput.value.length, text, text.length, text.length, false);
+              resetSavedSelectionState();
+              updateReader(false);
+              pushHistoryState();
+              showToast('Texte collé (Ctrl+Z pour annuler)');
+            } else {
+              const s = rawInput.selectionStart || 0;
+              const en = rawInput.selectionEnd || 0;
+              replaceEditorRange(s, en, text, s + text.length, s + text.length, false);
+              updateReader(false);
+              pushHistoryState();
+              showToast('Texte collé au curseur (Ctrl+Z pour annuler)');
+            }
             return;
           }
         }
@@ -5956,7 +6442,7 @@ flowchart TD
       if (rawInput.value.trim().length > 40 && !clearArmed) {
         clearArmed = true;
         btnClearEditor.classList.add('ring-2', 'ring-rose-500', 'text-rose-200');
-        showToast('Cliquez à nouveau sur 🗑️ (3s) pour confirmer la suppression');
+        showToast('Cliquez à nouveau sur Vider (3s) pour confirmer la suppression');
         clearTimeout(clearConfirmTimer);
         clearConfirmTimer = setTimeout(() => {
           clearArmed = false;
@@ -5968,7 +6454,7 @@ flowchart TD
       clearTimeout(clearConfirmTimer);
       btnClearEditor.classList.remove('ring-2', 'ring-rose-500', 'text-rose-200');
       replaceEditorRange(0, rawInput.value.length, '', 0, 0, false);
-      savedSelectionState = { source: null, editorStart: 0, editorEnd: 0, previewRange: null, previewText: '', lastPlainPhrase: '', lastBlockText: '' };
+      resetSavedSelectionState();
       updateReader(false);
       pushHistoryState();
       rawInput.focus();
@@ -5981,15 +6467,21 @@ flowchart TD
     // STUDY TOOLS: OUTLINE, ACTIVE RECALL, POMODORO, PLUGINS MODAL
     // =====================================================
     const btnToggleOutline = document.getElementById('btnToggleOutline');
+    function syncOutlineToggleButtons(isOpen) {
+      [btnToggleOutline, document.getElementById('btnMobOutline')].forEach(btn => {
+        if (!btn) return;
+        btn.setAttribute('aria-pressed', String(!!isOpen));
+        btn.classList.toggle('v2-btn-active', !!isOpen);
+      });
+    }
     btnToggleOutline?.addEventListener('click', () => {
       const isHidden = outlineDrawer.classList.toggle('hidden');
-      btnToggleOutline.setAttribute('aria-pressed', String(!isHidden));
-      btnToggleOutline.classList.toggle('v2-btn-active', !isHidden);
+      syncOutlineToggleButtons(!isHidden);
+      if (!isHidden && outlineDirty) renderOutlineDrawer(true);
     });
     document.getElementById('btnCloseOutline')?.addEventListener('click', () => {
       outlineDrawer.classList.add('hidden');
-      btnToggleOutline?.setAttribute('aria-pressed', 'false');
-      btnToggleOutline?.classList.remove('v2-btn-active');
+      syncOutlineToggleButtons(false);
     });
 
     // Active Recall Mode
@@ -5997,14 +6489,17 @@ flowchart TD
     const activeRecallBar = document.getElementById('activeRecallBar');
     btnActiveRecall?.addEventListener('click', () => {
       if (!window.InkTeX.isPluginEnabled('active-recall')) {
-        showToast('Activez le plugin Révision Active dans 🧩 Plugins');
+        showToast('Activez le plugin Révision Active dans Plugins');
         return;
       }
       activeRecallMode = !activeRecallMode;
-      btnActiveRecall.setAttribute('aria-pressed', String(activeRecallMode));
+      [btnActiveRecall, document.getElementById('btnMobRecall')].forEach(btn => {
+        if (!btn) return;
+        btn.setAttribute('aria-pressed', String(activeRecallMode));
+        btn.classList.toggle('v2-btn-active', activeRecallMode);
+      });
       readerCard.classList.toggle('active-recall-on', activeRecallMode);
       activeRecallBar.classList.toggle('hidden', !activeRecallMode);
-      btnActiveRecall.classList.toggle('v2-btn-active', activeRecallMode);
       updateReader(false);
     });
     document.getElementById('btnRevealAllRecall')?.addEventListener('click', () => {
@@ -6020,25 +6515,72 @@ flowchart TD
       });
     });
 
-    // Pomodoro Focus Timer (Popover with Pause, Resume & Reset)
+    // Pomodoro Focus Timer (Popover with Pause, Resume, Reset & Soft Web Audio Chime)
     const POMO_DURATIONS = { focus: 25 * 60, break: 5 * 60 };
     let pomoMode = 'focus';
     let pomoSeconds = POMO_DURATIONS.focus;
     let pomoInterval = null;
+    let pomoMuted = false;
 
     const pomodoroContainer = document.getElementById('pomodoroContainer');
     const btnPomodoro = document.getElementById('btnPomodoro');
     const pomodoroPopover = document.getElementById('pomodoroPopover');
     const pomoDisplay = document.getElementById('pomodoroDisplay');
     const pomoPopoverDisplay = document.getElementById('pomoPopoverDisplay');
+    const mobPomodoroDisplay = document.getElementById('mobPomodoroDisplay');
+    const mobPomoStatusDot = document.getElementById('mobPomoStatusDot');
     const pomoStateBadge = document.getElementById('pomoStateBadge');
     const pomoModeLabel = document.getElementById('pomoModeLabel');
     const pomoStatusDot = document.getElementById('pomoStatusDot');
+    const btnPomoMute = document.getElementById('btnPomoMute');
     const btnPomoModeFocus = document.getElementById('btnPomoModeFocus');
     const btnPomoModeBreak = document.getElementById('btnPomoModeBreak');
     const btnPomoStartResume = document.getElementById('btnPomoStartResume');
     const btnPomoPause = document.getElementById('btnPomoPause');
     const btnPomoReset = document.getElementById('btnPomoReset');
+
+    function playPomoChime() {
+      if (pomoMuted) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+        const notes = [523.25, 783.99]; // Calm C5 -> G5 chime
+        notes.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.18);
+          gain.gain.setValueAtTime(0.0001, now + i * 0.18);
+          gain.gain.exponentialRampToValueAtTime(0.075, now + i * 0.18 + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.18 + 0.55);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.18);
+          osc.stop(now + i * 0.18 + 0.6);
+        });
+        setTimeout(() => { try { ctx.close(); } catch (e) {} }, 1000);
+      } catch (e) {}
+    }
+
+    function syncPomoMuteUI() {
+      if (!btnPomoMute) return;
+      btnPomoMute.setAttribute('aria-pressed', String(pomoMuted));
+      btnPomoMute.title = pomoMuted ? 'Carillon coupé (cliquer pour réactiver)' : 'Carillon sonore activé';
+      btnPomoMute.classList.toggle('opacity-50', pomoMuted);
+      btnPomoMute.innerHTML = pomoMuted
+        ? '<i data-lucide="volume-x" class="w-3.5 h-3.5" aria-hidden="true"></i>'
+        : '<i data-lucide="volume-2" class="w-3.5 h-3.5" aria-hidden="true"></i>';
+      if (window.lucide) lucide.createIcons({ nodes: [btnPomoMute] });
+    }
+
+    btnPomoMute?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      pomoMuted = !pomoMuted;
+      syncPomoMuteUI();
+      showToast(pomoMuted ? 'Carillon Pomodoro coupé' : 'Carillon Pomodoro activé');
+    });
 
     function renderPomo() {
       const m = String(Math.floor(pomoSeconds / 60)).padStart(2, '0');
@@ -6046,6 +6588,7 @@ flowchart TD
       const timeStr = `${m}:${s}`;
       if (pomoDisplay) pomoDisplay.textContent = timeStr;
       if (pomoPopoverDisplay) pomoPopoverDisplay.textContent = timeStr;
+      if (mobPomodoroDisplay) mobPomodoroDisplay.textContent = timeStr;
 
       const isRunning = !!pomoInterval;
       const isAtFull = pomoSeconds === POMO_DURATIONS[pomoMode];
@@ -6055,9 +6598,9 @@ flowchart TD
       }
 
       if (btnPomoModeFocus && btnPomoModeBreak) {
-        const focusActiveCls = 'px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-sky-400/15 text-sky-300 border border-sky-400/30 cursor-pointer transition';
-        const idleCls = 'px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-[#171a23] text-[#8b91a0] border border-white/[0.065] hover:text-[#e6e8ee] cursor-pointer transition';
-        const breakActiveCls = 'px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-emerald-400/15 text-emerald-300 border border-emerald-400/30 cursor-pointer transition';
+        const focusActiveCls = 'px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-sky-400/15 text-sky-300 border border-sky-400/30 cursor-pointer transition whitespace-nowrap';
+        const idleCls = 'px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-[#171a23] text-[#949bad] border border-white/[0.065] hover:text-[#e6e8ee] cursor-pointer transition whitespace-nowrap';
+        const breakActiveCls = 'px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-emerald-400/15 text-emerald-300 border border-emerald-400/30 cursor-pointer transition whitespace-nowrap';
         btnPomoModeFocus.className = pomoMode === 'focus' ? focusActiveCls : idleCls;
         btnPomoModeBreak.className = pomoMode === 'break' ? breakActiveCls : idleCls;
       }
@@ -6071,21 +6614,19 @@ flowchart TD
           pomoStateBadge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-400/15 text-amber-300 border border-amber-400/30';
         } else {
           pomoStateBadge.textContent = 'Prêt';
-          pomoStateBadge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.05] text-[#8b91a0] border border-white/[0.065]';
+          pomoStateBadge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.05] text-[#949bad] border border-white/[0.065]';
         }
       }
 
-      if (pomoStatusDot && btnPomodoro) {
-        if (isRunning) {
-          pomoStatusDot.className = 'w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse';
-          btnPomodoro.classList.add('v2-btn-active');
-        } else if (!isAtFull && pomoSeconds > 0) {
-          pomoStatusDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400';
-          btnPomodoro.classList.add('v2-btn-active');
-        } else {
-          pomoStatusDot.className = 'w-1.5 h-1.5 rounded-full bg-[#646b7c]';
-          btnPomodoro.classList.remove('v2-btn-active');
-        }
+      const dotCls = isRunning
+        ? 'w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse'
+        : (!isAtFull && pomoSeconds > 0
+          ? 'w-1.5 h-1.5 rounded-full bg-amber-400'
+          : 'w-1.5 h-1.5 rounded-full bg-[#8a92a4]');
+      if (pomoStatusDot) pomoStatusDot.className = dotCls;
+      if (mobPomoStatusDot) mobPomoStatusDot.className = dotCls;
+      if (btnPomodoro) {
+        btnPomodoro.classList.toggle('v2-btn-active', isRunning || (!isAtFull && pomoSeconds > 0));
       }
 
       if (btnPomoStartResume && btnPomoPause) {
@@ -6108,7 +6649,8 @@ flowchart TD
         pomoInterval = null;
         pomoEndAt = 0;
         renderPomo();
-        showToast(pomoMode === 'focus' ? '⏰ Session terminée ! Passez en Pause 5 min.' : '⏰ Pause terminée ! Prêt pour Focus.');
+        playPomoChime();
+        showToast(pomoMode === 'focus' ? 'Session Focus terminée — passez en Pause 5 min' : 'Pause terminée — prêt pour Focus');
       }
     }
 
@@ -6153,14 +6695,11 @@ flowchart TD
     btnPomodoro?.addEventListener('click', (e) => {
       e.stopPropagation();
       const willOpen = pomodoroPopover.classList.contains('hidden');
-      pomodoroPopover.classList.toggle('hidden');
+      if (typeof closeV2Popovers === 'function') closeV2Popovers(willOpen ? 'pomodoro' : null);
+      pomodoroPopover.classList.toggle('hidden', !willOpen);
       btnPomodoro.setAttribute('aria-expanded', String(willOpen));
-    });
-
-    document.addEventListener('click', (e) => {
-      if (pomodoroPopover && pomodoroContainer && !pomodoroContainer.contains(e.target)) {
-        pomodoroPopover.classList.add('hidden');
-        btnPomodoro?.setAttribute('aria-expanded', 'false');
+      if (willOpen && typeof positionFixedPopover === 'function') {
+        positionFixedPopover(btnPomodoro, pomodoroPopover, true);
       }
     });
 
@@ -6244,11 +6783,17 @@ flowchart TD
         closeStudioModal(exportModal);
         closeStudioModal(pluginModal);
         closeStudioModal(shortcutsModal);
-        pomodoroPopover?.classList.add('hidden');
-        btnPomodoro?.setAttribute('aria-expanded', 'false');
-        symbolsPopover?.classList.add('hidden');
         if (typeof closeV2Popovers === 'function') closeV2Popovers();
-        if (typeof setNbStyleDrawer === 'function') setNbStyleDrawer(false);
+        if (floatingPenPopup && !floatingPenPopup.classList.contains('hidden')) {
+          floatingPenPopup.classList.add('hidden');
+        }
+        if (findReplaceBar && !findReplaceBar.classList.contains('hidden')) {
+          setFindBarOpen(false, true);
+        }
+        if (outlineDrawer && !outlineDrawer.classList.contains('hidden')) {
+          outlineDrawer.classList.add('hidden');
+          syncOutlineToggleButtons(false);
+        }
         return;
       }
       if (e.altKey && !e.ctrlKey && !e.metaKey && e.key.toLowerCase() === 't') {
@@ -6261,13 +6806,13 @@ flowchart TD
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
         if (editorContainer && editorContainer.contains(document.activeElement)) {
           e.preventDefault();
-          findReplaceBar.classList.remove('hidden');
-          findInput.focus();
+          setFindBarOpen(true);
           return;
         }
       }
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'e') {
         e.preventDefault();
+        warmExportLibraries();
         openStudioModal(exportModal, btnOpenExportModal);
         return;
       }
@@ -6286,10 +6831,19 @@ flowchart TD
           return;
         }
       }
-      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z') {
-        if (document.activeElement !== rawInput && historyIndex > 0) { e.preventDefault(); performUndo(); }
-      } else if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') || ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z')) {
-        if (document.activeElement !== rawInput && historyIndex < historyStack.length - 1) { e.preventDefault(); performRedo(); }
+      const activeTag = document.activeElement?.tagName?.toUpperCase() || '';
+      const isOtherField = document.activeElement !== rawInput && (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || document.activeElement?.isContentEditable);
+      if (!isOtherField && (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z') {
+        const hasPendingChange = historyIndex >= 0 && historyStack[historyIndex] && historyStack[historyIndex].raw !== rawInput.value;
+        if (historyIndex > 0 || hasPendingChange) {
+          e.preventDefault();
+          performUndo();
+        }
+      } else if (!isOtherField && (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') || ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z'))) {
+        if (historyIndex < historyStack.length - 1) {
+          e.preventDefault();
+          performRedo();
+        }
       }
     });
 
@@ -6373,7 +6927,10 @@ flowchart TD
       setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 2000);
     }
 
-    btnOpenExportModal?.addEventListener('click', () => openStudioModal(exportModal, btnOpenExportModal));
+    btnOpenExportModal?.addEventListener('click', () => {
+      warmExportLibraries();
+      openStudioModal(exportModal, btnOpenExportModal);
+    });
     btnCloseExportModal?.addEventListener('click', () => closeStudioModal(exportModal));
     exportModal?.addEventListener('click', (e) => { if (e.target === exportModal) closeStudioModal(exportModal); });
     btnCloseExportPreview?.addEventListener('click', () => {
@@ -6413,9 +6970,62 @@ flowchart TD
 
     const EXPORT_WIDTH_MAP = { a4: 794, wide: 1040, compact: 540 };
     const EXPORT_BASELINE_FIX_CSS = 'img:not(.inktex-img){display:inline-block !important;vertical-align:baseline !important;}';
+    let isExportCaptureRunning = false;
+    const EXPORT_CAPTURE_BTN_IDS = ['btnPreviewExport', 'btnExportDirectPdf', 'btnExportPng', 'btnExportJpg', 'btnCopyPng', 'btnExportPrintPdf'];
+
+    function setExportButtonsBusy(busy) {
+      EXPORT_CAPTURE_BTN_IDS.forEach(id => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.disabled = !!busy;
+        btn.setAttribute('aria-busy', String(!!busy));
+        btn.classList.toggle('opacity-50', !!busy);
+        btn.classList.toggle('pointer-events-none', !!busy);
+      });
+    }
+
+    async function runWithExportLock(taskFn) {
+      if (isExportCaptureRunning) {
+        showToast('Export déjà en cours...');
+        return false;
+      }
+      isExportCaptureRunning = true;
+      setExportButtonsBusy(true);
+      try {
+        await taskFn();
+        return true;
+      } finally {
+        isExportCaptureRunning = false;
+        setExportButtonsBusy(false);
+      }
+    }
 
     async function captureReaderCanvas(captureOpts = {}) {
-      const { forPdf = false, scaleOverride = null } = captureOpts || {};
+      const { forPdf = false, scaleOverride = null, _lockHeld = false } = captureOpts || {};
+      if (!_lockHeld) {
+        if (isExportCaptureRunning) {
+          const busyErr = new Error('EXPORT_BUSY');
+          busyErr.code = 'EXPORT_BUSY';
+          throw busyErr;
+        }
+        isExportCaptureRunning = true;
+        setExportButtonsBusy(true);
+      }
+      let liveFixStyle = null;
+      let prevCardStyleCss = '';
+      let hadNotebookSpacing = false;
+      let wasDarkWithoutBg = false;
+      let wasReaderHidden = false;
+      let prevContainerCss = '';
+      let domMutated = false;
+
+      try {
+      await ensureHtml2Canvas();
+      if (currentTheme === 'theme-notebook' && nbFontSelect) {
+        await ensureFontLoaded(nbFontSelect.value);
+      } else if (baseFontSelect) {
+        await ensureFontLoaded(baseFontSelect.value);
+      }
       await flushPendingMermaid();
       if (document.fonts && document.fonts.ready) {
         try { await document.fonts.ready; } catch (e) {}
@@ -6426,16 +7036,17 @@ flowchart TD
       const widthMode = exportWidth ? exportWidth.value : 'auto';
       const targetWidthPx = EXPORT_WIDTH_MAP[widthMode] || 0;
 
-      const prevCardStyleCss = readerCard.style.cssText;
-      const hadNotebookSpacing = workspaceGrid && workspaceGrid.classList.contains('notebook-mode-spacing');
+      prevCardStyleCss = readerCard.style.cssText;
+      hadNotebookSpacing = !!(workspaceGrid && workspaceGrid.classList.contains('notebook-mode-spacing'));
       if (hadNotebookSpacing) workspaceGrid.classList.remove('notebook-mode-spacing');
-      const wasDarkWithoutBg = !includeBg && currentTheme === 'theme-dark';
-      const wasReaderHidden = readerContainer && readerContainer.classList.contains('hidden');
-      const prevContainerCss = readerContainer ? readerContainer.style.cssText : '';
+      wasDarkWithoutBg = !includeBg && currentTheme === 'theme-dark';
+      wasReaderHidden = !!(readerContainer && readerContainer.classList.contains('hidden'));
+      prevContainerCss = readerContainer ? readerContainer.style.cssText : '';
+      domMutated = true;
 
       // Temporarily enforce inline-block on non-content <img> on LIVE document so html2canvas FontMetrics
       // measures true text baselines (fixes Tailwind v3 Preflight `img { display: block }` downward text shift!)
-      let liveFixStyle = document.getElementById('inktexHtml2CanvasBaselineFix');
+      liveFixStyle = document.getElementById('inktexHtml2CanvasBaselineFix');
       if (!liveFixStyle) {
         liveFixStyle = document.createElement('style');
         liveFixStyle.id = 'inktexHtml2CanvasBaselineFix';
@@ -6483,7 +7094,7 @@ flowchart TD
       const bgColor = !includeBg
         ? '#ffffff'
         : (currentTheme === 'theme-dark'
-          ? '#131314'
+          ? '#12141a'
           : (currentTheme === 'theme-notebook'
             ? (readerCard.classList.contains('paper-parchemin')
               ? '#f8f1dc'
@@ -6625,7 +7236,6 @@ flowchart TD
         return c;
       }
 
-      try {
         try {
           const canvas = resetCanvasTransform(await runHtml2Canvas(safeScale));
           return { canvas, appliedScale: safeScale, bgColor, includeBg, blocks: liveBlocks };
@@ -6637,16 +7247,22 @@ flowchart TD
         }
       } finally {
         if (liveFixStyle && liveFixStyle.parentNode) liveFixStyle.remove();
-        readerCard.classList.remove('export-hide-header', 'export-flat-pdf');
-        if (wasDarkWithoutBg) {
-          readerCard.classList.remove('theme-light');
-          readerCard.classList.add('theme-dark');
+        if (domMutated) {
+          readerCard.classList.remove('export-hide-header', 'export-flat-pdf');
+          if (wasDarkWithoutBg) {
+            readerCard.classList.remove('theme-light');
+            readerCard.classList.add('theme-dark');
+          }
+          readerCard.style.cssText = prevCardStyleCss;
+          if (hadNotebookSpacing && workspaceGrid) workspaceGrid.classList.add('notebook-mode-spacing');
+          if (readerContainer) {
+            readerContainer.style.cssText = prevContainerCss;
+            if (wasReaderHidden) readerContainer.classList.add('hidden');
+          }
         }
-        readerCard.style.cssText = prevCardStyleCss;
-        if (hadNotebookSpacing && workspaceGrid) workspaceGrid.classList.add('notebook-mode-spacing');
-        if (readerContainer) {
-          readerContainer.style.cssText = prevContainerCss;
-          if (wasReaderHidden) readerContainer.classList.add('hidden');
+        if (!_lockHeld) {
+          isExportCaptureRunning = false;
+          setExportButtonsBusy(false);
         }
       }
     }
@@ -6788,13 +7404,14 @@ flowchart TD
     }
 
     // Live Export Preview inside Modal
-    btnPreviewExport?.addEventListener('click', async () => {
-      if (!window.html2canvas) { showToast('Bibliothèque image non chargée'); return; }
+    btnPreviewExport?.addEventListener('click', () => runWithExportLock(async () => {
       try {
         const pageSize = exportPageSize.value;
         const isPaged = pageSize !== 'auto';
         showExportProgress('Génération de l’aperçu exact avant export...');
-        const { canvas, appliedScale, bgColor, blocks } = await captureReaderCanvas({ forPdf: isPaged, scaleOverride: 1.5 });
+        await ensureHtml2Canvas();
+        if (!window.html2canvas) { hideExportProgress(); showToast('Bibliothèque image indisponible hors ligne'); return; }
+        const { canvas, appliedScale, bgColor, blocks } = await captureReaderCanvas({ forPdf: isPaged, scaleOverride: 1.5, _lockHeld: true });
 
         let metaMsg = `${Math.round(canvas.width / appliedScale)} × ${Math.round(canvas.height / appliedScale)} px`;
         if (isPaged) {
@@ -6850,19 +7467,21 @@ flowchart TD
         canvas.height = 0;
         hideExportProgress();
       } catch (err) {
+        if (err && err.code === 'EXPORT_BUSY') { showToast('Export déjà en cours...'); return; }
         console.error('Export Preview Error:', err);
         hideExportProgress();
         showToast('Erreur lors de la génération de l’aperçu');
       }
-    });
+    }));
 
     // 2. Direct Download PDF (.pdf) with smart block-aware page breaks & seamless page background fill
-    document.getElementById('btnExportDirectPdf').addEventListener('click', async () => {
-      if (!window.html2canvas || !window.jspdf) { showToast('Bibliothèque PDF en cours de chargement...'); return; }
+    document.getElementById('btnExportDirectPdf').addEventListener('click', () => runWithExportLock(async () => {
       try {
         showExportProgress('Génération du fichier PDF haute précision...');
+        await Promise.all([ensureHtml2Canvas(), ensureJsPdf()]);
+        if (!window.html2canvas || !window.jspdf) { hideExportProgress(); showToast('Bibliothèque PDF indisponible hors ligne'); return; }
         const pageSize = exportPageSize.value;
-        const { canvas, appliedScale, bgColor, includeBg, blocks } = await captureReaderCanvas({ forPdf: true });
+        const { canvas, appliedScale, bgColor, includeBg, blocks } = await captureReaderCanvas({ forPdf: true, _lockHeld: true });
         const { jsPDF } = window.jspdf;
         const orientation = exportOrientation.value;
         const marginMm = { normal: 12, narrow: 6, wide: 20, none: 0 }[exportMargins.value] ?? 12;
@@ -6921,46 +7540,52 @@ flowchart TD
         hideExportProgress();
         showToast('Fichier PDF téléchargé !');
       } catch (err) {
+        if (err && err.code === 'EXPORT_BUSY') { showToast('Export déjà en cours...'); return; }
         console.error('PDF Direct Export Error:', err);
         hideExportProgress();
         showToast('Erreur lors de la création du PDF');
       }
-    });
+    }));
 
     // 3 & 4. High-Res PNG & JPG (streamed directly via canvas.toBlob to avoid mobile OOM spikes)
     async function exportAsImage(format) {
-      if (!window.html2canvas) { showToast('Bibliothèque image non chargée'); return; }
-      try {
-        const ext = format === 'png' ? 'png' : 'jpg';
-        showExportProgress(`Rendu de l'image ${ext.toUpperCase()} (${exportScale.value}x DPI)...`);
-        const { canvas } = await captureReaderCanvas();
-        const mime = format === 'png' ? 'image/png' : 'image/jpeg';
-        const blob = await new Promise((resolve) => canvas.toBlob(resolve, mime, 0.95));
-        canvas.width = 0;
-        canvas.height = 0;
-        if (!blob) throw new Error('Canvas toBlob returned null');
-        triggerBlobDownload(blob, getSafeExportFilename(ext));
-        hideExportProgress();
-        showToast(`Image ${ext.toUpperCase()} téléchargée !`);
-      } catch (err) {
-        console.error('Image Export Error:', err);
-        hideExportProgress();
-        showToast('Erreur lors de l’export image');
-      }
+      return runWithExportLock(async () => {
+        try {
+          const ext = format === 'png' ? 'png' : 'jpg';
+          showExportProgress(`Rendu de l'image ${ext.toUpperCase()} (${exportScale.value}x DPI)...`);
+          await ensureHtml2Canvas();
+          if (!window.html2canvas) { hideExportProgress(); showToast('Bibliothèque image indisponible hors ligne'); return; }
+          const { canvas } = await captureReaderCanvas({ _lockHeld: true });
+          const mime = format === 'png' ? 'image/png' : 'image/jpeg';
+          const blob = await new Promise((resolve) => canvas.toBlob(resolve, mime, 0.95));
+          canvas.width = 0;
+          canvas.height = 0;
+          if (!blob) throw new Error('Canvas toBlob returned null');
+          triggerBlobDownload(blob, getSafeExportFilename(ext));
+          hideExportProgress();
+          showToast(`Image ${ext.toUpperCase()} téléchargée !`);
+        } catch (err) {
+          if (err && err.code === 'EXPORT_BUSY') { showToast('Export déjà en cours...'); return; }
+          console.error('Image Export Error:', err);
+          hideExportProgress();
+          showToast('Erreur lors de l’export image');
+        }
+      });
     }
 
     document.getElementById('btnExportPng').addEventListener('click', () => exportAsImage('png'));
     document.getElementById('btnExportJpg').addEventListener('click', () => exportAsImage('jpeg'));
 
     // Clipboard Copy PNG & Rich HTML (uses Promise inside ClipboardItem to preserve Safari/iOS user gesture)
-    document.getElementById('btnCopyPng')?.addEventListener('click', async () => {
-      if (!window.html2canvas || !navigator.clipboard || !window.ClipboardItem) {
+    document.getElementById('btnCopyPng')?.addEventListener('click', () => runWithExportLock(async () => {
+      if (!navigator.clipboard || !window.ClipboardItem) {
         showToast('Copie image non supportée par ce navigateur');
         return;
       }
+      let pngBlobPromise = null;
       try {
         showExportProgress('Capture PNG vers le presse-papier...');
-        const pngBlobPromise = captureReaderCanvas().then(({ canvas }) => new Promise((resolve, reject) => {
+        pngBlobPromise = ensureHtml2Canvas().then(() => captureReaderCanvas({ _lockHeld: true })).then(({ canvas }) => new Promise((resolve, reject) => {
           canvas.toBlob((blob) => {
             canvas.width = 0;
             canvas.height = 0;
@@ -6972,10 +7597,15 @@ flowchart TD
         hideExportProgress();
         showToast('Image PNG copiée dans le presse-papier !');
       } catch (err) {
+        if (err && err.code === 'EXPORT_BUSY') { showToast('Export déjà en cours...'); return; }
         hideExportProgress();
         showToast('Échec copie PNG : utilisez Télécharger PNG');
+      } finally {
+        if (pngBlobPromise) {
+          await pngBlobPromise.catch(() => {});
+        }
       }
-    });
+    }));
 
     document.getElementById('btnCopyHtml')?.addEventListener('click', async () => {
       try {
@@ -7031,17 +7661,22 @@ flowchart TD
         else cb.removeAttribute('checked');
       });
       const clonedCardHtml = clonedCard.outerHTML;
+      const activeBaseFont = rootStyle.getPropertyValue('--reader-base-font') || "'Inter', sans-serif";
+      const activeNbFont = rootStyle.getPropertyValue('--nb-font') || "'Kalam', cursive";
+      const extraFontLinks = Array.from(new Set([
+        getFontStylesheetUrl(activeBaseFont),
+        currentTheme === 'theme-notebook' ? getFontStylesheetUrl(activeNbFont) : null
+      ].filter(Boolean))).map(u => `  <link href="${u}" rel="stylesheet">`).join('\n');
+      const hasCodeBlocks = !!clonedCard.querySelector('.inktex-code-wrap');
       const standaloneHtml = `<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(exportFilename.value || 'Notes InkTeX')}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@500;700&family=Courgette&family=Gloria+Hallelujah&family=Gochi+Hand&family=Handlee&family=Indie+Flower&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Kalam:wght@400;700&family=Mali:wght@400;600;700&family=Neucha&family=Patrick+Hand&family=Shadows+Into+Light&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-  <style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+${extraFontLinks ? extraFontLinks + '\n' : ''}  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+${hasCodeBlocks ? '  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">\n' : ''}  <style>
     *, *::before, *::after { box-sizing: border-box; }
     ${coreCss}
     :root {
@@ -7054,7 +7689,7 @@ flowchart TD
       --nb-bold-color: ${rootStyle.getPropertyValue('--nb-bold-color') || '#1850b8'};
       --nb-math-color: ${rootStyle.getPropertyValue('--nb-math-color') || '#1b7a34'};
     }
-    body { margin: 0; padding: 2rem 1rem; background: ${includeBg ? '#0e0f11' : '#f1f5f9'}; display: flex; justify-content: center; }
+    body { margin: 0; padding: 2rem 1rem; background: ${includeBg ? '#0a0b0e' : '#f1f5f9'}; display: flex; justify-content: center; }
     .reader-card { max-width: ${maxW}px; width: 100%; padding: 3rem; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.28); }
     .inktex-copy-code-btn, .page-guide-overlay { display: none !important; }
   </style>
@@ -7421,7 +8056,7 @@ ${texLines.join('\n')}
     });
 
     // Strip injected Netlify badges strictly on direct <body> children (never touch user notes)
-    const PROTECTED_BODY_IDS = new Set(['workspaceGrid', 'notebookCustomBar', 'showRibbonPillContainer', 'floatingPenPopup', 'outlineDrawer', 'activeRecallBar', 'statusToast', 'mobileViewSwitcher', 'exportModal', 'pluginModal', 'shortcutsModal']);
+    const PROTECTED_BODY_IDS = new Set(['pomodoroPopover', 'workspaceGrid', 'notebookCustomBar', 'showRibbonPillContainer', 'floatingPenPopup', 'outlineDrawer', 'activeRecallBar', 'statusToast', 'mobileViewSwitcher', 'exportModal', 'pluginModal', 'shortcutsModal']);
     function isInjectedNetlifyNode(el) {
       if (!el || el.nodeType !== 1 || el.parentElement !== document.body) return false;
       if (el.id && PROTECTED_BODY_IDS.has(el.id)) return false;
@@ -7444,7 +8079,7 @@ ${texLines.join('\n')}
 
 
     // =====================================================
-    // V2 STUDIO POPOVERS (APPARENCE & + INSÉRER MENU)
+    // V2 STUDIO POPOVERS, POSITIONING & PROGRESSIVE ENHANCEMENTS
     // =====================================================
     const appearanceContainer = document.getElementById('appearanceContainer');
     const btnToggleAppearance = document.getElementById('btnToggleAppearance');
@@ -7452,6 +8087,35 @@ ${texLines.join('\n')}
     const insertMenuContainer = document.getElementById('insertMenuContainer');
     const btnToggleInsertMenu = document.getElementById('btnToggleInsertMenu');
     const insertMenuPopover = document.getElementById('insertMenuPopover');
+    const btnMobOutline = document.getElementById('btnMobOutline');
+    const btnMobRecall = document.getElementById('btnMobRecall');
+    const btnMobPomodoro = document.getElementById('btnMobPomodoro');
+    const btnMobShortcuts = document.getElementById('btnMobShortcuts');
+
+    function positionFixedPopover(triggerEl, popoverEl, alignRight = false) {
+      if (!triggerEl || !popoverEl) return;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const pad = 12;
+      const rect = triggerEl.getBoundingClientRect();
+      // Reset mobile Tailwind inset helpers before measuring
+      popoverEl.style.right = 'auto';
+      popoverEl.style.bottom = 'auto';
+      const popW = popoverEl.offsetWidth || 280;
+      const popH = popoverEl.offsetHeight || 220;
+
+      let left = alignRight ? (rect.right - popW) : rect.left;
+      left = Math.max(pad, Math.min(vw - popW - pad, left));
+
+      let top = rect.bottom + 8;
+      if (top + popH > vh - pad && rect.top - popH - 8 >= pad) {
+        top = rect.top - popH - 8;
+      } else {
+        top = Math.max(pad, Math.min(vh - popH - pad, top));
+      }
+      popoverEl.style.left = `${Math.round(left)}px`;
+      popoverEl.style.top = `${Math.round(top)}px`;
+    }
 
     function closeV2Popovers(except = null) {
       if (except !== 'appearance' && appearancePopover) {
@@ -7467,9 +8131,15 @@ ${texLines.join('\n')}
       if (except !== 'pomodoro' && pomodoroPopover) {
         pomodoroPopover.classList.add('hidden');
         btnPomodoro?.setAttribute('aria-expanded', 'false');
+        btnMobPomodoro?.setAttribute('aria-expanded', 'false');
       }
       if (except !== 'symbols' && symbolsPopover) {
         symbolsPopover.classList.add('hidden');
+        btnSymbolsPicker?.setAttribute('aria-expanded', 'false');
+        btnSymbolsPicker?.classList.remove('v2-btn-active');
+      }
+      if (except !== 'nbDrawer' && typeof setNbStyleDrawer === 'function' && isNbDrawerOpen) {
+        setNbStyleDrawer(false);
       }
     }
 
@@ -7489,31 +8159,116 @@ ${texLines.join('\n')}
       insertMenuPopover.classList.toggle('hidden', !willOpen);
       btnToggleInsertMenu.setAttribute('aria-expanded', String(willOpen));
       btnToggleInsertMenu.classList.toggle('v2-btn-active', willOpen);
+      if (willOpen) positionFixedPopover(btnToggleInsertMenu, insertMenuPopover, false);
     });
 
-    // Close "+ Insérer" menu after inserting any snippet or symbol inside it
+    // Close "+ Insérer" menu after inserting any snippet inside it
     insertMenuPopover?.querySelectorAll('.snippet-btn').forEach(btn => {
       btn.addEventListener('click', () => closeV2Popovers());
     });
-    insertMenuPopover?.querySelectorAll('.sym-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        insertAtEditorCursor(btn.textContent || '');
-        closeV2Popovers();
-      });
+
+    // Mobile Study & Reference Triggers inside Apparence Popover (close Apparence first!)
+    btnMobOutline?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeV2Popovers();
+      btnToggleOutline?.click();
+    });
+    btnMobRecall?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeV2Popovers();
+      btnActiveRecall?.click();
+    });
+    btnMobPomodoro?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeV2Popovers('pomodoro');
+      if (pomodoroPopover) {
+        pomodoroPopover.classList.remove('hidden');
+        pomodoroPopover.style.left = '';
+        pomodoroPopover.style.top = '';
+        pomodoroPopover.style.right = '';
+        pomodoroPopover.style.bottom = '';
+        if (window.innerWidth >= 640 && btnToggleAppearance) {
+          positionFixedPopover(btnToggleAppearance, pomodoroPopover, true);
+        }
+        btnMobPomodoro.setAttribute('aria-expanded', 'true');
+      }
+    });
+    btnMobShortcuts?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeV2Popovers();
+      openStudioModal(shortcutsModal, btnToggleAppearance);
     });
 
+    // Single Consolidated Outside-Click Listener for All Studio Popovers & Drawers
     document.addEventListener('click', (e) => {
-      if (appearancePopover && appearanceContainer && !appearanceContainer.contains(e.target)) {
+      const target = e.target;
+      if (appearancePopover && !appearancePopover.classList.contains('hidden') && appearanceContainer && !appearanceContainer.contains(target)) {
         appearancePopover.classList.add('hidden');
         btnToggleAppearance?.setAttribute('aria-expanded', 'false');
         btnToggleAppearance?.classList.remove('v2-btn-active');
       }
-      if (insertMenuPopover && insertMenuContainer && !insertMenuContainer.contains(e.target)) {
+      if (insertMenuPopover && !insertMenuPopover.classList.contains('hidden') && insertMenuContainer && !insertMenuContainer.contains(target)) {
         insertMenuPopover.classList.add('hidden');
         btnToggleInsertMenu?.setAttribute('aria-expanded', 'false');
         btnToggleInsertMenu?.classList.remove('v2-btn-active');
       }
+      if (symbolsPopover && !symbolsPopover.classList.contains('hidden') && !symbolsPopover.contains(target) && target !== btnSymbolsPicker) {
+        symbolsPopover.classList.add('hidden');
+        btnSymbolsPicker?.setAttribute('aria-expanded', 'false');
+        btnSymbolsPicker?.classList.remove('v2-btn-active');
+      }
+      if (pomodoroPopover && !pomodoroPopover.classList.contains('hidden') && !pomodoroPopover.contains(target) && !(pomodoroContainer && pomodoroContainer.contains(target)) && target !== btnMobPomodoro) {
+        pomodoroPopover.classList.add('hidden');
+        btnPomodoro?.setAttribute('aria-expanded', 'false');
+        btnMobPomodoro?.setAttribute('aria-expanded', 'false');
+      }
+      if (isNbDrawerOpen && notebookCustomBar && !notebookCustomBar.contains(target)) {
+        setNbStyleDrawer(false);
+      }
     });
+
+    // Progressive Fallback for Full-Reader Reading Progress Bar (only when CSS Scroll-Driven Animations unsupported)
+    const readingProgressBar = document.getElementById('readingProgressBar');
+    let readingProgRaf = null;
+    function updateReadingProgressFallback() {
+      if (!readingProgressBar || !isFullReaderMode) return;
+      if (typeof CSS !== 'undefined' && CSS.supports && CSS.supports('animation-timeline', 'scroll()')) return;
+      const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const pct = Math.max(0, Math.min(1, window.scrollY / scrollable));
+      readingProgressBar.style.transform = `scaleX(${pct})`;
+    }
+    if (readingProgressBar && !(typeof CSS !== 'undefined' && CSS.supports && CSS.supports('animation-timeline', 'scroll()'))) {
+      window.addEventListener('scroll', () => {
+        if (!isFullReaderMode || readingProgRaf) return;
+        readingProgRaf = requestAnimationFrame(() => {
+          readingProgRaf = null;
+          updateReadingProgressFallback();
+        });
+      }, { passive: true });
+    }
+
+    // Progressive Fallback for Floating Dock Horizontal Fade Hints (only when scroll(self inline) unsupported)
+    function initDockScrollHintsFallback() {
+      const scroller = document.getElementById('nbDockScroller');
+      if (!scroller) return;
+      if (typeof CSS !== 'undefined' && CSS.supports && CSS.supports('animation-timeline', 'scroll(self inline)')) return;
+      if (typeof IntersectionObserver === 'undefined') return;
+      const startSentinel = document.createElement('span');
+      const endSentinel = document.createElement('span');
+      [startSentinel, endSentinel].forEach(el => {
+        el.setAttribute('aria-hidden', 'true');
+        el.style.cssText = 'min-inline-size:1px;min-block-size:1px;flex-shrink:0;pointer-events:none;';
+      });
+      scroller.prepend(startSentinel);
+      scroller.append(endSentinel);
+      const obs = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          scroller.classList.toggle(entry.target === startSentinel ? 'more-start' : 'more-end', !entry.isIntersecting);
+        }
+      }, { root: scroller, threshold: 0.99 });
+      obs.observe(startSentinel);
+      obs.observe(endSentinel);
+    }
 
     // Initialize on Page Load
     window.addEventListener('DOMContentLoaded', () => {
@@ -7522,6 +8277,8 @@ ${texLines.join('\n')}
       loadExportPrefs();
       applyRealisticNotebookClasses();
       renderPluginCards();
+      setRibbonPinnedState(isRibbonPinned, false);
+      initDockScrollHintsFallback();
 
       const restored = restoreFromLocalStorage();
       if (!restored) {
@@ -7542,15 +8299,10 @@ ${texLines.join('\n')}
       badgeObserver.observe(document.body, { childList: true, subtree: false });
     });
 
-    // Retry deferred Highlight.js / Mermaid / Lucide once assets finish loading (or show code fallback if offline)
+    // Retry deferred Lucide icons once assets finish loading
     window.addEventListener('load', () => {
       if (window.lucide && document.querySelector('i[data-lucide]')) {
         lucide.createIcons();
-      }
-      const hasPendingMermaid = Array.from(readerOutput.querySelectorAll('.inktex-mermaid-wrap')).some(w => !w.querySelector('svg'));
-      const hasUnhighlightedCode = window.hljs && window.InkTeX.isPluginEnabled('code-highlight') && readerOutput.querySelector('.inktex-code-wrap pre code:not(.hljs)');
-      if (hasPendingMermaid || hasUnhighlightedCode) {
-        runPostRenderPlugins({ offlineFallback: true });
       }
     });
   </script>
