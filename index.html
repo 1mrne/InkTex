@@ -63,6 +63,22 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* Fix Tailwind v3 Preflight (img { display: block }) breaking html2canvas FontMetrics baseline measurement */
+    body img {
+      display: inline-block;
+    }
+
+    /* Export capture utility states */
+    .reader-card.export-hide-header .notebook-meta-stamp,
+    .reader-card.export-hide-header .notebook-spiral-holes {
+      display: none !important;
+    }
+    .reader-card.export-flat-pdf {
+      border-radius: 0 !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+    }
+
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -765,13 +781,31 @@
 
     /* Inline & Block Code */
     .inktex-code-inline {
-      padding: 0.1em 0.4em;
-      border-radius: 0.35rem;
+      display: inline;
+      padding: 0.08em 0.36em;
+      border-radius: 0.32rem;
       background-color: var(--code-bg);
       color: var(--code-text);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.88em;
+      font-size: 0.86em;
+      line-height: 1.3;
       border: 1px solid var(--border-divider);
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      vertical-align: baseline;
+    }
+    .reader-content h1 .inktex-code-inline,
+    .reader-content h2 .inktex-code-inline,
+    .reader-content h3 .inktex-code-inline,
+    .reader-content h4 .inktex-code-inline,
+    .reader-content h5 .inktex-code-inline,
+    .reader-content h6 .inktex-code-inline {
+      font-size: 0.78em;
+      font-weight: 500;
+      padding: 0.04em 0.32em;
+      text-decoration: none;
+      display: inline-block;
+      vertical-align: 0.04em;
     }
 
     .inktex-code-wrap {
@@ -827,12 +861,17 @@
       background-color: var(--table-header-bg);
       color: var(--text-heading);
       font-weight: 700;
-      padding: 0.55rem 0.85rem;
+      padding: 0.6rem 0.85rem;
+      line-height: 1.45;
+      vertical-align: middle;
+      text-wrap: balance;
       border-bottom: 2px solid var(--border-divider);
       border-right: 1px solid var(--border-divider);
     }
     .inktex-table td {
-      padding: 0.5rem 0.85rem;
+      padding: 0.55rem 0.85rem;
+      line-height: 1.5;
+      vertical-align: middle;
       border-bottom: 1px solid var(--border-divider);
       border-right: 1px solid var(--border-divider);
       color: var(--text-main);
@@ -1057,8 +1096,24 @@
       box-sizing: content-box;
     }
 
-    .reader-content .katex .frac-line {
+    .reader-content .katex svg {
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: inherit;
+      max-width: none;
+      vertical-align: baseline;
+    }
+
+    .reader-content .katex .frac-line,
+    .reader-content .katex .hline,
+    .reader-content .katex .overline-line,
+    .reader-content .katex .underline-line,
+    .reader-content .katex .sqrt-line {
       min-height: 1px;
+    }
+
+    .reader-content .katex .frac-line {
       border-bottom-width: 0.06em;
     }
 
@@ -1304,6 +1359,43 @@
       .reader-card.theme-dark .callout-formule .inktex-callout-title { color: #047857 !important; }
       .reader-card.theme-dark .callout-attention .inktex-callout-title { color: #b45309 !important; }
       .reader-card.theme-dark .callout-astuce .inktex-callout-title { color: #6d28d9 !important; }
+      .reader-card.print-no-bg {
+        background-image: none !important;
+        background-color: #ffffff !important;
+      }
+      .reader-card.print-no-header .notebook-meta-stamp,
+      .reader-card.print-no-header .notebook-spiral-holes {
+        display: none !important;
+      }
+      .reader-content h1,
+      .reader-content h2,
+      .reader-content h3,
+      .reader-content h4,
+      .reader-content h5,
+      .reader-content h6 {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+      .reader-content .katex-display,
+      .reader-content .math-block,
+      .reader-content .inktex-table-wrap,
+      .reader-content .inktex-table tr,
+      .reader-content .inktex-callout,
+      .reader-content .inktex-code-wrap,
+      .reader-content .inktex-mermaid-wrap,
+      .reader-content blockquote,
+      .reader-content img.inktex-img {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .reader-content .inktex-table thead {
+        display: table-header-group;
+      }
+      .reader-content p,
+      .reader-content li {
+        orphans: 3;
+        widows: 3;
+      }
       .page-guide-overlay,
       .inktex-copy-code-btn {
         display: none !important;
@@ -2107,54 +2199,93 @@
               </select>
             </div>
 
-            <div class="flex flex-col justify-end gap-1.5">
-              <label class="inline-flex items-center gap-2 text-zinc-300 cursor-pointer select-none">
-                <input id="exportIncludeBg" type="checkbox" checked class="accent-sky-500 rounded cursor-pointer" />
-                <span>Inclure le fond &amp; lignes du cahier</span>
-              </label>
-              <label class="inline-flex items-center gap-2 text-zinc-300 cursor-pointer select-none">
-                <input id="exportCleanTags" type="checkbox" checked class="accent-sky-500 rounded cursor-pointer" />
-                <span>Nettoyer les balises dans .MD</span>
-              </label>
+            <div>
+              <label for="exportWidth" class="block text-zinc-400 mb-1 font-medium">Largeur de mise en page</label>
+              <select id="exportWidth" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-zinc-100 focus:outline-none focus:border-sky-500 cursor-pointer">
+                <option value="auto" selected>Identique à l'aperçu (Auto)</option>
+                <option value="a4">Document A4 équilibré (794 px)</option>
+                <option value="wide">Large / Paysage (1040 px)</option>
+                <option value="compact">Compact / Mobile (540 px)</option>
+              </select>
             </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 pt-2 border-t border-zinc-800/80">
+            <label class="inline-flex items-center gap-2 text-zinc-300 cursor-pointer select-none">
+              <input id="exportIncludeBg" type="checkbox" checked class="accent-sky-500 rounded cursor-pointer" />
+              <span>Inclure le fond &amp; lignes du cahier</span>
+            </label>
+            <label class="inline-flex items-center gap-2 text-zinc-300 cursor-pointer select-none">
+              <input id="exportSmartBreaks" type="checkbox" checked class="accent-sky-500 rounded cursor-pointer" />
+              <span>Éviter de couper formules &amp; tableaux (PDF)</span>
+            </label>
+            <label class="inline-flex items-center gap-2 text-zinc-300 cursor-pointer select-none">
+              <input id="exportIncludeHeader" type="checkbox" checked class="accent-sky-500 rounded cursor-pointer" />
+              <span>Inclure en-tête Matière/Date &amp; spirales</span>
+            </label>
+            <label class="inline-flex items-center gap-2 text-zinc-300 cursor-pointer select-none">
+              <input id="exportCleanTags" type="checkbox" checked class="accent-sky-500 rounded cursor-pointer" />
+              <span>Nettoyer les balises dans .MD</span>
+            </label>
           </div>
         </div>
 
-        <!-- Quick Clipboard Row -->
+        <!-- Quick Actions & Live Export Preview Row -->
         <div class="flex flex-wrap items-center gap-2">
-          <button id="btnCopyPng" type="button" class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/35 font-semibold transition cursor-pointer">
+          <button id="btnPreviewExport" type="button" class="flex-1 min-w-[140px] inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-violet-500/15 hover:bg-violet-500/25 text-violet-300 border border-violet-500/35 font-semibold transition cursor-pointer">
+            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+            <span>Aperçu avant export</span>
+          </button>
+          <button id="btnCopyPng" type="button" class="flex-1 min-w-[140px] inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/35 font-semibold transition cursor-pointer">
             <i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i>
             <span>Copier Image PNG</span>
           </button>
-          <button id="btnCopyHtml" type="button" class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/35 font-semibold transition cursor-pointer">
+          <button id="btnCopyHtml" type="button" class="flex-1 min-w-[160px] inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/35 font-semibold transition cursor-pointer">
             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-            <span>Copier Texte Enrichi (Word/Notion)</span>
+            <span>Copier Texte Enrichi</span>
           </button>
+        </div>
+
+        <!-- Collapsible Live Export Preview Panel -->
+        <div id="exportPreviewPanel" class="hidden bg-[#0a0c10] border border-violet-500/35 rounded-xl overflow-hidden">
+          <div class="px-3.5 py-2 bg-[#141722] border-b border-zinc-800 flex items-center justify-between gap-2">
+            <span id="exportPreviewMeta" class="text-[11px] font-medium text-violet-300">Aperçu exact du rendu exporté</span>
+            <button id="btnCloseExportPreview" type="button" class="text-[11px] px-2 py-0.5 rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-300 cursor-pointer">Masquer</button>
+          </div>
+          <div class="p-3 max-h-80 overflow-y-auto block bg-zinc-950/80">
+            <img id="exportPreviewImg" alt="Aperçu avant export" class="block mx-auto max-w-full w-auto h-auto rounded-lg border border-zinc-800 shadow-lg" />
+          </div>
         </div>
 
         <!-- Section 2: Export Formats Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
 
           <button id="btnExportPrintPdf" type="button" class="flex items-center justify-between p-3 rounded-xl bg-zinc-900/90 hover:bg-sky-950/50 border border-zinc-800 hover:border-sky-500/50 transition text-left group cursor-pointer">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-lg bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 font-bold">PDF</div>
-              <div>
-                <div class="font-semibold text-zinc-100 group-hover:text-sky-300">PDF Vectoriel (Impression)</div>
-                <div class="text-[11px] text-zinc-400">Texte &amp; formules vectoriels ultra-nets</div>
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-9 h-9 rounded-lg bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 font-bold flex-shrink-0">PDF</div>
+              <div class="min-w-0">
+                <div class="font-semibold text-zinc-100 group-hover:text-sky-300 flex items-center gap-1.5 flex-wrap">
+                  <span>PDF Vectoriel (Impression)</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">100% Net</span>
+                </div>
+                <div class="text-[11px] text-zinc-400">Texte sélectionnable &amp; formules vectorielles</div>
               </div>
             </div>
-            <i data-lucide="printer" class="w-4 h-4 text-zinc-500 group-hover:text-sky-400"></i>
+            <i data-lucide="printer" class="w-4 h-4 text-zinc-500 group-hover:text-sky-400 flex-shrink-0"></i>
           </button>
 
           <button id="btnExportDirectPdf" type="button" class="flex items-center justify-between p-3 rounded-xl bg-zinc-900/90 hover:bg-sky-950/50 border border-zinc-800 hover:border-sky-500/50 transition text-left group cursor-pointer">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 font-bold">.PDF</div>
-              <div>
-                <div class="font-semibold text-zinc-100 group-hover:text-sky-300">Télécharger PDF Direct</div>
-                <div class="text-[11px] text-zinc-400">Génère un fichier .pdf avec le papier</div>
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-9 h-9 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 font-bold flex-shrink-0">.PDF</div>
+              <div class="min-w-0">
+                <div class="font-semibold text-zinc-100 group-hover:text-sky-300 flex items-center gap-1.5 flex-wrap">
+                  <span>Télécharger PDF Direct</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30 font-semibold">Sauts auto</span>
+                </div>
+                <div class="text-[11px] text-zinc-400">Fichier .pdf fidèle au papier, sans coupure</div>
               </div>
             </div>
-            <i data-lucide="file-down" class="w-4 h-4 text-zinc-500 group-hover:text-sky-400"></i>
+            <i data-lucide="file-down" class="w-4 h-4 text-zinc-500 group-hover:text-sky-400 flex-shrink-0"></i>
           </button>
 
           <button id="btnExportPng" type="button" class="flex items-center justify-between p-3 rounded-xl bg-zinc-900/90 hover:bg-sky-950/50 border border-zinc-800 hover:border-sky-500/50 transition text-left group cursor-pointer">
@@ -2275,10 +2406,18 @@
     const exportOrientation = document.getElementById('exportOrientation');
     const exportMargins = document.getElementById('exportMargins');
     const exportScale = document.getElementById('exportScale');
+    const exportWidth = document.getElementById('exportWidth');
     const exportIncludeBg = document.getElementById('exportIncludeBg');
+    const exportSmartBreaks = document.getElementById('exportSmartBreaks');
+    const exportIncludeHeader = document.getElementById('exportIncludeHeader');
     const exportCleanTags = document.getElementById('exportCleanTags');
     const exportProgressBox = document.getElementById('exportProgressBox');
     const exportProgressText = document.getElementById('exportProgressText');
+    const exportPreviewPanel = document.getElementById('exportPreviewPanel');
+    const exportPreviewMeta = document.getElementById('exportPreviewMeta');
+    const exportPreviewImg = document.getElementById('exportPreviewImg');
+    const btnPreviewExport = document.getElementById('btnPreviewExport');
+    const btnCloseExportPreview = document.getElementById('btnCloseExportPreview');
 
     // New Pro Controls
     const pluginModal = document.getElementById('pluginModal');
@@ -2893,10 +3032,16 @@ flowchart TD
     const DOUBLED_OPEN_BRACKET_RE = /\\{2,}\[(?!\s*[-+]?[\d.]+\s*(?:pt|mm|cm|em|ex|in|bp|px)\s*\])/g;
 
     /**
-     * Cleans double-escaped LaTeX commands (e.g., \\Delta -> \Delta)
-     * while preserving genuine LaTeX matrix/align line breaks (\\, \\[4pt], x=1\\y=2).
+     * Cleans double-escaped LaTeX commands (e.g., \\Delta -> \Delta) and repairs common AI KaTeX
+     * pitfalls (superscript/subscript directly after spacing commands like 25\,^\circ\text{C},
+     * or double sub/superscripts like HCO_3^-_{(aq)}) while preserving matrix line breaks.
      * Uses capturing groups instead of lookbehinds for Safari / iPadOS < 16.4 compatibility.
      */
+    const KATEX_SCRIPT_ARG = '(?:\\{[^{}]*\\}|\\\\[a-zA-Z]+|[A-Za-z0-9+\\-])';
+    const KATEX_DOUBLE_SUBSUP_RE = new RegExp(`(_${KATEX_SCRIPT_ARG}\\^${KATEX_SCRIPT_ARG}|\\^${KATEX_SCRIPT_ARG}_${KATEX_SCRIPT_ARG})\\s*([_^])`, 'g');
+    const KATEX_REPEAT_SUB_RE = new RegExp(`(_${KATEX_SCRIPT_ARG})\\s*_`, 'g');
+    const KATEX_REPEAT_SUP_RE = new RegExp(`(\\^${KATEX_SCRIPT_ARG})\\s*\\^`, 'g');
+
     function cleanInnerMath(mathExpr, extraCmdNames = []) {
       let cleaned = mathExpr.trim().replace(DOUBLED_LATEX_CMD_RE, '$1\\');
       if (extraCmdNames && extraCmdNames.length > 0) {
@@ -2908,7 +3053,49 @@ flowchart TD
           cleaned = cleaned.replace(extraRe, '$1\\');
         }
       }
+      // Protect \ce{...} / \pu{...} before KaTeX-specific sub/sup repairs (unique nonce prevents literal collisions)
+      const chemTokens = [];
+      const chemPrefix = 'CHM' + Math.random().toString(36).slice(2, 8).toUpperCase();
+      cleaned = cleaned.replace(/\\(?:ce|pu)\{(?:[^{}]|\{[^{}]*\})+\}/g, (m) => {
+        const idx = chemTokens.length;
+        chemTokens.push(m);
+        return `@@${chemPrefix}_${idx}@@`;
+      });
+      // Fix KaTeX error on ^ or _ immediately following a spacing atom (e.g., 25\,^\circ\text{C} -> 25\,{}^\circ\text{C})
+      cleaned = cleaned.replace(/(^|[^\\])(\\(?:,|;|:|!|quad|qquad|enspace|thinspace| ))\s*([_^])/g, '$1$2{}$3');
+      // Fix KaTeX "Double subscript/superscript" (e.g., HCO_3^-_{(aq)} -> HCO_3^-{}_{(aq)})
+      cleaned = cleaned
+        .replace(KATEX_DOUBLE_SUBSUP_RE, '$1{}$2')
+        .replace(KATEX_REPEAT_SUB_RE, '$1{}_')
+        .replace(KATEX_REPEAT_SUP_RE, '$1{}^');
+      if (chemTokens.length > 0) {
+        const chemRestoreRe = new RegExp(`@@${chemPrefix}_(\\d+)@@`, 'g');
+        cleaned = cleaned.replace(chemRestoreRe, (_, idx) => chemTokens[Number(idx)] || '');
+      }
       return cleaned;
+    }
+
+    /**
+     * Normalizes AI double-escaped LaTeX delimiters (\\( ... \\), \\[ ... \\]) while skipping
+     * fenced code blocks and inline backtick code spans (so regexes like `(?<!\\)\|` stay intact).
+     */
+    function normalizeDoubleEscapedDelimiters(text) {
+      const codeSpans = [];
+      const nonce = 'NDEL' + Math.random().toString(36).slice(2, 8).toUpperCase();
+      let s = String(text).replace(/```[\s\S]*?```|`[^`\r\n]+?`/g, (m) => {
+        const idx = codeSpans.length;
+        codeSpans.push(m);
+        return `@@${nonce}_${idx}@@`;
+      });
+      s = s
+        .replace(/\\{2,}\(/g, '\\(')
+        .replace(/\\{2,}\)/g, '\\)')
+        .replace(DOUBLED_OPEN_BRACKET_RE, '\\[')
+        .replace(/\\{2,}\]/g, '\\]');
+      if (codeSpans.length > 0) {
+        s = s.replace(new RegExp(`@@${nonce}_(\\d+)@@`, 'g'), (_, idx) => codeSpans[Number(idx)] || '');
+      }
+      return s;
     }
 
     /**
@@ -2990,6 +3177,190 @@ flowchart TD
       return cells.length > 0 && cells.every(c => /^:?-{2,}:?$/.test(c));
     }
 
+    function endsWithUnescapedPipe(s) {
+      const t = s.trim();
+      if (!t.endsWith('|')) return false;
+      let bs = 0;
+      for (let k = t.length - 2; k >= 0 && t[k] === '\\'; k--) bs++;
+      return bs % 2 === 0;
+    }
+
+    /**
+     * Repairs AI-copied Markdown tables (Gemini / NotebookLM / Google Docs) where rich-text copy
+     * splits a table row across multiple lines or blank lines (often right after KaTeX formulas).
+     */
+    function normalizeTableLines(lines) {
+      const out = [];
+      let inFence = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        if (/^```(?![^`]*```)/.test(trimmed)) {
+          inFence = !inFence;
+          out.push(line);
+          continue;
+        }
+        if (inFence) {
+          out.push(line);
+          continue;
+        }
+
+        // Detect table header + separator (allow up to 1 blank line between header and separator)
+        let sepIdx = -1;
+        if (trimmed.includes('|')) {
+          if (i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
+            sepIdx = i + 1;
+          } else if (i + 2 < lines.length && lines[i + 1].trim() === '' && isTableSeparator(lines[i + 2])) {
+            sepIdx = i + 2;
+          }
+        }
+
+        if (sepIdx !== -1) {
+          const expectedCols = splitMarkdownTableRow(lines[sepIdx], true).length;
+          out.push(line);
+          out.push(lines[sepIdx]);
+          let j = sepIdx + 1;
+
+          while (j < lines.length) {
+            const curTrim = lines[j].trim();
+
+            if (!curTrim) {
+              // Skip a single blank line between complete rows ONLY if the next line continues this same table
+              if (j + 1 < lines.length && lines[j + 1].trim().startsWith('|') && !(j + 2 < lines.length && isTableSeparator(lines[j + 2]))) {
+                j++;
+                continue;
+              }
+              break;
+            }
+            if (/^(?:#{1,6}\s|```|[-*_]{3,}$|>)/.test(curTrim)) break;
+            if (!curTrim.includes('|')) break;
+
+            let rowBuf = curTrim;
+            j++;
+
+            // Reassemble incomplete rows split across newlines / blank lines
+            while (j < lines.length) {
+              const cellsNow = splitMarkdownTableRow(rowBuf, true).length;
+              const hasClosingPipe = endsWithUnescapedPipe(rowBuf);
+              if (hasClosingPipe && cellsNow >= expectedCols) break;
+
+              let k = j;
+              let blanks = 0;
+              while (k < lines.length && lines[k].trim() === '' && blanks < 3) {
+                k++;
+                blanks++;
+              }
+              if (k >= lines.length) break;
+
+              const nextTrim = lines[k].trim();
+              if (!nextTrim || /^(?:#{1,6}\s|```|[-*_]{3,}$|>)/.test(nextTrim)) break;
+
+              // Row already has all expected columns (no trailing '|') -> only consume a lone closing '|'
+              if (cellsNow >= expectedCols) {
+                if (nextTrim === '|') {
+                  rowBuf = `${rowBuf} |`;
+                  j = k + 1;
+                }
+                break;
+              }
+
+              // Don't swallow a complete independent next row
+              const nextIsFullOwnRow = nextTrim.startsWith('|') && endsWithUnescapedPipe(nextTrim) && splitMarkdownTableRow(nextTrim, true).length >= expectedCols;
+              if (nextIsFullOwnRow) break;
+
+              if (nextTrim.includes('|')) {
+                rowBuf = `${rowBuf} ${nextTrim}`;
+                j = k + 1;
+              } else {
+                // Plain-text cell continuation only if a '|' appears within the next 3 lines
+                let hasPipeAhead = false;
+                for (let m = k + 1; m < Math.min(lines.length, k + 4); m++) {
+                  if (lines[m].trim().includes('|')) { hasPipeAhead = true; break; }
+                }
+                if (!hasPipeAhead) break;
+                rowBuf = `${rowBuf} ${nextTrim}`;
+                j = k + 1;
+              }
+            }
+
+            out.push(rowBuf);
+          }
+
+          i = j - 1;
+          continue;
+        }
+
+        out.push(line);
+      }
+
+      return out;
+    }
+
+    const AI_MATH_CMD_NAMES =
+      'frac|dfrac|tfrac|cfrac|binom|sqrt|sum|prod|coprod|int|iint|iiint|oint|lim|limsup|liminf|' +
+      'infty|partial|nabla|Delta|Gamma|Lambda|Omega|Theta|Phi|Psi|Pi|Sigma|Upsilon|Xi|' +
+      'alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|vartheta|iota|kappa|lambda|mu|nu|xi|pi|varpi|rho|varrho|sigma|varsigma|tau|upsilon|phi|varphi|chi|psi|omega|' +
+      'pm|mp|times|div|cdot|cdots|ldots|quad|qquad|' +
+      'Rightarrow|Leftarrow|Leftrightarrow|Longrightarrow|Longleftarrow|Longleftrightarrow|rightarrow|leftarrow|leftrightarrow|longrightarrow|longleftarrow|longleftrightarrow|to|mapsto|implies|iff|' +
+      'approx|simeq|cong|equiv|neq|ne|leq|le|geq|ge|propto|sim|subset|supset|subseteq|supseteq|in|notin|cup|cap|forall|exists|neg|wedge|vee|perp|parallel|angle|triangle|circ|degree|' +
+      'log|ln|exp|sin|cos|tan|cot|sec|csc|arcsin|arccos|arctan|sinh|cosh|tanh|' +
+      'mathrm|mathbf|mathit|mathcal|mathbb|hat|bar|vec|overrightarrow|tilde|dot|ddot|overline|overbrace|underbrace|left|right|ce|pu';
+    const AI_MATH_CMD_RE = new RegExp('\\\\(?:' + AI_MATH_CMD_NAMES + ')\\b');
+
+    /**
+     * Replaces LaTeX commands with arbitrarily nested balanced braces (1-arg or 2-arg).
+     */
+    function replaceBalancedCmd(str, cmdPattern, replacer, twoArgs = false) {
+      const re = new RegExp(`\\\\(${cmdPattern})\\{`, 'g');
+      let out = '';
+      let lastIdx = 0;
+      let m;
+      while ((m = re.exec(str)) !== null) {
+        const cmdStart = m.index;
+        const cmdName = m[1];
+        const arg1Start = m.index + m[0].length;
+        let depth = 1;
+        let pos = arg1Start;
+        while (pos < str.length && depth > 0) {
+          if (str[pos] === '\\' && pos + 1 < str.length) { pos += 2; continue; }
+          if (str[pos] === '{') depth++;
+          else if (str[pos] === '}') depth--;
+          pos++;
+        }
+        if (depth !== 0) continue;
+        const arg1 = str.slice(arg1Start, pos - 1);
+        let endPos = pos;
+        let arg2 = null;
+
+        if (twoArgs) {
+          let p2 = pos;
+          while (p2 < str.length && /\s/.test(str[p2])) p2++;
+          if (str[p2] !== '{') continue;
+          const arg2Start = p2 + 1;
+          let d2 = 1;
+          let q = arg2Start;
+          while (q < str.length && d2 > 0) {
+            if (str[q] === '\\' && q + 1 < str.length) { q += 2; continue; }
+            if (str[q] === '{') d2++;
+            else if (str[q] === '}') d2--;
+            q++;
+          }
+          if (d2 !== 0) continue;
+          arg2 = str.slice(arg2Start, q - 1);
+          endPos = q;
+        }
+
+        out += str.slice(lastIdx, cmdStart);
+        const full = str.slice(cmdStart, endPos);
+        out += replacer(full, cmdName, arg1, arg2);
+        lastIdx = endPos;
+        re.lastIndex = endPos;
+      }
+      return lastIdx === 0 ? str : (out + str.slice(lastIdx));
+    }
+
     // =====================================================
     // CORE MARKDOWN + LATEX + TABLES + CALLOUTS + MERMAID PARSER
     // =====================================================
@@ -3022,30 +3393,30 @@ flowchart TD
         }
       }
 
+      // Unique per-render token nonce so literal strings like `@@KATEXTOKEN-0@@` in user notes never collide
+      const tokSeed = 'INKTOK' + Math.random().toString(36).slice(2, 9).toUpperCase();
+      const T_CODE = `${tokSeed}CB`;
+      const T_PRECODE = `${tokSeed}PC`;
+      const T_ESCDOLLAR = `${tokSeed}ED`;
+      const T_KATEX = `${tokSeed}KX`;
+      const T_INLINECODE = `${tokSeed}IC`;
+      const T_ESCCHAR = `${tokSeed}EC`;
+      const T_SAFEURL = `${tokSeed}SU`;
+
       // 1. Extract Fenced Code Blocks & Mermaid Diagrams BEFORE math & markdown parsing
       const codeStash = [];
       normalized = normalized.replace(/```([a-zA-Z0-9_-]*)[ \t]*\r?\n([\s\S]*?)```/g, (_, lang, codeBody) => {
         const idx = codeStash.length;
         const cleanLang = (lang || '').trim().toLowerCase();
         codeStash.push({ lang: cleanLang, code: codeBody.replace(/\n$/, '') });
-        return `\n@@CODEBLOCK-${idx}@@\n`;
+        return `\n@@${T_CODE}-${idx}@@\n`;
       });
 
-      // 2. AI LaTeX Sanitizer Plugin
+      // 2. AI LaTeX Sanitizer Plugin (unwrap backticked AI math FIRST, then stash non-math inline code BEFORE un-doubling delimiters)
       if (window.InkTeX.isPluginEnabled('ai-fixer')) {
-        normalized = normalized
-          .replace(/\\{2,}\(/g, '\\(')
-          .replace(/\\{2,}\)/g, '\\)')
-          .replace(DOUBLED_OPEN_BRACKET_RE, '\\[')
-          .replace(/\\{2,}\]/g, '\\]');
-
-        // Convert standalone ChatGPT-style [ \frac{a}{b} ] math blocks (single or multi-line) into $$...$$
-        normalized = normalized.replace(/^\[\s*([^\n]*\\[a-zA-Z]+[^\n]*)\s*\]$/gm, (_, inner) => `$$${inner}$$`);
-        normalized = normalized.replace(/^\[\r?\n([^\[\]]*\\[a-zA-Z]+[^\[\]]*)\r?\n\]$/gm, (_, inner) => `$$${inner.trim()}$$`);
-
         // Unwrap Gemini / NotebookLM / ChatGPT inline backticked or quoted LaTeX formulas (e.g. `"D = \frac{\Delta E}{\Delta m} ..."`)
         const LATEX_SCRIPT_RE = /[A-Za-z0-9)\]}]\s*(?:\^\{[^}\r\n]+\}|_\{[^}\r\n]+\})|\b[A-Za-z]_[A-Za-z0-9]\b(?=[^`\r\n]*=)/;
-        const CODE_NOISE_RE = /[A-Za-z]:\\|https?:\/\/|\b(?:function|const|let|var|return|import|export|class|console\.log|document\.|window\.)\b/;
+        const CODE_NOISE_RE = /[A-Za-z]:\\|https?:\/\/|^\s*\/.+\/[dgimsuvy]*\s*$|\{\s*\.\.\.\s*\}|\$\s*\.\.\.\s*\$|\\\([.\s]*\.\.\.[.\s]*\\\)|\\\[[.\s]*\.\.\.[.\s]*\\\]|\b(?:function|const|let|var|return|import|export|class|console\.log|document\.|window\.)\b/;
 
         const convertAiMathSpan = (rawSpan, wasBackticked) => {
           if (CODE_NOISE_RE.test(rawSpan)) return null;
@@ -3060,28 +3431,35 @@ flowchart TD
           }
           if (!core) return null;
 
+          // Normalize doubled delimiters inside candidate AI math spans (e.g. `\\(\frac{a}{b}\\)`)
+          const coreUnescaped = core
+            .replace(/\\{2,}\(/g, '\\(')
+            .replace(/\\{2,}\)/g, '\\)')
+            .replace(DOUBLED_OPEN_BRACKET_RE, '\\[')
+            .replace(/\\{2,}\]/g, '\\]');
+
           // If already delimited with $...$ or \(...\) inside backticks, just unwrap backticks
-          if (/(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$\n]+?\$)/.test(core)) {
-            return wasBackticked ? `${openQ}${core}${closeQ}` : null;
+          if (/(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$\n]+?\$)/.test(coreUnescaped)) {
+            return wasBackticked ? `${openQ}${coreUnescaped}${closeQ}` : null;
           }
 
-          if (!LATEX_MATH_CMD_RE.test(core) && !LATEX_SCRIPT_RE.test(core)) {
+          if (!AI_MATH_CMD_RE.test(coreUnescaped) && !LATEX_SCRIPT_RE.test(coreUnescaped)) {
             return null;
           }
 
           // Case A: Leading prose before an implication arrow (\Rightarrow, \rightarrow, etc.)
-          const arrowSplit = core.match(/^([A-Za-zÀ-ÖØ-öø-ÿ0-9'’\-\s(),]{3,}?\s+)(\\(?:Rightarrow|Leftarrow|Leftrightarrow|rightarrow|leftarrow|leftrightarrow|to|mapsto)\b[\s\S]+)$/);
+          const arrowSplit = coreUnescaped.match(/^([A-Za-zÀ-ÖØ-öø-ÿ0-9'’\-\s(),]{3,}?\s+)(\\(?:Rightarrow|Leftarrow|Leftrightarrow|rightarrow|leftarrow|leftrightarrow|to|mapsto)\b[\s\S]+)$/);
           if (arrowSplit && !/[\\=]/.test(arrowSplit[1])) {
             return `${openQ}${arrowSplit[1]}$${arrowSplit[2].trim()}$${closeQ}`;
           }
 
           // Case B: Multi-word prose (2+ plain words) before an equation LHS = RHS
-          const proseEqSplit = core.match(/^((?:[A-Za-zÀ-ÖØ-öø-ÿ'’\-]+\s+){2,})([A-Za-z0-9\\][A-Za-z0-9_^{}()[\]\\+-]*\s*=[\s\S]+)$/);
+          const proseEqSplit = coreUnescaped.match(/^((?:[A-Za-zÀ-ÖØ-öø-ÿ'’\-]+\s+){2,})([A-Za-z0-9\\][A-Za-z0-9_^{}()[\]\\+-]*\s*=[\s\S]+)$/);
           if (proseEqSplit && !/[\\=]/.test(proseEqSplit[1])) {
             return `${openQ}${proseEqSplit[1]}$${proseEqSplit[2].trim()}$${closeQ}`;
           }
 
-          return `${openQ}$${core}$${closeQ}`;
+          return `${openQ}$${coreUnescaped}$${closeQ}`;
         };
 
         // 2a. Unwrap single-line backticked LaTeX math: `"D = \frac{...}"` or `D = \frac{...}`
@@ -3091,25 +3469,35 @@ flowchart TD
         });
       }
 
-      // 2.2 Stash remaining inline backtick code spans BEFORE quoted-OCR & math extraction
-      // so `$HOME` and `$PATH` or `\ce{H2O}` inside code are never hijacked as KaTeX math
+      // 2.2 Stash remaining inline backtick code spans BEFORE delimiter un-doubling, quoted-OCR & math extraction
+      // so `$HOME`, `(?<!\\)\|`, `/\\(ce|pu)...` or `\ce{H2O}` inside code are never altered or hijacked as math
       const preInlineCodeStash = [];
       normalized = normalized.replace(/`([^`\r\n]+?)`/g, (_, code) => {
         const idx = preInlineCodeStash.length;
         preInlineCodeStash.push(code);
-        return `@@PRECODE-${idx}@@`;
+        return `@@${T_PRECODE}-${idx}@@`;
       });
 
-      // 2b. Wrap un-backticked quoted OCR formulas: "D = \frac{\Delta E}{\Delta m} ..." or “...”
+      // 2b. Normalize doubled delimiters & standalone ChatGPT [ ... ] math blocks + quoted OCR formulas (outside code)
       if (window.InkTeX.isPluginEnabled('ai-fixer')) {
+        normalized = normalized
+          .replace(/\\{2,}\(/g, '\\(')
+          .replace(/\\{2,}\)/g, '\\)')
+          .replace(DOUBLED_OPEN_BRACKET_RE, '\\[')
+          .replace(/\\{2,}\]/g, '\\]');
+
+        // Convert standalone ChatGPT-style [ \frac{a}{b} ] math blocks (single or multi-line) into $$...$$
+        normalized = normalized.replace(/^\[\s*([^\n]*\\[a-zA-Z]+[^\n]*)\s*\]$/gm, (_, inner) => `$$${inner}$$`);
+        normalized = normalized.replace(/^\[\r?\n([^\[\]]*\\[a-zA-Z]+[^\[\]]*)\r?\n\]$/gm, (_, inner) => `$$${inner.trim()}$$`);
+
         const LATEX_SCRIPT_RE2 = /[A-Za-z0-9)\]}]\s*(?:\^\{[^}\r\n]+\}|_\{[^}\r\n]+\})|\b[A-Za-z]_[A-Za-z0-9]\b(?=[^`\r\n]*=)/;
-        const CODE_NOISE_RE2 = /[A-Za-z]:\\|https?:\/\/|\b(?:function|const|let|var|return|import|export|class|console\.log|document\.|window\.)\b/;
+        const CODE_NOISE_RE2 = /[A-Za-z]:\\|https?:\/\/|^\s*\/.+\/[dgimsuvy]*\s*$|\{\s*\.\.\.\s*\}|\b(?:function|const|let|var|return|import|export|class|console\.log|document\.|window\.)\b/;
         normalized = normalized.replace(/(["\u201c])([^"\u201d\r\n]+?)(["\u201d])/g, (full, openQ, inner, closeQ) => {
           if ((openQ === '"' && closeQ !== '"') || (openQ === '\u201c' && closeQ !== '\u201d')) return full;
-          if (inner.includes('$') || inner.includes('\\(') || inner.includes('\\[') || inner.includes('@@PRECODE-')) return full;
+          if (inner.includes('$') || inner.includes('\\(') || inner.includes('\\[') || inner.includes(`@@${T_PRECODE}-`)) return full;
           if (CODE_NOISE_RE2.test(inner)) return full;
           const core = inner.trim();
-          if (!core || (!LATEX_MATH_CMD_RE.test(core) && !LATEX_SCRIPT_RE2.test(core))) return full;
+          if (!core || (!AI_MATH_CMD_RE.test(core) && !LATEX_SCRIPT_RE2.test(core))) return full;
           const arrowSplit = core.match(/^([A-Za-zÀ-ÖØ-öø-ÿ0-9'’\-\s(),]{3,}?\s+)(\\(?:Rightarrow|Leftarrow|Leftrightarrow|rightarrow|leftarrow|leftrightarrow|to|mapsto)\b[\s\S]+)$/);
           if (arrowSplit && !/[\\=]/.test(arrowSplit[1])) {
             return `${openQ}${arrowSplit[1]}$${arrowSplit[2].trim()}$${closeQ}`;
@@ -3122,16 +3510,10 @@ flowchart TD
         });
       }
 
-      // Support \begin{equation} / \begin{align*} / \begin{gather*}
-      normalized = normalized.replace(/\\begin\{(equation\*?|align\*?|gather\*?)\}([\s\S]*?)\\end\{\1\}/g, (_, env, body) => {
-        if (env.startsWith('align')) {
-          return `$$\\begin{aligned}${body}\\end{aligned}$$`;
-        }
-        return `$$${body.trim()}$$`;
-      });
-
       // Preserve escaped literal dollars \$
-      normalized = normalized.replace(/\\\$/g, '@@ESCAPEDDOLLAR@@');
+      const escDollarToken = `@@${T_ESCDOLLAR}@@`;
+      const escDollarRe = new RegExp(`@@${T_ESCDOLLAR}@@`, 'g');
+      normalized = normalized.replace(/\\\$/g, escDollarToken);
 
       // 3. Extract Math Blocks into KaTeX tokens
       const mathStash = [];
@@ -3141,17 +3523,11 @@ flowchart TD
       const useMhchem = window.InkTeX.isPluginEnabled('mhchem');
 
       function storeMath(expr, displayMode) {
-        const id = `@@KATEXTOKEN-${mathStash.length}@@`;
-        let restoredExpr = expr.replace(/@@ESCAPEDDOLLAR@@/g, '\\$');
+        const id = `@@${T_KATEX}-${mathStash.length}@@`;
+        let restoredExpr = expr.replace(escDollarRe, '\\$');
         let cleaned = cleanInnerMath(restoredExpr, customMacroNames);
         if (!useMhchem && /\\(?:ce|pu)\{/.test(cleaned)) {
-          let prevC;
-          let guardC = 0;
-          do {
-            prevC = cleaned;
-            cleaned = cleaned.replace(/\\(?:ce|pu)\{((?:[^{}]|\{[^{}]*\})+)\}/g, '\\text{$1}');
-            guardC++;
-          } while (cleaned !== prevC && guardC < 5);
+          cleaned = replaceBalancedCmd(cleaned, 'ce|pu', (_, __, inner) => `\\text{${inner}}`);
         }
         let rendered = escapeHtml(restoredExpr);
         if (window.katex) {
@@ -3184,18 +3560,37 @@ flowchart TD
       normalized = normalized.replace(/\$\$([\s\S]*?)\$\$/g, (_, m) => storeMath(m, true));
       normalized = normalized.replace(/\\\[([\s\S]*?)\\\]/g, (_, m) => storeMath(m, true));
       normalized = normalized.replace(/\\\(([\s\S]*?)\\\)/g, (_, m) => storeMath(m, false));
-      normalized = normalized.replace(/\$(?!\$)([^\$\n]+?)\$/g, (full, m) => {
+      // Inline $...$ (supports single line breaks within a paragraph when content is math-like)
+      normalized = normalized.replace(/\$(?!\$)((?:[^\$\n]|\n(?!\s*\n))+?)\$(?!\$)/g, (full, m) => {
         // Avoid treating prose between two currency amounts (e.g., "$15 and $30") as inline math
         if (/^\d+(?:[.,]\d+)?\s[\s\S]*\s$/.test(m)) return full;
+        if (m.includes('\n')) {
+          if (m.length > 350 || /^\s|\s$/.test(m) || !/[=\\^_+\-*/<>]/.test(m)) return full;
+        }
         return storeMath(m, false);
       });
 
-      // Auto-wrap bare \begin{cases|aligned|pmatrix|bmatrix|vmatrix|Bmatrix|matrix} outside $...$ / \(...\) / $$...$$
-      normalized = normalized.replace(/\\begin\{(cases|aligned|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)\}([\s\S]*?)\\end\{\1\}/g, (full) => storeMath(full, true));
+      // Auto-wrap bare LaTeX display environments outside $...$ / \(...\) / $$...$$
+      normalized = normalized.replace(
+        /\\begin\{(equation\*?|align\*?|alignat\*?|flalign\*?|gather\*?|multline\*?|eqnarray\*?|split|subequations|cases|aligned|array|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)\}([\s\S]*?)\\end\{\1\}/g,
+        (full, env, body) => {
+          if (/^(?:align\*?|alignat\*?|flalign\*?|split)$/.test(env)) {
+            return storeMath(`\\begin{aligned}${body}\\end{aligned}`, true);
+          }
+          if (/^eqnarray\*?$/.test(env)) {
+            const fixedEqn = body.replace(/&\s*([=<>≤≥≠≈]+|\\[a-zA-Z]+)\s*&/g, '&$1');
+            return storeMath(`\\begin{aligned}${fixedEqn}\\end{aligned}`, true);
+          }
+          if (/^(?:equation\*?|gather\*?|multline\*?|subequations)$/.test(env)) {
+            return storeMath(body.trim(), true);
+          }
+          return storeMath(full, true);
+        }
+      );
 
-      // Auto-render bare \ce{...} / \pu{...} outside math delimiters when mhchem + ai-fixer active
+      // Auto-render bare \ce{...} / \pu{...} at arbitrary brace nesting depth outside math delimiters
       if (useMhchem && window.InkTeX.isPluginEnabled('ai-fixer')) {
-        normalized = normalized.replace(/\\(ce|pu)\{((?:[^{}]|\{[^{}]*\})+)\}/g, (full) => storeMath(full, false));
+        normalized = replaceBalancedCmd(normalized, 'ce|pu', (full) => storeMath(full, false));
       }
 
       // Word & Read-Time Stats
@@ -3206,18 +3601,23 @@ flowchart TD
       }
 
       // 4. Inline Formatter (runs on HTML-escaped text)
+      const safeUrlRe = new RegExp(`@@${T_SAFEURL}-(\\d+)@@`, 'g');
+      const escCharRe = new RegExp(`@@${T_ESCCHAR}-(\\d+)@@`, 'g');
+      const inlineCodeRe = new RegExp(`@@${T_INLINECODE}-(\\d+)@@`, 'g');
+      const preCodeRe = new RegExp(`@@${T_PRECODE}-(\\d+)@@`, 'g');
+
       function formatInlineMarkdown(lineText) {
-        let safe = escapeHtml(lineText).replace(/@@ESCAPEDDOLLAR@@/g, '$');
+        let safe = escapeHtml(lineText).replace(escDollarRe, '$');
 
         // Inline code `...` (protect first before LaTeX text, escaped chars, links, bold/italic)
         const inlineCodes = [];
         safe = safe.replace(/`([^`]+?)`/g, (_, code) => {
-          const tok = `@@INLINECODE-${inlineCodes.length}@@`;
+          const tok = `@@${T_INLINECODE}-${inlineCodes.length}@@`;
           inlineCodes.push(`<code class="inktex-code-inline">${code}</code>`);
           return tok;
         });
 
-        // LaTeX text commands outside math (multi-pass for nested \textbf{...\textit{...}})
+        // LaTeX text commands outside math (balanced-brace parser supports arbitrary nesting)
         const texColorMap = {
           red: 'ink-rouge', rouge: 'ink-rouge',
           blue: 'ink-bleu', bleu: 'ink-bleu',
@@ -3225,29 +3625,31 @@ flowchart TD
           purple: 'ink-violet', violet: 'ink-violet',
           orange: 'ink-orange', black: 'ink-noir', noir: 'ink-noir'
         };
-        let prevTex;
-        let texPass = 0;
-        do {
-          prevTex = safe;
-          safe = safe.replace(/\\textbf\{([^{}]+)\}/g, '<strong>$1</strong>');
-          safe = safe.replace(/\\(textit|emph)\{([^{}]+)\}/g, '<em>$2</em>');
-          safe = safe.replace(/\\underline\{([^{}]+)\}/g, '<span class="ink-underline">$1</span>');
-          safe = safe.replace(/\\texttt\{([^{}]+)\}/g, (_, c) => {
-            const tok = `@@INLINECODE-${inlineCodes.length}@@`;
-            inlineCodes.push(`<code class="inktex-code-inline">${c}</code>`);
-            return tok;
-          });
-          safe = safe.replace(/\\textcolor\{([a-zA-Z]+)\}\{([^{}]+)\}/g, (_, col, inner) => {
-            const cls = texColorMap[col.toLowerCase()] || 'ink-rouge';
-            return `<span class="${cls}">${inner}</span>`;
-          });
-          texPass++;
-        } while (safe !== prevTex && texPass < 6);
+        const applyLatexTextCmds = (str, depth = 0) => {
+          if (depth > 8 || !str.includes('\\')) return str;
+          let res = replaceBalancedCmd(str, 'textcolor', (_, __, col, inner) => {
+            const cls = texColorMap[col.trim().toLowerCase()] || 'ink-rouge';
+            return `<span class="${cls}">${applyLatexTextCmds(inner, depth + 1)}</span>`;
+          }, true);
+          res = replaceBalancedCmd(res, 'textbf|textit|emph|underline|texttt', (_, cmd, inner) => {
+            if (cmd === 'texttt') {
+              const tok = `@@${T_INLINECODE}-${inlineCodes.length}@@`;
+              inlineCodes.push(`<code class="inktex-code-inline">${inner}</code>`);
+              return tok;
+            }
+            const parsedInner = applyLatexTextCmds(inner, depth + 1);
+            if (cmd === 'textbf') return `<strong>${parsedInner}</strong>`;
+            if (cmd === 'underline') return `<span class="ink-underline">${parsedInner}</span>`;
+            return `<em>${parsedInner}</em>`;
+          }, false);
+          return res;
+        };
+        safe = applyLatexTextCmds(safe, 0);
 
         // Escaped Markdown punctuation (\*, \_, \#, \|, \[, \], \~, \=, \^)
         const escapedChars = [];
         safe = safe.replace(/\\([*_#~|[\]=^`])/g, (_, ch) => {
-          const tok = `@@ESCCHAR-${escapedChars.length}@@`;
+          const tok = `@@${T_ESCCHAR}-${escapedChars.length}@@`;
           escapedChars.push(ch);
           return tok;
         });
@@ -3255,12 +3657,12 @@ flowchart TD
         // Safe Markdown Images ![alt](https://...) & Links [label](https://...) supporting balanced parentheses in URLs
         const safeUrls = [];
         safe = safe.replace(/!\[([^\]]*)\]\((https?:\/\/(?:[^\s()]+|\([^\s()]*\))+)\)/g, (_, alt, url) => {
-          const urlTok = `@@SAFEURL-${safeUrls.length}@@`;
+          const urlTok = `@@${T_SAFEURL}-${safeUrls.length}@@`;
           safeUrls.push(url);
           return `<img src="${urlTok}" alt="${alt}" class="inktex-img" loading="lazy" referrerpolicy="no-referrer" />`;
         });
         safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/(?:[^\s()]+|\([^\s()]*\))+)\)/g, (_, label, url) => {
-          const urlTok = `@@SAFEURL-${safeUrls.length}@@`;
+          const urlTok = `@@${T_SAFEURL}-${safeUrls.length}@@`;
           safeUrls.push(url);
           return `<a href="${urlTok}" target="_blank" rel="noopener noreferrer" class="inktex-link">${label}</a>`;
         });
@@ -3274,10 +3676,11 @@ flowchart TD
         safe = safe.replace(/\^([^^\s]+?)\^/g, '<sup>$1</sup>');
 
         // Bold-italic ***...***, Bold **...** / __...__, and Italic *...* / _..._
-        safe = safe.replace(/\*\*\*([^*]+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-        safe = safe.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+        // CommonMark-safe: forbids spaces inside *...* so "2 * 3 * 4 = 24" stays multiplication
+        safe = safe.replace(/\*\*\*([^\s*\n](?:[^*\n]*[^\s*\n])?)\*\*\*/g, '<strong><em>$1</em></strong>');
+        safe = safe.replace(/\*\*([^\s*\n](?:[^*\n]*[^\s*\n])?)\*\*/g, '<strong>$1</strong>');
         safe = safe.replace(/(^|[^\w\\])__([^_\n]+?)__(?!\w)/g, '$1<strong>$2</strong>');
-        safe = safe.replace(/\*([^*]+?)\*/g, '<em>$1</em>');
+        safe = safe.replace(/\*([^\s*\n](?:[^*\n]*[^\s*\n])?)\*/g, '<em>$1</em>');
         safe = safe.replace(/(^|[^\w\\])_([^_\n]+?)_(?!\w)/g, '$1<em>$2</em>');
 
         // Process {size:XX} and {tag}...{/tag} in any nesting order
@@ -3305,10 +3708,10 @@ flowchart TD
         }
 
         // Restore stashed URLs, escaped punctuation, and inline code (including pre-stashed backtick code)
-        safe = safe.replace(/@@SAFEURL-(\d+)@@/g, (_, idx) => safeUrls[Number(idx)] || '');
-        safe = safe.replace(/@@ESCCHAR-(\d+)@@/g, (_, idx) => escapedChars[Number(idx)] || '');
-        safe = safe.replace(/@@INLINECODE-(\d+)@@/g, (_, idx) => inlineCodes[Number(idx)] || '');
-        safe = safe.replace(/@@PRECODE-(\d+)@@/g, (_, idx) => {
+        safe = safe.replace(safeUrlRe, (_, idx) => safeUrls[Number(idx)] || '');
+        safe = safe.replace(escCharRe, (_, idx) => escapedChars[Number(idx)] || '');
+        safe = safe.replace(inlineCodeRe, (_, idx) => inlineCodes[Number(idx)] || '');
+        safe = safe.replace(preCodeRe, (_, idx) => {
           const rawCode = preInlineCodeStash[Number(idx)];
           return rawCode !== undefined ? `<code class="inktex-code-inline">${escapeHtml(rawCode)}</code>` : '';
         });
@@ -3335,6 +3738,9 @@ flowchart TD
       };
 
       let headingSeq = 0;
+      const codeBlockExactRe = new RegExp(`^@@${T_CODE}-(\\d+)@@$`);
+      const katexExactRe = new RegExp(`^@@${T_KATEX}-\\d+@@$`);
+      const katexRestoreRe = new RegExp(`@@${T_KATEX}-(\\d+)@@`, 'g');
 
       function parseBlockLines(blockLines, depth = 0) {
         const blockHtml = [];
@@ -3368,7 +3774,7 @@ flowchart TD
           }
 
           // Fenced Code or Mermaid Placeholder
-          const codeMatch = trimmed.match(/^@@CODEBLOCK-(\d+)@@$/);
+          const codeMatch = trimmed.match(codeBlockExactRe);
           if (codeMatch) {
             closeAllLists();
             const block = codeStash[Number(codeMatch[1])];
@@ -3536,7 +3942,7 @@ flowchart TD
 
           // Standalone display math wrapper
           closeAllLists();
-          if (/^@@KATEXTOKEN-\d+@@$/.test(trimmed)) {
+          if (katexExactRe.test(trimmed)) {
             blockHtml.push(`<div class="math-block"${alignAttr}>${trimmed}</div>`);
             continue;
           }
@@ -3549,7 +3955,7 @@ flowchart TD
         return blockHtml.join('\n');
       }
 
-      let finalHtml = parseBlockLines(normalized.split(/\r?\n/), 0);
+      let finalHtml = parseBlockLines(normalizeTableLines(normalized.split(/\r?\n/)), 0);
 
       // Sanitize Markdown HTML via DOMPurify (or offline strict DOM fallback) BEFORE restoring KaTeX tokens
       if (window.DOMPurify) {
@@ -3562,7 +3968,7 @@ flowchart TD
       }
 
       // Restore KaTeX tokens
-      finalHtml = finalHtml.replace(/@@KATEXTOKEN-(\d+)@@/g, (_, idx) => mathStash[Number(idx)] || '');
+      finalHtml = finalHtml.replace(katexRestoreRe, (_, idx) => mathStash[Number(idx)] || '');
 
       return finalHtml;
     }
@@ -4782,30 +5188,63 @@ flowchart TD
         } catch (e) {}
       }
 
-      // Fallback B: preview selection spans inline KaTeX formulas (replace .katex nodes with math regex gap)
+      // Fallback B: preview selection spans or touches rendered KaTeX formulas
+      // Uses KaTeX's embedded <annotation encoding="application/x-tex"> source and expands partial formula drags
       if (start === -1 && targetRange && readerOutput && readerOutput.contains(targetRange.commonAncestorContainer)) {
         try {
-          const frag = targetRange.cloneContents();
-          const katexNodes = frag.querySelectorAll('.katex');
-          if (katexNodes.length > 0 && katexNodes.length <= 6) {
+          const expRange = targetRange.cloneRange();
+          const startEl = expRange.startContainer.nodeType === 3 ? expRange.startContainer.parentElement : expRange.startContainer;
+          const endEl = expRange.endContainer.nodeType === 3 ? expRange.endContainer.parentElement : expRange.endContainer;
+          const startKatex = startEl?.closest?.('.katex');
+          const endKatex = endEl?.closest?.('.katex');
+          if (startKatex && readerOutput.contains(startKatex)) expRange.setStartBefore(startKatex);
+          if (endKatex && readerOutput.contains(endKatex)) expRange.setEndAfter(endKatex);
+
+          const frag = expRange.cloneContents();
+          const katexNodes = Array.from(frag.querySelectorAll('.katex'));
+          if (katexNodes.length > 0 && katexNodes.length <= 8) {
+            const escToken = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const mathSources = [];
+            katexNodes.forEach((kn) => {
+              const ann = kn.querySelector('annotation[encoding="application/x-tex"]');
+              const texSrc = ann ? (ann.textContent || '').trim() : '';
+              const idx = mathSources.length;
+              mathSources.push(texSrc);
+              kn.replaceWith(document.createTextNode(` @@MATHGAP${idx}@@ `));
+            });
             frag.querySelectorAll('.katex-mathml, [style*="color:transparent"]').forEach(n => n.remove());
-            katexNodes.forEach(kn => kn.replaceWith(document.createTextNode(' @@MATHGAP@@ ')));
             const skeleton = (frag.textContent || '').replace(/\u200b/g, '').trim();
-            const plainOnly = skeleton.replace(/@@MATHGAP@@/g, '').replace(/\s+/g, '');
-            if (plainOnly.length >= 3 && skeleton.length <= 260) {
-              const escToken = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-              const inlineGap = `(?:\\*\\*\\*|\\*\\*|\\*|__|_|==|~~|\\{(?:\\/?(?:${ALL_CUSTOM_TAG_NAMES}|size(?::\\d+(?:\\.\\d+)?)?))\\}|\\s)*`;
-              const mathPattern = `(?:\\$\\$[\\s\\S]+?\\$\\$|\\\\\\[[\\s\\S]+?\\\\\\]|\\\\\\([\\s\\S]+?\\\\\\)|\\$(?!\\$)[^$\\n]+?\\$|\\\\(?:ce|pu)\\{(?:[^{}]|\\{[^{}]*\\})+\\})`;
-              const tokens = skeleton.split(/\s+/).filter(Boolean);
-              const pattern = tokens.map(tok => tok === '@@MATHGAP@@' ? mathPattern : escToken(tok)).join(inlineGap);
-              const re = new RegExp(pattern, 'g');
-              const m = re.exec(raw);
+            const plainOnly = skeleton.replace(/@@MATHGAP\d+@@/g, '').replace(/\s+/g, '');
+            const inlineGap = `(?:\\*\\*\\*|\\*\\*|\\*|__|_|==|~~|\\{(?:\\/?(?:${ALL_CUSTOM_TAG_NAMES}|size(?::\\d+(?:\\.\\d+)?)?))\\}|\\s)*`;
+            const genericMathPat = `(?:\\$\\$[\\s\\S]+?\\$\\$|\\\\\\[[\\s\\S]+?\\\\\\]|\\\\\\([\\s\\S]+?\\\\\\)|\\$(?!\\$)(?:[^\\$\\n]|\\n(?!\\s*\\n))+?\\$|\\\\(?:ce|pu)\\{(?:[^{}]|\\{[^{}]*\\})+\\})`;
+
+            const buildPattern = (useExactTex) => skeleton.split(/\s+/).filter(Boolean).map((tok) => {
+              const mm = tok.match(/^@@MATHGAP(\d+)@@$/);
+              if (mm) {
+                const tex = mathSources[Number(mm[1])] || '';
+                if (useExactTex && tex) {
+                  const e = escToken(tex);
+                  return `(?:\\$\\$\\s*${e}\\s*\\$\\$|\\\\\\[\\s*${e}\\s*\\\\\\]|\\\\\\(\\s*${e}\\s*\\\\\\)|\\$\\s*${e}\\s*\\$|${e})`;
+                }
+                return genericMathPat;
+              }
+              return escToken(tok);
+            }).join(inlineGap);
+
+            // Try exact <annotation> LaTeX match first (works even for standalone selected formulas!), then generic math-gap fallback
+            const tryPatterns = [];
+            if (mathSources.some(Boolean) && skeleton.length <= 320) tryPatterns.push(buildPattern(true));
+            if (plainOnly.length >= 3 && skeleton.length <= 260) tryPatterns.push(buildPattern(false));
+
+            for (const pat of tryPatterns) {
+              const m = new RegExp(pat, 'g').exec(raw);
               if (m) {
                 start = m.index;
                 end = m.index + m[0].length;
                 if (raw.slice(0, start).endsWith('**') && ((m[0].match(/\*\*/g) || []).length % 2 === 1)) {
                   start -= 2;
                 }
+                break;
               }
             }
           }
@@ -5561,12 +6000,59 @@ flowchart TD
     // =====================================================
     // ADVANCED EXPORT CENTER (PDF, PNG, JPG, HTML, MD, TEX, CLIPBOARD)
     // =====================================================
+    const EXPORT_PREFS_KEY = 'inktex_pro_export_prefs_v1';
+
+    function saveExportPrefs() {
+      try {
+        const prefs = {
+          pageSize: exportPageSize?.value || 'a4',
+          orientation: exportOrientation?.value || 'portrait',
+          margins: exportMargins?.value || 'normal',
+          scale: exportScale?.value || '2',
+          width: exportWidth?.value || 'auto',
+          includeBg: exportIncludeBg ? exportIncludeBg.checked : true,
+          smartBreaks: exportSmartBreaks ? exportSmartBreaks.checked : true,
+          includeHeader: exportIncludeHeader ? exportIncludeHeader.checked : true,
+          cleanTags: exportCleanTags ? exportCleanTags.checked : true
+        };
+        localStorage.setItem(EXPORT_PREFS_KEY, JSON.stringify(prefs));
+      } catch (e) {}
+    }
+
+    function loadExportPrefs() {
+      try {
+        const raw = localStorage.getItem(EXPORT_PREFS_KEY);
+        if (!raw) return;
+        const p = JSON.parse(raw);
+        if (!p || typeof p !== 'object') return;
+        if (exportPageSize && ['a4', 'letter', 'auto'].includes(p.pageSize)) exportPageSize.value = p.pageSize;
+        if (exportOrientation && ['portrait', 'landscape'].includes(p.orientation)) exportOrientation.value = p.orientation;
+        if (exportMargins && ['normal', 'narrow', 'wide', 'none'].includes(p.margins)) exportMargins.value = p.margins;
+        if (exportScale && ['1', '2', '3', '4'].includes(String(p.scale))) exportScale.value = String(p.scale);
+        if (exportWidth && ['auto', 'a4', 'wide', 'compact'].includes(p.width)) exportWidth.value = p.width;
+        if (exportIncludeBg && typeof p.includeBg === 'boolean') exportIncludeBg.checked = p.includeBg;
+        if (exportSmartBreaks && typeof p.smartBreaks === 'boolean') exportSmartBreaks.checked = p.smartBreaks;
+        if (exportIncludeHeader && typeof p.includeHeader === 'boolean') exportIncludeHeader.checked = p.includeHeader;
+        if (exportCleanTags && typeof p.cleanTags === 'boolean') exportCleanTags.checked = p.cleanTags;
+      } catch (e) {}
+    }
+
+    [exportPageSize, exportOrientation, exportMargins, exportScale, exportWidth, exportIncludeBg, exportSmartBreaks, exportIncludeHeader, exportCleanTags]
+      .filter(Boolean)
+      .forEach(el => el.addEventListener('change', saveExportPrefs));
+
     function getSafeExportFilename(ext) {
       const base = (exportFilename?.value || '').trim().normalize('NFC')
         .replace(/[\\/:*?"<>|\u0000-\u001f]+/g, '-')
         .replace(/\s+/g, '-')
         .replace(/^[-.]+|[-.]+$/g, '') || 'inktex-notes';
       return `${base}.${ext}`;
+    }
+
+    function hexToRgbTuple(hex) {
+      const m = String(hex || '#ffffff').trim().match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+      if (!m) return [255, 255, 255];
+      return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)];
     }
 
     function showExportProgress(msg) {
@@ -5594,13 +6080,18 @@ flowchart TD
     btnOpenExportModal?.addEventListener('click', () => openStudioModal(exportModal, btnOpenExportModal));
     btnCloseExportModal?.addEventListener('click', () => closeStudioModal(exportModal));
     exportModal?.addEventListener('click', (e) => { if (e.target === exportModal) closeStudioModal(exportModal); });
+    btnCloseExportPreview?.addEventListener('click', () => {
+      if (exportPreviewPanel) exportPreviewPanel.classList.add('hidden');
+    });
 
-    // 1. Vector Print PDF
+    // 1. Vector Print PDF (native browser vector text & math, respects all Export Center options)
     document.getElementById('btnExportPrintPdf').addEventListener('click', () => {
       const size = exportPageSize.value === 'letter' ? 'letter' : 'A4';
       const orient = exportOrientation.value;
       const marginMap = { normal: '12mm', narrow: '6mm', wide: '20mm', none: '0mm' };
       const marginVal = marginMap[exportMargins.value] || '12mm';
+      const includeBg = exportIncludeBg ? exportIncludeBg.checked : true;
+      const includeHeader = exportIncludeHeader ? exportIncludeHeader.checked : true;
 
       let dynamicStyle = document.getElementById('dynamicPrintPageStyle');
       if (!dynamicStyle) {
@@ -5609,33 +6100,74 @@ flowchart TD
         document.head.appendChild(dynamicStyle);
       }
       dynamicStyle.textContent = `@media print { @page { size: ${size} ${orient}; margin: ${marginVal}; } }`;
+
+      readerCard.classList.toggle('print-no-bg', !includeBg);
+      readerCard.classList.toggle('print-no-header', !includeHeader);
+      const cleanupPrintClasses = () => {
+        readerCard.classList.remove('print-no-bg', 'print-no-header');
+      };
+      window.addEventListener('afterprint', cleanupPrintClasses, { once: true });
+
       closeStudioModal(exportModal);
-      setTimeout(() => window.print(), 120);
+      setTimeout(() => {
+        window.print();
+        setTimeout(cleanupPrintClasses, 1500);
+      }, 120);
     });
 
-    async function captureReaderCanvas() {
+    const EXPORT_WIDTH_MAP = { a4: 794, wide: 1040, compact: 540 };
+    const EXPORT_BASELINE_FIX_CSS = 'img:not(.inktex-img){display:inline-block !important;vertical-align:baseline !important;}';
+
+    async function captureReaderCanvas(captureOpts = {}) {
+      const { forPdf = false, scaleOverride = null } = captureOpts || {};
       await flushPendingMermaid();
       if (document.fonts && document.fonts.ready) {
         try { await document.fonts.ready; } catch (e) {}
       }
-      const requestedScale = parseInt(exportScale.value, 10) || 2;
-      const includeBg = exportIncludeBg.checked;
-      const prevBgImage = readerCard.style.backgroundImage;
-      const prevBgColor = readerCard.style.backgroundColor;
+      const requestedScale = scaleOverride || (parseInt(exportScale.value, 10) || 2);
+      const includeBg = exportIncludeBg ? exportIncludeBg.checked : true;
+      const includeHeader = exportIncludeHeader ? exportIncludeHeader.checked : true;
+      const widthMode = exportWidth ? exportWidth.value : 'auto';
+      const targetWidthPx = EXPORT_WIDTH_MAP[widthMode] || 0;
+
+      const prevCardStyleCss = readerCard.style.cssText;
       const wasDarkWithoutBg = !includeBg && currentTheme === 'theme-dark';
       const wasReaderHidden = readerContainer && readerContainer.classList.contains('hidden');
-      const prevContainerCss = wasReaderHidden ? readerContainer.style.cssText : '';
+      const prevContainerCss = readerContainer ? readerContainer.style.cssText : '';
+
+      // Temporarily enforce inline-block on non-content <img> on LIVE document so html2canvas FontMetrics
+      // measures true text baselines (fixes Tailwind v3 Preflight `img { display: block }` downward text shift!)
+      let liveFixStyle = document.getElementById('inktexHtml2CanvasBaselineFix');
+      if (!liveFixStyle) {
+        liveFixStyle = document.createElement('style');
+        liveFixStyle.id = 'inktexHtml2CanvasBaselineFix';
+        liveFixStyle.textContent = EXPORT_BASELINE_FIX_CSS;
+        document.head.appendChild(liveFixStyle);
+      }
 
       if (wasReaderHidden) {
         readerContainer.classList.remove('hidden');
         readerContainer.style.position = 'fixed';
         readerContainer.style.left = '-99999px';
         readerContainer.style.top = '0';
-        readerContainer.style.width = `${Math.min(920, Math.max(360, window.innerWidth - 24))}px`;
+        readerContainer.style.width = `${targetWidthPx || Math.min(920, Math.max(360, window.innerWidth - 24))}px`;
         readerContainer.style.visibility = 'visible';
         readerContainer.style.pointerEvents = 'none';
+      } else if (targetWidthPx > 0 && readerContainer) {
+        readerContainer.style.overflowX = 'visible';
       }
 
+      if (targetWidthPx > 0) {
+        readerCard.style.width = `${targetWidthPx}px`;
+        readerCard.style.minWidth = `${targetWidthPx}px`;
+        readerCard.style.maxWidth = `${targetWidthPx}px`;
+      }
+      if (!includeHeader) {
+        readerCard.classList.add('export-hide-header');
+      }
+      if (forPdf) {
+        readerCard.classList.add('export-flat-pdf');
+      }
       if (wasDarkWithoutBg) {
         readerCard.classList.remove('theme-dark');
         readerCard.classList.add('theme-light');
@@ -5643,6 +6175,11 @@ flowchart TD
       if (!includeBg) {
         readerCard.style.backgroundImage = 'none';
         readerCard.style.backgroundColor = '#ffffff';
+      }
+
+      // Allow layout reflow when width, header visibility, or container state changed
+      if (wasReaderHidden || targetWidthPx > 0 || !includeHeader || forPdf) {
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       }
 
       const bgColor = !includeBg
@@ -5655,12 +6192,32 @@ flowchart TD
               : (readerCard.classList.contains('paper-vierge') ? '#ffffff' : '#fdfbf7'))
             : '#ffffff'));
 
+      const cardRect = readerCard.getBoundingClientRect();
       const liveMermaidSizes = Array.from(readerCard.querySelectorAll('.inktex-mermaid-wrap svg')).map(svg => {
         const r = svg.getBoundingClientRect();
         return { w: Math.ceil(r.width), h: Math.ceil(r.height) };
       });
+      const liveScrollFits = Array.from(readerCard.querySelectorAll('.katex-display, .inktex-table-wrap, .inktex-code-wrap pre')).map(el => (
+        el.scrollWidth <= el.clientWidth + 2
+      ));
 
-      const cardRect = readerCard.getBoundingClientRect();
+      // Collect atomic block bounds relative to readerCard top for smart PDF page breaks
+      const blockSelector = 'h1, h2, h3, h4, h5, h6, p, li, .math-block, .katex-display, .inktex-table-wrap, .inktex-table tr, .inktex-callout, .inktex-code-wrap, .inktex-mermaid-wrap, blockquote, hr, img.inktex-img';
+      const liveBlocks = Array.from(readerOutput.querySelectorAll(blockSelector))
+        .map(el => {
+          const r = el.getBoundingClientRect();
+          if (r.height <= 0 || r.width <= 0) return null;
+          return {
+            top: Math.max(0, r.top - cardRect.top),
+            bottom: Math.max(0, r.bottom - cardRect.top),
+            isHeading: /^H[1-6]$/.test(el.tagName),
+            isTableWrap: el.classList.contains('inktex-table-wrap'),
+            isTableRow: el.tagName === 'TR'
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.top - b.top);
+
       const maxCanvasPixels = 15000000; // Stay safely under iOS Safari's ~16.7M px canvas cap
       const cardArea = Math.max(1, cardRect.width * cardRect.height);
       const safeScale = Math.max(1, Math.min(requestedScale, Math.sqrt(maxCanvasPixels / cardArea)));
@@ -5674,15 +6231,32 @@ flowchart TD
           logging: false,
           scrollX: 0,
           scrollY: 0,
+          width: Math.ceil(cardRect.width),
+          height: Math.ceil(cardRect.height),
+          windowWidth: Math.max(document.documentElement.clientWidth, Math.ceil(cardRect.width) + 64),
           onclone: (clonedDoc) => {
+            // Re-apply baseline fix inside cloned document as well
+            const cloneFix = clonedDoc.createElement('style');
+            cloneFix.textContent = EXPORT_BASELINE_FIX_CSS;
+            clonedDoc.head.appendChild(cloneFix);
+
             const clonedCard = clonedDoc.getElementById('readerCard');
             if (clonedCard) {
               clonedCard.classList.remove('active-recall-on');
+              clonedCard.style.width = `${Math.ceil(cardRect.width)}px`;
+              clonedCard.style.maxWidth = `${Math.ceil(cardRect.width)}px`;
               clonedCard.style.minHeight = 'auto';
               clonedCard.style.height = 'auto';
               clonedCard.style.transform = 'none';
               clonedCard.style.boxShadow = 'none';
-              clonedCard.querySelectorAll('.page-guide-overlay, .inktex-copy-code-btn').forEach(el => el.remove());
+              clonedCard.style.transition = 'none';
+              clonedCard.style.animation = 'none';
+
+              // Remove non-visual or screen-reader-only duplicate DOM (prevents html2canvas MathML leaks)
+              clonedCard.querySelectorAll('.katex-mathml, .page-guide-overlay, .inktex-copy-code-btn').forEach(el => el.remove());
+              if (!includeHeader) {
+                clonedCard.querySelectorAll('.notebook-meta-stamp, .notebook-spiral-holes').forEach(el => el.remove());
+              }
               clonedCard.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
 
               // Replace <input> stamp fields with <span> so html2canvas never clips text vertically
@@ -5700,15 +6274,30 @@ flowchart TD
                 }
               });
 
-              // Lock KaTeX line-height & crisp fraction bars in html2canvas clone
+              // Prevent phantom scrollbars on containers that fit horizontally
+              clonedCard.querySelectorAll('.katex-display, .inktex-table-wrap, .inktex-code-wrap pre').forEach((el, idx) => {
+                if (liveScrollFits[idx]) {
+                  el.style.overflowX = 'hidden';
+                }
+              });
+
+              // Lock KaTeX line-height, SVG rules & crisp horizontal bars in html2canvas clone
+              const cloneView = clonedDoc.defaultView || window;
               clonedCard.querySelectorAll('.katex').forEach(k => {
                 k.style.lineHeight = '1.2';
               });
-              clonedCard.querySelectorAll('.katex .frac-line').forEach(fl => {
-                fl.style.borderBottomStyle = 'none';
-                fl.style.height = '1.5px';
-                fl.style.minHeight = '1.5px';
-                fl.style.backgroundColor = 'currentColor';
+              clonedCard.querySelectorAll('.katex svg').forEach(svg => {
+                svg.style.maxWidth = 'none';
+                svg.style.verticalAlign = 'baseline';
+              });
+              clonedCard.querySelectorAll('.katex .frac-line, .katex .hline, .katex .overline-line, .katex .underline-line, .katex .sqrt-line').forEach(lineEl => {
+                const cs = cloneView.getComputedStyle(lineEl);
+                const thick = Math.max(1.25, parseFloat(cs.borderBottomWidth) || 1.25);
+                const col = cs.borderBottomColor || cs.color || 'currentColor';
+                lineEl.style.borderBottomStyle = 'none';
+                lineEl.style.height = `${thick}px`;
+                lineEl.style.minHeight = `${thick}px`;
+                lineEl.style.backgroundColor = col;
               });
 
               // Lock explicit pixel dimensions on Mermaid SVGs to avoid bottom clipping
@@ -5727,50 +6316,272 @@ flowchart TD
         });
       }
 
+      function resetCanvasTransform(c) {
+        try {
+          const ctx = c.getContext('2d');
+          if (ctx && typeof ctx.setTransform === 'function') {
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+          }
+        } catch (e) {}
+        return c;
+      }
+
       try {
         try {
-          const canvas = await runHtml2Canvas(safeScale);
-          return { canvas, appliedScale: safeScale, bgColor };
+          const canvas = resetCanvasTransform(await runHtml2Canvas(safeScale));
+          return { canvas, appliedScale: safeScale, bgColor, includeBg, blocks: liveBlocks };
         } catch (firstErr) {
           console.warn('Retrying html2canvas at reduced scale:', firstErr);
           const fallbackScale = Math.min(1.5, safeScale);
-          const canvas = await runHtml2Canvas(fallbackScale);
-          return { canvas, appliedScale: fallbackScale, bgColor };
+          const canvas = resetCanvasTransform(await runHtml2Canvas(fallbackScale));
+          return { canvas, appliedScale: fallbackScale, bgColor, includeBg, blocks: liveBlocks };
         }
       } finally {
+        if (liveFixStyle && liveFixStyle.parentNode) liveFixStyle.remove();
+        readerCard.classList.remove('export-hide-header', 'export-flat-pdf');
         if (wasDarkWithoutBg) {
           readerCard.classList.remove('theme-light');
           readerCard.classList.add('theme-dark');
         }
-        readerCard.style.backgroundImage = prevBgImage;
-        readerCard.style.backgroundColor = prevBgColor;
-        if (wasReaderHidden) {
+        readerCard.style.cssText = prevCardStyleCss;
+        if (readerContainer) {
           readerContainer.style.cssText = prevContainerCss;
-          readerContainer.classList.add('hidden');
+          if (wasReaderHidden) readerContainer.classList.add('hidden');
         }
       }
     }
 
-    // 2. Direct Download PDF (.pdf)
+    /**
+     * Computes clean PDF page slices that avoid cutting across formulas, tables, callouts,
+     * code blocks, headings, or individual lines of text.
+     */
+    function computeSmartPdfBreaks(canvas, blocks, appliedScale, sliceMaxH, bgColor, enableSmartBreaks = true) {
+      const totalH = canvas.height;
+      if (totalH <= sliceMaxH || !enableSmartBreaks) {
+        const plain = [];
+        for (let y = 0; y < totalH; y += sliceMaxH) {
+          plain.push({ startY: y, height: Math.min(sliceMaxH, totalH - y) });
+        }
+        return plain;
+      }
+
+      // Scale block bounds to canvas coordinates; skip outer table wrappers that are too tall so rows split cleanly
+      const scaledBlocks = (blocks || [])
+        .map(b => ({
+          top: b.top * appliedScale,
+          bottom: b.bottom * appliedScale,
+          isHeading: b.isHeading,
+          isTableWrap: b.isTableWrap,
+          isTableRow: b.isTableRow
+        }))
+        .filter(b => !(b.isTableWrap && (b.bottom - b.top) > sliceMaxH * 0.55));
+
+      const [bgR, bgG, bgB] = hexToRgbTuple(bgColor);
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      const padPx = Math.max(4, Math.round(5 * appliedScale));
+
+      function isScanlineClean(rowY) {
+        if (!ctx || rowY < 0 || rowY >= totalH) return true;
+        const marginX = Math.floor(canvas.width * 0.12);
+        const sampleW = Math.max(1, canvas.width - marginX * 2);
+        try {
+          const data = ctx.getImageData(marginX, rowY, sampleW, 1).data;
+          const stepX = Math.max(3, Math.floor(sampleW / 200));
+          for (let x = 0; x < sampleW; x += stepX) {
+            const p = x * 4;
+            const diff = Math.abs(data[p] - bgR) + Math.abs(data[p + 1] - bgG) + Math.abs(data[p + 2] - bgB);
+            if (diff > 85) return false;
+          }
+        } catch (e) {}
+        return true;
+      }
+
+      function findCleanScanline(fromY, minY) {
+        if (!ctx || fromY <= minY) return -1;
+        const bandH = Math.min(fromY - minY, Math.floor(sliceMaxH * 0.16));
+        if (bandH < 4) return -1;
+        const startRow = fromY - bandH;
+        const marginX = Math.floor(canvas.width * 0.12);
+        const sampleW = Math.max(1, canvas.width - marginX * 2);
+        try {
+          const data = ctx.getImageData(marginX, startRow, sampleW, bandH).data;
+          const stepX = Math.max(3, Math.floor(sampleW / 200));
+          let runStart = -1;
+          for (let row = bandH - 1; row >= 0; row--) {
+            let isClean = true;
+            const rowOff = row * sampleW * 4;
+            for (let x = 0; x < sampleW; x += stepX) {
+              const p = rowOff + x * 4;
+              const diff = Math.abs(data[p] - bgR) + Math.abs(data[p + 1] - bgG) + Math.abs(data[p + 2] - bgB);
+              // Threshold > 85 ignores faint notebook ruling/grid lines while detecting text, borders & math ink
+              if (diff > 85) {
+                isClean = false;
+                break;
+              }
+            }
+            if (isClean) {
+              if (runStart === -1) runStart = row;
+            } else if (runStart !== -1) {
+              const midRow = Math.floor((runStart + row + 1) / 2);
+              return startRow + midRow;
+            }
+          }
+          if (runStart !== -1) {
+            return startRow + Math.floor(runStart / 2);
+          }
+        } catch (e) {}
+        return -1;
+      }
+
+      const slices = [];
+      let offsetY = 0;
+      let guard = 0;
+      while (offsetY < totalH && guard < 200) {
+        guard++;
+        if (totalH - offsetY <= sliceMaxH) {
+          slices.push({ startY: offsetY, height: totalH - offsetY });
+          break;
+        }
+        const idealEnd = offsetY + sliceMaxH;
+        const minEnd = offsetY + Math.floor(sliceMaxH * 0.42);
+        let cutY = idealEnd;
+
+        // Avoid cutting through any atomic block straddling idealEnd
+        let earliestTop = Infinity;
+        for (const b of scaledBlocks) {
+          if (b.top < cutY && b.bottom > cutY) {
+            if (b.top >= minEnd && b.top < earliestTop) {
+              earliestTop = b.top;
+            }
+          }
+        }
+        if (earliestTop < Infinity) {
+          cutY = Math.max(minEnd, Math.floor(earliestTop) - padPx);
+        }
+
+        // Prevent orphan heading stranded alone at the very bottom of a page
+        const headingZone = Math.round(130 * appliedScale);
+        for (const b of scaledBlocks) {
+          if (b.isHeading && b.top >= minEnd && b.bottom <= cutY && (cutY - b.top) <= headingZone) {
+            const hasContentAfter = scaledBlocks.some(other => !other.isHeading && other.top >= b.bottom - 2 && other.bottom <= cutY);
+            if (!hasContentAfter) {
+              cutY = Math.max(minEnd, Math.floor(b.top) - padPx);
+              break;
+            }
+          }
+        }
+
+        // Pixel-verify cutY on actual rendered canvas (handles tall paragraphs & sub-pixel reflow)
+        const stillCrosses = scaledBlocks.some(b => b.top < cutY - 2 && b.bottom > cutY + 2);
+        if (stillCrosses || !isScanlineClean(cutY)) {
+          const cleanRow = findCleanScanline(cutY, minEnd);
+          if (cleanRow > minEnd && cleanRow < cutY) {
+            cutY = cleanRow;
+          }
+        }
+
+        const sliceH = Math.max(1, Math.min(sliceMaxH, cutY - offsetY));
+        slices.push({ startY: offsetY, height: sliceH });
+        offsetY += sliceH;
+      }
+      return slices;
+    }
+
+    // Live Export Preview inside Modal
+    btnPreviewExport?.addEventListener('click', async () => {
+      if (!window.html2canvas) { showToast('Bibliothèque image non chargée'); return; }
+      try {
+        const pageSize = exportPageSize.value;
+        const isPaged = pageSize !== 'auto';
+        showExportProgress('Génération de l’aperçu exact avant export...');
+        const { canvas, appliedScale, bgColor, blocks } = await captureReaderCanvas({ forPdf: isPaged, scaleOverride: 1.5 });
+
+        let metaMsg = `${Math.round(canvas.width / appliedScale)} × ${Math.round(canvas.height / appliedScale)} px`;
+        if (isPaged) {
+          const orientation = exportOrientation.value;
+          const marginMm = { normal: 12, narrow: 6, wide: 20, none: 0 }[exportMargins.value] ?? 12;
+          const baseW = pageSize === 'letter' ? 215.9 : 210;
+          const baseH = pageSize === 'letter' ? 279.4 : 297;
+          const pageW = orientation === 'landscape' ? baseH : baseW;
+          const pageH = orientation === 'landscape' ? baseW : baseH;
+          const usableW = Math.max(20, pageW - marginMm * 2);
+          const usableH = Math.max(20, pageH - marginMm * 2);
+          const pxPerMm = canvas.width / usableW;
+          const sliceMaxH = Math.max(1, Math.floor(usableH * pxPerMm));
+          const useSmart = exportSmartBreaks ? exportSmartBreaks.checked : true;
+          const slices = computeSmartPdfBreaks(canvas, blocks, appliedScale, sliceMaxH, bgColor, useSmart);
+
+          // Draw subtle page-break guides onto preview canvas copy (explicit identity transform)
+          const pCtx = canvas.getContext('2d');
+          if (pCtx && slices.length > 1) {
+            pCtx.save();
+            pCtx.setTransform(1, 0, 0, 1, 0, 0);
+            for (let sIdx = 1; sIdx < slices.length; sIdx++) {
+              const y = slices[sIdx].startY;
+              pCtx.strokeStyle = 'rgba(239, 68, 68, 0.85)';
+              pCtx.lineWidth = Math.max(2, Math.round(2 * appliedScale));
+              pCtx.setLineDash([8 * appliedScale, 5 * appliedScale]);
+              pCtx.beginPath();
+              pCtx.moveTo(0, y);
+              pCtx.lineTo(canvas.width, y);
+              pCtx.stroke();
+              pCtx.setLineDash([]);
+              const tag = `Saut Page ${sIdx + 1}`;
+              pCtx.font = `bold ${Math.round(11 * appliedScale)}px Inter, sans-serif`;
+              const tw = pCtx.measureText(tag).width + 14 * appliedScale;
+              const th = 20 * appliedScale;
+              pCtx.fillStyle = 'rgba(239, 68, 68, 0.92)';
+              pCtx.fillRect(canvas.width - tw - 8 * appliedScale, Math.max(0, y - th / 2), tw, th);
+              pCtx.fillStyle = '#ffffff';
+              pCtx.fillText(tag, canvas.width - tw - 1 * appliedScale, Math.max(12 * appliedScale, y + 4 * appliedScale));
+            }
+            pCtx.restore();
+          }
+          const pageLabel = pageSize === 'letter' ? 'US Letter' : 'A4';
+          metaMsg = `${slices.length} page${slices.length > 1 ? 's' : ''} ${pageLabel} (${orientation === 'landscape' ? 'Paysage' : 'Portrait'})${useSmart ? ' • Sauts intelligents actifs' : ''}`;
+        } else {
+          metaMsg = `Page continue • ${Math.round(canvas.width / appliedScale)} × ${Math.round(canvas.height / appliedScale)} px`;
+        }
+
+        if (exportPreviewImg) exportPreviewImg.src = canvas.toDataURL('image/png');
+        if (exportPreviewMeta) exportPreviewMeta.textContent = `Aperçu exact — ${metaMsg}`;
+        if (exportPreviewPanel) exportPreviewPanel.classList.remove('hidden');
+        canvas.width = 0;
+        canvas.height = 0;
+        hideExportProgress();
+      } catch (err) {
+        console.error('Export Preview Error:', err);
+        hideExportProgress();
+        showToast('Erreur lors de la génération de l’aperçu');
+      }
+    });
+
+    // 2. Direct Download PDF (.pdf) with smart block-aware page breaks & seamless page background fill
     document.getElementById('btnExportDirectPdf').addEventListener('click', async () => {
       if (!window.html2canvas || !window.jspdf) { showToast('Bibliothèque PDF en cours de chargement...'); return; }
       try {
-        showExportProgress('Génération du fichier PDF en cours...');
-        const { canvas, appliedScale, bgColor } = await captureReaderCanvas();
-        const { jsPDF } = window.jspdf;
+        showExportProgress('Génération du fichier PDF haute précision...');
         const pageSize = exportPageSize.value;
+        const { canvas, appliedScale, bgColor, includeBg, blocks } = await captureReaderCanvas({ forPdf: true });
+        const { jsPDF } = window.jspdf;
         const orientation = exportOrientation.value;
         const marginMm = { normal: 12, narrow: 6, wide: 20, none: 0 }[exportMargins.value] ?? 12;
+        const [bgR, bgG, bgB] = hexToRgbTuple(bgColor);
+        const shouldFillPageBg = includeBg && bgColor && bgColor.toLowerCase() !== '#ffffff';
 
         let pdf;
         if (pageSize === 'auto') {
-          const imgData = canvas.toDataURL('image/jpeg', 0.95);
+          const imgData = canvas.toDataURL('image/jpeg', 0.96);
           const pxToMm = 0.264583;
           const contentW = Math.max(50, (canvas.width / appliedScale) * pxToMm);
           const contentH = Math.max(50, (canvas.height / appliedScale) * pxToMm);
           const pdfW = contentW + marginMm * 2;
           const pdfH = contentH + marginMm * 2;
           pdf = new jsPDF({ orientation: pdfW > pdfH ? 'l' : 'p', unit: 'mm', format: [pdfW, pdfH] });
+          if (shouldFillPageBg && marginMm > 0) {
+            pdf.setFillColor(bgR, bgG, bgB);
+            pdf.rect(0, 0, pdfW, pdfH, 'F');
+          }
           pdf.addImage(imgData, 'JPEG', marginMm, marginMm, contentW, contentH);
         } else {
           pdf = new jsPDF({ orientation: orientation === 'landscape' ? 'l' : 'p', unit: 'mm', format: pageSize === 'letter' ? 'letter' : 'a4' });
@@ -5780,26 +6591,27 @@ flowchart TD
           const usableH = pageHeight - marginMm * 2;
           const pxPerMm = canvas.width / usableW;
           const sliceMaxH = Math.max(1, Math.floor(usableH * pxPerMm));
+          const useSmart = exportSmartBreaks ? exportSmartBreaks.checked : true;
+          const slices = computeSmartPdfBreaks(canvas, blocks, appliedScale, sliceMaxH, bgColor, useSmart);
 
           const sliceCanvas = document.createElement('canvas');
           const sliceCtx = sliceCanvas.getContext('2d');
           sliceCanvas.width = canvas.width;
 
-          let offsetY = 0;
-          let pageIdx = 0;
-          while (offsetY < canvas.height) {
-            const currentSliceH = Math.min(sliceMaxH, canvas.height - offsetY);
-            sliceCanvas.height = currentSliceH;
+          slices.forEach((slice, pageIdx) => {
+            sliceCanvas.height = slice.height;
             sliceCtx.fillStyle = bgColor || '#ffffff';
-            sliceCtx.fillRect(0, 0, sliceCanvas.width, currentSliceH);
-            sliceCtx.drawImage(canvas, 0, offsetY, canvas.width, currentSliceH, 0, 0, canvas.width, currentSliceH);
-            const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.95);
-            const sliceMmH = currentSliceH / pxPerMm;
+            sliceCtx.fillRect(0, 0, sliceCanvas.width, slice.height);
+            sliceCtx.drawImage(canvas, 0, slice.startY, canvas.width, slice.height, 0, 0, canvas.width, slice.height);
+            const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.96);
+            const sliceMmH = slice.height / pxPerMm;
             if (pageIdx > 0) pdf.addPage();
+            if (shouldFillPageBg) {
+              pdf.setFillColor(bgR, bgG, bgB);
+              pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+            }
             pdf.addImage(sliceData, 'JPEG', marginMm, marginMm, usableW, sliceMmH);
-            offsetY += currentSliceH;
-            pageIdx++;
-          }
+          });
           sliceCanvas.width = 0;
           sliceCanvas.height = 0;
         }
@@ -5891,8 +6703,24 @@ flowchart TD
     document.getElementById('btnExportHtml').addEventListener('click', () => {
       const rootStyle = document.documentElement.style;
       const coreCss = document.getElementById('inktexCoreStyles')?.textContent || '';
+      const includeBg = exportIncludeBg ? exportIncludeBg.checked : true;
+      const includeHeader = exportIncludeHeader ? exportIncludeHeader.checked : true;
+      const widthMode = exportWidth ? exportWidth.value : 'auto';
+      const maxW = EXPORT_WIDTH_MAP[widthMode] || 920;
+
       const clonedCard = readerCard.cloneNode(true);
-      clonedCard.classList.remove('active-recall-on');
+      clonedCard.classList.remove('active-recall-on', 'export-hide-header', 'export-flat-pdf', 'print-no-bg', 'print-no-header');
+      if (!includeBg) {
+        if (clonedCard.classList.contains('theme-dark')) {
+          clonedCard.classList.remove('theme-dark');
+          clonedCard.classList.add('theme-light');
+        }
+        clonedCard.style.backgroundImage = 'none';
+        clonedCard.style.backgroundColor = '#ffffff';
+      }
+      if (!includeHeader) {
+        clonedCard.querySelectorAll('.notebook-meta-stamp, .notebook-spiral-holes').forEach(el => el.remove());
+      }
       const subjInput = clonedCard.querySelector('#nbSubjectInput');
       const dateInput = clonedCard.querySelector('#nbDateInput');
       if (subjInput && nbSubjectInput) subjInput.setAttribute('value', nbSubjectInput.value);
@@ -5926,8 +6754,8 @@ flowchart TD
       --nb-bold-color: ${rootStyle.getPropertyValue('--nb-bold-color') || '#1850b8'};
       --nb-math-color: ${rootStyle.getPropertyValue('--nb-math-color') || '#1b7a34'};
     }
-    body { margin: 0; padding: 2rem 1rem; background: #0e0f11; display: flex; justify-content: center; }
-    .reader-card { max-width: 920px; width: 100%; padding: 3rem; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    body { margin: 0; padding: 2rem 1rem; background: ${includeBg ? '#0e0f11' : '#f1f5f9'}; display: flex; justify-content: center; }
+    .reader-card { max-width: ${maxW}px; width: 100%; padding: 3rem; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.28); }
     .inktex-copy-code-btn, .page-guide-overlay { display: none !important; }
   </style>
 </head>
@@ -5941,9 +6769,7 @@ flowchart TD
 
     // 6. Clean Markdown Export (.md)
     document.getElementById('btnExportMd').addEventListener('click', () => {
-      let mdContent = rawInput.value
-        .replace(/\\{2,}\(/g, '\\(').replace(/\\{2,}\)/g, '\\)')
-        .replace(DOUBLED_OPEN_BRACKET_RE, '\\[').replace(/\\{2,}\]/g, '\\]');
+      let mdContent = normalizeDoubleEscapedDelimiters(rawInput.value);
 
       if (exportCleanTags && exportCleanTags.checked) {
         const stripRegex = new RegExp(`\\{(?:${ALL_CUSTOM_TAG_NAMES}|size:\\d+(?:\\.\\d+)?)\\}([\\s\\S]*?)\\{\\/(?:${ALL_CUSTOM_TAG_NAMES}|size)\\}`, 'gi');
@@ -5951,6 +6777,7 @@ flowchart TD
         do { prev = mdContent; mdContent = mdContent.replace(stripRegex, '$1'); } while (mdContent !== prev);
         mdContent = mdContent.replace(/^\{align:(left|center|right)\}\s*/gim, '');
       }
+      mdContent = normalizeTableLines(mdContent.split(/\r?\n/)).join('\n');
       triggerBlobDownload(new Blob([mdContent], { type: 'text/markdown;charset=utf-8' }), getSafeExportFilename('md'));
       showToast('Fichier Markdown (.md) téléchargé !');
     });
@@ -5958,11 +6785,9 @@ flowchart TD
     // 7. Compilable LaTeX Export (.tex) with math-safe escaping, mhchem, hyperref, tables, callouts, checklists & code support
     function convertMarkdownToTex(rawSrc, customMacrosMap = {}) {
       const extraCmdNames = Object.keys(customMacrosMap).map(k => k.replace(/^\\/, ''));
-      const src = rawSrc
-        .replace(/\\{2,}\(/g, '\\(').replace(/\\{2,}\)/g, '\\)')
-        .replace(DOUBLED_OPEN_BRACKET_RE, '\\[').replace(/\\{2,}\]/g, '\\]');
+      const src = normalizeDoubleEscapedDelimiters(rawSrc);
 
-      const lines = src.split(/\r?\n/);
+      const lines = normalizeTableLines(src.split(/\r?\n/));
       const texLines = [];
       let activeListEnv = null; // 'itemize' | 'enumerate'
       let inDisplayMath = false;
@@ -6077,13 +6902,13 @@ flowchart TD
         const cleanOtherTags = new RegExp(`\\{(?:${ALL_CUSTOM_TAG_NAMES}|size:\\d+(?:\\.\\d+)?)\\}([\\s\\S]*?)\\{\\/(?:${ALL_CUSTOM_TAG_NAMES}|size)\\}`, 'gi');
         do { prev = t; t = t.replace(cleanOtherTags, '$1'); } while (t !== prev);
 
-        // 4. Markdown emphasis in prose only
+        // 4. Markdown emphasis in prose only (CommonMark-safe *...* so "2 * 3 * 4" stays multiplication)
         t = t.replace(/==([^=]+?)==/g, (_, inner) => `${stash('\\textbf{')}${inner}${stash('}')}`);
-        t = t.replace(/\*\*\*([^*]+?)\*\*\*/g, (_, inner) => `${stash('\\textbf{\\textit{')}${inner}${stash('}}')}`);
-        t = t.replace(/\*\*([^*]+?)\*\*/g, (_, inner) => `${stash('\\textbf{')}${inner}${stash('}')}`);
+        t = t.replace(/\*\*\*([^\s*\n](?:[^*\n]*[^\s*\n])?)\*\*\*/g, (_, inner) => `${stash('\\textbf{\\textit{')}${inner}${stash('}}')}`);
+        t = t.replace(/\*\*([^\s*\n](?:[^*\n]*[^\s*\n])?)\*\*/g, (_, inner) => `${stash('\\textbf{')}${inner}${stash('}')}`);
         t = t.replace(/__([^_]+?)__/g, (_, inner) => `${stash('\\textbf{')}${inner}${stash('}')}`);
         t = t.replace(/~~([^~]+?)~~/g, (_, inner) => inner);
-        t = t.replace(/\*([^*\n]+?)\*/g, (_, inner) => `${stash('\\textit{')}${inner}${stash('}')}`);
+        t = t.replace(/\*([^\s*\n](?:[^*\n]*[^\s*\n])?)\*/g, (_, inner) => `${stash('\\textit{')}${inner}${stash('}')}`);
         t = t.replace(/(^|[^\w\\])_([^_\n]+?)_(?!\w)/g, (_, pre, inner) => `${pre}${stash('\\textit{')}${inner}${stash('}')}`);
 
         // 5. Escape LaTeX specials in remaining plain prose
@@ -6139,11 +6964,11 @@ flowchart TD
           continue;
         }
 
-        const envStartMatch = trimmed.match(/^\\begin\{(equation\*?|align\*?|gather\*?|aligned|cases|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)\}/);
+        const envStartMatch = trimmed.match(/^\\begin\{(equation\*?|align\*?|alignat\*?|flalign\*?|gather\*?|multline\*?|eqnarray\*?|split|subequations|aligned|cases|array|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)\}/);
         if (envStartMatch) {
           closeTexList();
           const envName = envStartMatch[1];
-          const needsMathWrap = /^(?:aligned|cases|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)$/.test(envName);
+          const needsMathWrap = /^(?:aligned|cases|array|split|pmatrix|bmatrix|vmatrix|Bmatrix|matrix)$/.test(envName);
           const endRe = new RegExp(`\\\\end\\{${envName.replace('*', '\\*')}\\}`);
           if (needsMathWrap) texLines.push('\\[');
           texLines.push(cleanInnerMath(rawLine, extraCmdNames));
@@ -6321,6 +7146,7 @@ ${texLines.join('\n')}
     window.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
       loadPluginSettings();
+      loadExportPrefs();
       applyRealisticNotebookClasses();
       renderPluginCards();
 
