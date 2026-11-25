@@ -2344,7 +2344,7 @@
           id="rawInput"
           aria-label="Éditeur Markdown et LaTeX"
           spellcheck="false"
-          placeholder="Collez votre cours IA (ChatGPT / Gemini / NotebookLM), équations LaTeX \(\Delta G\), réactions chimiques \ce{H2O}, tableaux Markdown ou schémas ```mermaid..."
+          placeholder="Collez votre texte ici"
           class="mono-editor flex-1 min-h-0 w-full overflow-y-auto bg-[#0d0f14] text-[#dce0ea] placeholder-[#7e8698] p-4 text-[13px] leading-relaxed focus:outline-none resize-none"
         ></textarea>
       </div>
@@ -4027,7 +4027,7 @@ flowchart TD
 
       if (!rawText || !rawText.trim()) {
         if (updateGlobals) statsCounter.textContent = '0 formules • 0 mots';
-        return `<p class="opacity-60 italic">Collez votre cours, vos formules LaTeX, réactions chimiques \\ce{...} ou schémas Mermaid à gauche...</p>`;
+        return '';
       }
 
       let normalized = rawText;
