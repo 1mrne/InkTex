@@ -1744,7 +1744,7 @@
         </div>
       </div>
 
-      <!-- RIGHT: Apparence Popover · Plugins · Layout · Quick Print · ? · Primary Exporter -->
+      <!-- RIGHT: Apparence Popover · Plugins · Layout · ? · Primary Exporter -->
       <div class="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
 
         <!-- Apparence Popover (Base Font, Size & Line Height cleanly tucked away) -->
@@ -1823,11 +1823,6 @@
         <button id="btnToggleLayout" type="button" aria-pressed="false" class="hidden lg:inline-flex v2-icon-btn" title="Basculer entre vue divisée et lecture plein écran">
           <i data-lucide="panel-left-close" class="w-3.5 h-3.5" aria-hidden="true"></i>
           <span id="layoutBtnText">Plein écran</span>
-        </button>
-
-        <!-- Quick Vector Print PDF -->
-        <button id="btnPrintPdf" type="button" aria-label="Imprimer en PDF" class="hidden xl:inline-flex v2-icon-btn !px-2" title="Impression rapide PDF (Ctrl+P)">
-          <i data-lucide="printer" class="w-3.5 h-3.5" aria-hidden="true"></i>
         </button>
 
         <!-- Keyboard Shortcuts -->
@@ -6460,8 +6455,6 @@ flowchart TD
       rawInput.focus();
       showToast('Éditeur vidé (Ctrl+Z pour annuler)');
     });
-
-    document.getElementById('btnPrintPdf').addEventListener('click', () => window.print());
 
     // =====================================================
     // STUDY TOOLS: OUTLINE, ACTIVE RECALL, POMODORO, PLUGINS MODAL
