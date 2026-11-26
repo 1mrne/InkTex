@@ -1,9 +1,12 @@
-const CACHE_VERSION = 'inktex-studio-v5';
+const CACHE_VERSION = 'inktex-studio-v6';
 const APP_SHELL_URLS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.svg'
+  './icon.svg',
+  './apple-touch-icon.png',
+  './icon-192.png',
+  './icon-512.png'
 ];
 const CDN_CORE_URLS = [
   'https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css',
@@ -86,7 +89,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Other same-origin assets (manifest.json, icon.svg): Stale-While-Revalidate
+  // 2. Other same-origin assets (manifest.json, icônes SVG/PNG): Stale-While-Revalidate
   if (isSameOrigin) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_VERSION);

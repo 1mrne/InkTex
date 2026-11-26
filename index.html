@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="InkTeX" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlYTVlOSIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNGY0NmU1Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOTMzM2VhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTgiIGZpbGw9InVybCgjZykiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNCAxNCkgc2NhbGUoMS41KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuMTUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIxVjciLz48cGF0aCBkPSJtMTYgMTIgMiAyIDQtNCIvPjxwYXRoIGQ9Ik0yMiA2VjRhMSAxIDAgMCAwLTEtMWgtNWE0IDQgMCAwIDAtNCA0IDQgNCAwIDAgMC00LTRIM2ExIDEgMCAwIDAtMSAxdjEzYTEgMSAwIDAgMCAxIDFoNmEzIDMgMCAwIDEgMyAzIDMgMyAwIDAgMSAzLTNoNmExIDEgMCAwIDAgMS0xdi0xLjMiLz48L2c+PC9zdmc+" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlYTVlOSIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNGY0NmU1Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOTMzM2VhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTgiIGZpbGw9InVybCgjZykiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNCAxNCkgc2NhbGUoMS41KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuMTUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIxVjciLz48cGF0aCBkPSJtMTYgMTIgMiAyIDQtNCIvPjxwYXRoIGQ9Ik0yMiA2VjRhMSAxIDAgMCAwLTEtMWgtNWE0IDQgMCAwIDAtNCA0IDQgNCAwIDAgMC00LTRIM2ExIDEgMCAwIDAtMSAxdjEzYTEgMSAwIDAgMCAxIDFoNmEzIDMgMCAwIDEgMyAzIDMgMyAwIDAgMSAzLTNoNmExIDEgMCAwIDAgMS0xdi0xLjMiLz48L2c+PC9zdmc+" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
 
   <!-- Resource Hints: Early DNS/TLS for Critical Origins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,7 +58,7 @@
     }
 
     html {
-      scroll-padding-top: 4.5rem;
+      scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px));
       scroll-padding-bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px));
     }
 
@@ -72,6 +72,36 @@
       padding-bottom: env(safe-area-inset-bottom, 0px);
       -webkit-tap-highlight-color: transparent;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* iOS Standalone PWA Safe-Area Offsets (Dynamic Island / Status Bar) */
+    body > header {
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-left: env(safe-area-inset-left, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
+    }
+    @media (max-width: 639px) {
+      #appearancePopover {
+        top: calc(3.5rem + env(safe-area-inset-top, 0px));
+        max-height: calc(100vh - 72px - env(safe-area-inset-top, 0px));
+        max-height: calc(100dvh - 72px - env(safe-area-inset-top, 0px));
+      }
+    }
+    #pomodoroPopover {
+      top: calc(60px + env(safe-area-inset-top, 0px));
+    }
+    #outlineDrawer {
+      top: calc(64px + env(safe-area-inset-top, 0px));
+      max-height: calc(100vh - 80px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+      max-height: min(68dvh, calc(100dvh - 80px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)));
+    }
+    #statusToast {
+      top: calc(62px + env(safe-area-inset-top, 0px));
+    }
+    @media (min-width: 1024px) {
+      #editorContainer {
+        top: calc(68px + env(safe-area-inset-top, 0px));
+      }
     }
 
     /* Fix Tailwind v3 Preflight (img { display: block }) breaking html2canvas FontMetrics baseline measurement */
@@ -907,21 +937,21 @@
       max-width: 920px;
     }
     #editorContainer.editor-solo-height {
-      height: calc(100vh - 140px);
-      height: calc(100dvh - 140px);
+      height: calc(100vh - 140px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+      height: calc(100dvh - 140px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     }
     @media (min-width: 1024px) {
       #editorContainer {
-        height: calc(100vh - 88px);
-        height: calc(100dvh - 88px);
+        height: calc(100vh - 88px - env(safe-area-inset-top, 0px));
+        height: calc(100dvh - 88px - env(safe-area-inset-top, 0px));
       }
       body.desk-notebook-mode #editorContainer {
-        height: calc(100vh - 154px);
-        height: calc(100dvh - 154px);
+        height: calc(100vh - 154px - env(safe-area-inset-top, 0px));
+        height: calc(100dvh - 154px - env(safe-area-inset-top, 0px));
       }
       #readerCard {
-        min-height: calc(100vh - 88px);
-        min-height: calc(100dvh - 88px);
+        min-height: calc(100vh - 88px - env(safe-area-inset-top, 0px));
+        min-height: calc(100dvh - 88px - env(safe-area-inset-top, 0px));
       }
     }
     /* Lift Active Recall bar neatly above the Floating Dock when both are visible */
@@ -977,7 +1007,7 @@
     .reader-content h4,
     .reader-content h5,
     .reader-content h6 {
-      scroll-margin-top: 4.75rem;
+      scroll-margin-top: calc(4.75rem + env(safe-area-inset-top, 0px));
     }
 
     .reader-content h1 {
@@ -7785,7 +7815,8 @@ flowchart TD
           const maxLeft = Math.max(vpOffX + 8, vpOffX + vpW - popupWidth - 8);
           const popupLeft = Math.max(vpOffX + 8, Math.min(maxLeft, rect.left + rect.width / 2 - popupWidth / 2));
           const bottomSafeMargin = document.body.classList.contains('notebook-ribbon-open') ? 92 : (vpW < 1024 ? 76 : 16);
-          const topSafeMargin = vpOffY + 60;
+          const headerRect = document.querySelector('body > header')?.getBoundingClientRect();
+          const topSafeMargin = Math.max(vpOffY + 60, headerRect ? Math.ceil(headerRect.bottom) + 8 : 60);
           const maxTop = Math.max(topSafeMargin, vpOffY + vpH - popupHeight - bottomSafeMargin);
           let popupTop = rect.top - popupHeight - 10;
           if (popupTop < topSafeMargin) {
@@ -9770,11 +9801,14 @@ ${texLines.join('\n')}
       let left = alignRight ? (rect.right - popW) : rect.left;
       left = Math.max(pad, Math.min(vw - popW - pad, left));
 
+      const headerEl = document.querySelector('body > header');
+      const safeTopInset = headerEl ? (parseFloat(getComputedStyle(headerEl).paddingTop) || 0) : 0;
+      const topPad = pad + safeTopInset;
       let top = rect.bottom + 8;
-      if (top + popH > vh - pad && rect.top - popH - 8 >= pad) {
+      if (top + popH > vh - pad && rect.top - popH - 8 >= topPad) {
         top = rect.top - popH - 8;
       } else {
-        top = Math.max(pad, Math.min(vh - popH - pad, top));
+        top = Math.max(topPad, Math.min(vh - popH - pad, top));
       }
       popoverEl.style.left = `${Math.round(left)}px`;
       popoverEl.style.top = `${Math.round(top)}px`;
