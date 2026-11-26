@@ -24,12 +24,12 @@
 
   <!-- KaTeX 0.16.11 + mhchem (Chimie) + copy-tex (deferred: never blocks HTML parsing) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/mhchem.min.js" crossorigin="anonymous"></script>
+  <script defer id="katexCoreScript" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer id="katexMhchemScript" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/mhchem.min.js" crossorigin="anonymous"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" crossorigin="anonymous"></script>
 
   <!-- DOMPurify 3.5.0 (XSS Protection — deferred) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.5.0/dist/purify.min.js" crossorigin="anonymous"></script>
+  <script defer id="dompurifyScript" src="https://cdn.jsdelivr.net/npm/dompurify@3.5.0/dist/purify.min.js" crossorigin="anonymous"></script>
 
   <!-- Lucide Icons 1.79.0 (deferred; Highlight.js, Mermaid, html2canvas & jsPDF lazy-load strictly on-demand!) -->
   <script defer src="https://unpkg.com/lucide@1.79.0/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
@@ -61,6 +61,8 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
       background-color: var(--v2-canvas);
       color: var(--v2-text);
+      min-height: 100vh;
+      min-height: 100dvh;
       overflow-wrap: break-word;
       padding-bottom: env(safe-area-inset-bottom, 0px);
       -webkit-tap-highlight-color: transparent;
@@ -618,6 +620,8 @@
     }
     .ink-encadre {
       display: inline-block;
+      max-width: 100%;
+      box-sizing: border-box;
       border: 2px solid #c92a2a;
       border-radius: 6px;
       padding: 0.04em 0.4em;
@@ -627,6 +631,8 @@
     }
     .ink-encadre-vert {
       display: inline-block;
+      max-width: 100%;
+      box-sizing: border-box;
       border: 2px solid #1b7a34;
       border-radius: 6px;
       padding: 0.04em 0.4em;
@@ -636,6 +642,8 @@
     }
     .ink-encadre-bleu {
       display: inline-block;
+      max-width: 100%;
+      box-sizing: border-box;
       border: 2px solid #1850b8;
       border-radius: 6px;
       padding: 0.04em 0.4em;
@@ -893,9 +901,22 @@
     #workspaceGrid.full-reader #readerCard {
       max-width: 920px;
     }
+    #editorContainer.editor-solo-height {
+      height: calc(100vh - 140px);
+      height: calc(100dvh - 140px);
+    }
     @media (min-width: 1024px) {
+      #editorContainer {
+        height: calc(100vh - 88px);
+        height: calc(100dvh - 88px);
+      }
       body.desk-notebook-mode #editorContainer {
         height: calc(100vh - 154px);
+        height: calc(100dvh - 154px);
+      }
+      #readerCard {
+        min-height: calc(100vh - 88px);
+        min-height: calc(100dvh - 88px);
       }
     }
     /* Lift Active Recall bar neatly above the Floating Dock when both are visible */
@@ -939,6 +960,8 @@
       font-family: var(--font-body);
       font-size: var(--reader-font-size);
       line-height: var(--reader-line-height);
+      min-height: 64vh;
+      min-height: 64dvh;
       transition: background-color 200ms ease, color 200ms ease, box-shadow 220ms ease;
     }
 
@@ -1035,6 +1058,7 @@
       color: #0284c7;
       text-decoration: underline;
       text-underline-offset: 3px;
+      overflow-wrap: anywhere;
     }
     .theme-dark .reader-content a.inktex-link {
       color: #38bdf8;
@@ -1072,6 +1096,8 @@
 
     .inktex-code-wrap {
       margin: 1.1em 0;
+      max-width: 100%;
+      min-width: 0;
       border-radius: 0.75rem;
       overflow: hidden;
       border: 1px solid var(--border-divider);
@@ -1299,17 +1325,21 @@
     .inktex-mermaid-wrap {
       margin: 1.2em 0;
       padding: 0.9rem;
+      max-width: 100%;
+      min-width: 0;
       border-radius: 0.75rem;
       background-color: var(--bg-elevated);
       border: 1px solid var(--border-divider);
       overflow-x: auto;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
     }
     .inktex-mermaid-wrap svg {
       max-width: 100%;
       height: auto;
+      margin-inline: auto;
+      display: block;
     }
 
     /* Active Recall Blur Mode */
@@ -1367,6 +1397,22 @@
       color: var(--text-strong);
       line-height: 1.2 !important;
       box-sizing: content-box;
+      white-space: normal;
+      max-width: 100%;
+    }
+    .reader-content .katex-display .katex {
+      white-space: nowrap;
+    }
+    .reader-content .katex.katex-scroll-x {
+      display: inline-block;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      vertical-align: middle;
+      padding-block: 0.25em;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-x pan-y;
+      overscroll-behavior-x: contain;
     }
 
     .reader-content .katex * {
@@ -1406,6 +1452,8 @@
 
     .math-block {
       margin: 0.75em 0;
+      max-width: 100%;
+      min-width: 0;
     }
 
     /* Split Resizer (Desktop) */
@@ -1433,10 +1481,19 @@
       }
     }
 
-    /* Reader overflow protection & iPhone / Mobile ergonomics */
+    /* Reader overflow protection & iPhone / iPad Safari ergonomics */
     .reader-content {
       min-width: 0;
+      max-width: 100%;
       overflow-wrap: break-word;
+    }
+    .reader-content p,
+    .reader-content li,
+    .reader-content blockquote,
+    .reader-content .inktex-callout,
+    .reader-content .inktex-callout-body {
+      max-width: 100%;
+      min-width: 0;
     }
     .reader-content .katex-display,
     .inktex-table-wrap,
@@ -1444,6 +1501,8 @@
     .inktex-code-wrap pre {
       max-width: 100%;
       -webkit-overflow-scrolling: touch;
+      touch-action: pan-x pan-y;
+      overscroll-behavior-x: contain;
     }
 
     #rawInput {
@@ -1452,10 +1511,11 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
+      touch-action: pan-y;
     }
 
-    @media (max-width: 767px) and (pointer: coarse) {
-      /* Prevent iOS Safari auto-zoom on text inputs without inflating compact dock selects */
+    @media (pointer: coarse) and (hover: none), (max-width: 767px) and (pointer: coarse) {
+      /* Prevent iOS & iPadOS Safari auto-zoom on text inputs without inflating compact dock selects */
       #rawInput,
       #findInput,
       #replaceInput,
@@ -1467,12 +1527,50 @@
       }
     }
 
-    @media (min-width: 640px) and (max-width: 900px) {
+    @media (min-width: 640px) and (max-width: 1100px) {
+      .theme-notebook.reader-card,
+      .theme-notebook.paper-lignes.reader-card {
+        background-image:
+          linear-gradient(90deg, transparent 44px, rgba(239, 68, 68, 0.42) 44px, rgba(239, 68, 68, 0.42) 46px, transparent 46px),
+          repeating-linear-gradient(to bottom, transparent 0px, transparent 33px, rgba(147, 197, 253, 0.45) 33px, rgba(147, 197, 253, 0.45) 34px);
+        padding-left: 3.75rem !important;
+      }
+      .theme-notebook.paper-parchemin.reader-card {
+        background-image:
+          linear-gradient(90deg, transparent 44px, rgba(180, 83, 9, 0.34) 44px, rgba(180, 83, 9, 0.34) 46px, transparent 46px),
+          repeating-linear-gradient(to bottom, transparent 0px, transparent 33px, rgba(180, 145, 95, 0.28) 33px, rgba(180, 145, 95, 0.28) 34px);
+        padding-left: 3.75rem !important;
+      }
+      .theme-notebook.paper-seyes.reader-card {
+        background-image:
+          linear-gradient(90deg, transparent 46px, rgba(239, 68, 68, 0.45) 46px, rgba(239, 68, 68, 0.45) 48px, transparent 48px),
+          repeating-linear-gradient(to right, transparent 0px, transparent 31px, rgba(99, 102, 241, 0.16) 31px, rgba(99, 102, 241, 0.16) 32px),
+          repeating-linear-gradient(to bottom, transparent 0px, transparent 7px, rgba(147, 197, 253, 0.25) 7px, rgba(147, 197, 253, 0.25) 8px),
+          repeating-linear-gradient(to bottom, transparent 0px, transparent 31px, rgba(79, 70, 229, 0.38) 31px, rgba(79, 70, 229, 0.38) 32px);
+        padding-left: 3.85rem !important;
+      }
       .theme-notebook.paper-cornell.reader-card {
         background-image:
           linear-gradient(90deg, transparent 120px, rgba(239, 68, 68, 0.48) 120px, rgba(239, 68, 68, 0.48) 122px, transparent 122px),
           repeating-linear-gradient(to bottom, transparent 0px, transparent 33px, rgba(147, 197, 253, 0.4) 33px, rgba(147, 197, 253, 0.4) 34px);
         padding-left: 8.75rem !important;
+      }
+      .theme-notebook[class*="paper-"].no-red-margin.reader-card,
+      .theme-notebook.no-red-margin.reader-card,
+      .theme-notebook.paper-quadrille.reader-card,
+      .theme-notebook.paper-pointille.reader-card {
+        padding-left: 2.25rem !important;
+      }
+      .theme-notebook.paper-vierge.reader-card {
+        padding-left: 2rem !important;
+      }
+      .theme-notebook.with-spiral .notebook-spiral-holes {
+        left: 9px;
+        width: 20px;
+      }
+      .spiral-hole {
+        width: 13px;
+        height: 13px;
       }
     }
 
@@ -1616,6 +1714,7 @@
         border: none !important;
         max-width: 100% !important;
         width: 100% !important;
+        min-height: auto !important;
       }
       .reader-card.theme-dark {
         --bg-surface: #ffffff !important;
@@ -2188,7 +2287,7 @@
   <main id="workspaceGrid" class="split-layout flex-1 max-w-[1680px] w-full mx-auto grid grid-cols-1 gap-3 px-2.5 sm:px-5 pt-3 sm:pt-5 pb-24 lg:pb-8">
 
     <!-- LEFT PANE: Decluttered Raw Markdown / LaTeX Editor -->
-    <section id="editorContainer" class="no-print split-pane min-w-0 min-h-0 max-w-full flex flex-col bg-[#12141a] border border-white/[0.065] rounded-[18px] shadow-[0_14px_44px_rgba(0,0,0,0.42)] h-[300px] sm:h-[380px] lg:h-[calc(100vh-88px)] lg:sticky lg:top-[68px]">
+    <section id="editorContainer" class="no-print split-pane min-w-0 min-h-0 max-w-full flex flex-col bg-[#12141a] border border-white/[0.065] rounded-[18px] shadow-[0_14px_44px_rgba(0,0,0,0.42)] h-[300px] sm:h-[380px] lg:sticky lg:top-[68px]">
 
       <!-- Minimal Editor Header -->
       <div class="px-3.5 py-2.5 bg-[#12141a] rounded-t-[18px] border-b border-white/[0.06] flex items-center justify-between gap-2">
@@ -2363,7 +2462,7 @@
 
     <!-- RIGHT PANE: Cozy Reading Desk Presentation -->
     <section id="readerContainer" class="split-pane min-w-0 max-w-full flex flex-col items-center lg:px-3">
-      <div id="readerCard" class="reader-card theme-dark paper-lignes w-full max-w-[880px] min-w-0 min-h-[64dvh] lg:min-h-[calc(100vh-88px)] rounded-[20px] border border-white/[0.065] p-5 sm:p-10 md:p-14 flex flex-col justify-start">
+      <div id="readerCard" class="reader-card theme-dark paper-lignes w-full max-w-[880px] min-w-0 rounded-[20px] border border-white/[0.065] p-5 sm:p-7 md:p-8 xl:p-12 flex flex-col justify-start">
 
         <!-- Optional Realistic Spiral Binding Holes -->
         <div class="notebook-spiral-holes" aria-hidden="true">
@@ -2378,7 +2477,7 @@
 
         <!-- Minimal Integrated Handwritten Date & Subject Stamp -->
         <div class="notebook-meta-stamp">
-          <div class="flex-1 min-w-[170px]">
+          <div class="flex-1 min-w-[140px] max-w-full">
             <span>Matière</span>
             <input id="nbSubjectInput" type="text" aria-label="Matière du cahier" value="Cours &amp; Révisions" class="flex-1 min-w-0 sm:flex-none sm:w-52" />
           </div>
@@ -3659,6 +3758,23 @@ flowchart TD
 
     const CUSTOM_SIZE_RE = /\{size:(\d+(?:\.\d+)?)\}([\s\S]*?)\{\/size\}/gi;
     const CUSTOM_TAG_RE = new RegExp(`\\{(${ALL_CUSTOM_TAG_NAMES})\\}([\\s\\S]*?)\\{\\/\\1\\}`, 'gi');
+    const DIRTY_PASTE_CHAR_RE = /[\r\u2028\u2029\u200B\u200C\u200D\uFEFF\u00A0\u202F]/;
+
+    /**
+     * Normalizes iOS / iPadOS Notes, Safari, ChatGPT & Gemini pasted text:
+     * - Converts \r\n, lone \r, and Unicode Line/Paragraph Separators (\u2028, \u2029) to \n
+     * - Strips invisible zero-width characters & BOM (\u200B, \u200C, \u200D, \uFEFF)
+     * - Converts NBSP (\u00A0) & French narrow no-break spaces (\u202F) to standard ASCII spaces
+     */
+    function sanitizePastedText(str) {
+      if (typeof str !== 'string' || !str) return '';
+      if (!DIRTY_PASTE_CHAR_RE.test(str)) return str;
+      return str
+        .replace(/\r\n?/g, '\n')
+        .replace(/[\u2028\u2029]/g, '\n')
+        .replace(/[\u200B\u200C\u200D\uFEFF]/g, '')
+        .replace(/[\u00A0\u202F]/g, ' ');
+    }
 
     function countPlainWords(text) {
       if (!text) return 0;
@@ -3675,7 +3791,7 @@ flowchart TD
         }
         if (inFence) continue;
         const c = text.charCodeAt(i);
-        const isWs = c === 32 || c === 9 || c === 10 || c === 13 || c === 160;
+        const isWs = c === 32 || c === 9 || c === 10 || c === 13 || c === 160 || c === 8239 || c === 8232 || c === 8233;
         if (isWs) {
           inWord = false;
         } else if (!inWord) {
@@ -3687,7 +3803,7 @@ flowchart TD
     }
 
     function cleanInnerMath(mathExpr, extraCmdNamesOrRe = []) {
-      let cleaned = mathExpr.trim().replace(DOUBLED_LATEX_CMD_RE, '$1\\');
+      let cleaned = sanitizePastedText(String(mathExpr ?? '')).trim().replace(DOUBLED_LATEX_CMD_RE, '$1\\');
       if (extraCmdNamesOrRe instanceof RegExp) {
         cleaned = cleaned.replace(extraCmdNamesOrRe, '$1\\');
       } else if (Array.isArray(extraCmdNamesOrRe) && extraCmdNamesOrRe.length > 0) {
@@ -4016,6 +4132,34 @@ flowchart TD
     const KATEX_CACHE_MAX = 1200;
     const hljsCache = new Map();
     const HLJS_CACHE_MAX = 200;
+    let _mhchemVerifiedReady = false;
+    let renderedWithoutKatex = false;
+    let renderedWithoutMhchem = false;
+    let renderedWithoutPurify = false;
+
+    function isMhchemReady() {
+      if (_mhchemVerifiedReady) return true;
+      if (!window.katex || typeof window.katex.renderToString !== 'function') return false;
+      try {
+        const probe = window.katex.renderToString('\\ce{H2O}', { throwOnError: true, strict: false });
+        if (probe && !probe.includes('katex-error')) {
+          _mhchemVerifiedReady = true;
+          return true;
+        }
+      } catch (e) {}
+      return false;
+    }
+
+    function buildSafeFallbackParagraphs(text) {
+      const clean = sanitizePastedText(String(text ?? ''));
+      if (!clean.trim()) return '';
+      return clean
+        .split(/\n{2,}/)
+        .map(block => block.trim())
+        .filter(Boolean)
+        .map(block => `<p>${escapeHtml(block).replace(/\n/g, '<br />')}</p>`)
+        .join('\n');
+    }
 
     function renderMarkdownAndLatex(rawText, options = { updateGlobals: true }) {
       const updateGlobals = options && options.updateGlobals !== false;
@@ -4023,14 +4167,19 @@ flowchart TD
 
       if (updateGlobals) {
         mermaidQueue = localMermaidQueue;
+        renderedWithoutKatex = false;
+        renderedWithoutMhchem = false;
+        renderedWithoutPurify = false;
       }
 
-      if (!rawText || !rawText.trim()) {
+      const safeRaw = sanitizePastedText(String(rawText ?? ''));
+      if (!safeRaw || !safeRaw.trim()) {
         if (updateGlobals) statsCounter.textContent = '0 formules • 0 mots';
         return '';
       }
 
-      let normalized = rawText;
+      try {
+      let normalized = safeRaw;
 
       // Plugin hook: beforeNormalize
       for (const ext of registeredExternalPlugins) {
@@ -4173,11 +4322,17 @@ flowchart TD
         const id = `@@${T_KATEX}-${mathStash.length}@@`;
         let restoredExpr = expr.replace(escDollarRe, '\\$');
         let cleaned = cleanInnerMath(restoredExpr, extraMacroRe);
-        if (!useMhchem && /\\(?:ce|pu)\{/.test(cleaned)) {
+        const hasChemCmd = /\\(?:ce|pu)\{/.test(cleaned);
+        if (!useMhchem && hasChemCmd) {
           cleaned = replaceBalancedCmd(cleaned, 'ce|pu', (_, __, inner) => `\\text{${inner}}`);
         }
         let rendered = escapeHtml(restoredExpr);
-        if (window.katex) {
+        const mhchemAvailable = !useMhchem || !hasChemCmd || isMhchemReady();
+        if (!window.katex) {
+          if (updateGlobals) renderedWithoutKatex = true;
+        } else if (!mhchemAvailable) {
+          if (updateGlobals) renderedWithoutMhchem = true;
+        } else {
           const cacheKey = `${displayMode ? 'D' : 'I'}|${useMhchem ? 'C1' : 'C0'}|${macroSig}|${cleaned}`;
           if (katexCache.has(cacheKey)) {
             rendered = katexCache.get(cacheKey);
@@ -4242,7 +4397,7 @@ flowchart TD
 
       // Word & Read-Time Stats (zero-allocation word count)
       if (updateGlobals) {
-        const plainWords = countPlainWords(rawText);
+        const plainWords = countPlainWords(safeRaw);
         const readMins = Math.max(1, Math.ceil(plainWords / 180));
         statsCounter.textContent = `${mathStash.length} formule${mathStash.length !== 1 ? 's' : ''} • ${plainWords} mots (~${readMins} min)`;
       }
@@ -4449,7 +4604,7 @@ flowchart TD
               return 'left';
             });
             i += 2;
-            let tableHtml = `<div class="inktex-table-wrap"><table class="inktex-table"><thead><tr>`;
+            let tableHtml = `<div class="inktex-table-wrap" tabindex="0" role="region" aria-label="Tableau"><table class="inktex-table"><thead><tr>`;
             headers.forEach((h, cIdx) => {
               const al = aligns[cIdx] || 'left';
               tableHtml += `<th style="text-align:${al};">${formatInlineMarkdown(h)}</th>`;
@@ -4603,15 +4758,16 @@ flowchart TD
         return blockHtml.join('\n');
       }
 
-      let finalHtml = parseBlockLines(normalizeTableLines(normalized.split(/\r?\n/)), 0);
+      let finalHtml = parseBlockLines(normalizeTableLines(normalized.split('\n')), 0);
 
       // Sanitize Markdown HTML via DOMPurify (or offline strict DOM fallback) BEFORE restoring KaTeX tokens
       if (window.DOMPurify) {
         finalHtml = window.DOMPurify.sanitize(finalHtml, {
           USE_PROFILES: { html: true },
-          ADD_ATTR: ['style', 'class', 'data-pt-size', 'data-task-idx', 'data-mermaid-idx', 'data-lang', 'target', 'rel', 'type', 'checked', 'start', 'src', 'alt', 'loading', 'referrerpolicy']
+          ADD_ATTR: ['style', 'class', 'tabindex', 'role', 'aria-label', 'data-pt-size', 'data-task-idx', 'data-mermaid-idx', 'data-lang', 'target', 'rel', 'type', 'checked', 'start', 'src', 'alt', 'loading', 'referrerpolicy']
         });
       } else {
+        if (updateGlobals) renderedWithoutPurify = true;
         finalHtml = sanitizeHtmlFallback(finalHtml);
       }
 
@@ -4619,6 +4775,10 @@ flowchart TD
       finalHtml = finalHtml.replace(katexRestoreRe, (_, idx) => mathStash[Number(idx)] || '');
 
       return finalHtml;
+      } catch (renderErr) {
+        console.error('InkTeX renderMarkdownAndLatex error:', renderErr);
+        return buildSafeFallbackParagraphs(safeRaw);
+      }
     }
 
     function sanitizeHtmlFallback(html) {
@@ -4728,7 +4888,7 @@ flowchart TD
       if (!cb) return;
       const targetIdx = parseInt(cb.getAttribute('data-task-idx'), 10);
       if (isNaN(targetIdx)) return;
-      const lines = rawInput.value.split(/\r?\n/);
+      const lines = rawInput.value.split(/\r\n?|\n|\u2028|\u2029/);
       let seen = 0;
       let inFence = false;
       for (let li = 0; li < lines.length; li++) {
@@ -4790,12 +4950,54 @@ flowchart TD
       }).join('');
     }
 
+    let hasDeferredMermaidRender = false;
+    function isReaderVisible() {
+      if (!readerContainer || readerContainer.classList.contains('hidden')) return false;
+      const rect = readerContainer.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    }
+
+    function constrainOverflowingInlineMath() {
+      if (!isReaderVisible() || !readerOutput) return;
+      const inlineMaths = readerOutput.querySelectorAll('.katex');
+      if (inlineMaths.length === 0) return;
+      for (const el of inlineMaths) {
+        if (!el.closest('.katex-display, .inktex-table-wrap')) {
+          el.classList.remove('katex-scroll-x');
+        }
+      }
+      const readerWidth = readerOutput.clientWidth;
+      if (!readerWidth) return;
+      for (const el of inlineMaths) {
+        if (el.closest('.katex-display, .inktex-table-wrap')) continue;
+        const parentBox = el.closest('li, blockquote, .inktex-callout-body, p, h1, h2, h3, h4, h5, h6') || readerOutput;
+        const avail = Math.max(80, Math.min(readerWidth, parentBox.clientWidth || readerWidth) - 2);
+        let widestBase = 0;
+        const bases = el.querySelectorAll(':scope > .katex-html > .base');
+        for (const b of bases) {
+          const w = b.getBoundingClientRect().width;
+          if (w > widestBase) widestBase = w;
+        }
+        if (widestBase > avail || el.scrollWidth > avail + 2) {
+          el.classList.add('katex-scroll-x');
+        }
+      }
+    }
+
     async function renderPendingMermaidItems(pendingWrappers, isNotebook, isDark) {
       if (!pendingWrappers || pendingWrappers.length === 0) return;
+      if (!isReaderVisible()) {
+        hasDeferredMermaidRender = true;
+        return;
+      }
       if (!window.mermaid) {
         try { await ensureMermaid(); } catch (e) { return; }
       }
       if (!window.mermaid) return;
+      if (!isReaderVisible()) {
+        hasDeferredMermaidRender = true;
+        return;
+      }
       try {
         window.mermaid.initialize({
           startOnLoad: false,
@@ -4807,12 +5009,29 @@ flowchart TD
         for (let idxItem = 0; idxItem < pendingWrappers.length; idxItem++) {
           const item = pendingWrappers[idxItem];
           if (!item.wrap.isConnected) continue;
+          if (item.wrap.getAttribute('data-mermaid-rendered-key') === item.cacheKey && item.wrap.querySelector('svg')) continue;
+          if (!isReaderVisible()) {
+            hasDeferredMermaidRender = true;
+            return;
+          }
           if (idxItem > 0) await yieldToMain();
+          if (mermaidSvgCache.has(item.cacheKey)) {
+            item.wrap.innerHTML = mermaidSvgCache.get(item.cacheKey);
+            item.wrap.setAttribute('data-mermaid-rendered-key', item.cacheKey);
+            item.wrap.removeAttribute('data-mermaid-pending');
+            continue;
+          }
           const renderId = `inktex-mmd-${Date.now()}-${item.idx}`;
           try {
             const { svg } = await window.mermaid.render(renderId, item.diagramSrc);
+            if (!item.wrap.isConnected) continue;
+            if (!isReaderVisible()) {
+              hasDeferredMermaidRender = true;
+              return;
+            }
             item.wrap.innerHTML = svg;
             const svgEl = item.wrap.querySelector('svg');
+            let measuredOk = false;
             if (svgEl) {
               try {
                 const bbox = svgEl.getBBox();
@@ -4828,14 +5047,30 @@ flowchart TD
                   svgEl.style.maxWidth = '100%';
                   svgEl.style.height = 'auto';
                   svgEl.style.overflow = 'visible';
+                  measuredOk = true;
                 }
-              } catch (bboxErr) {}
+              } catch (bboxErr) {
+                const vb = (svgEl.getAttribute('viewBox') || '').trim().split(/\s+/).map(Number);
+                if (vb.length === 4 && vb[2] > 0 && vb[3] > 0) {
+                  svgEl.style.maxWidth = '100%';
+                  svgEl.style.height = 'auto';
+                  measuredOk = true;
+                }
+              }
             }
-            if (mermaidSvgCache.size >= MERMAID_CACHE_MAX) {
-              mermaidSvgCache.delete(mermaidSvgCache.keys().next().value);
+            if (measuredOk) {
+              if (mermaidSvgCache.size >= MERMAID_CACHE_MAX) {
+                mermaidSvgCache.delete(mermaidSvgCache.keys().next().value);
+              }
+              mermaidSvgCache.set(item.cacheKey, item.wrap.innerHTML);
+              item.wrap.setAttribute('data-mermaid-rendered-key', item.cacheKey);
+              item.wrap.removeAttribute('data-mermaid-pending');
+            } else {
+              // Avoid caching broken 0x0 SVG geometry; retry when preview is visible
+              item.wrap.removeAttribute('data-mermaid-rendered-key');
+              item.wrap.setAttribute('data-mermaid-pending', 'true');
+              hasDeferredMermaidRender = true;
             }
-            mermaidSvgCache.set(item.cacheKey, item.wrap.innerHTML);
-            item.wrap.setAttribute('data-mermaid-rendered-key', item.cacheKey);
           } catch (err) {
             item.wrap.innerHTML = `<div class="text-xs text-rose-400 font-mono p-2">Erreur de syntaxe Mermaid : ${escapeHtml(err.message || String(err))}</div>`;
           }
@@ -4846,11 +5081,29 @@ flowchart TD
     }
 
     async function flushPendingMermaid() {
-      if (pendingMermaidTask) {
+      if (pendingMermaidTask && isReaderVisible()) {
         const task = pendingMermaidTask;
         clearTimeout(mermaidRenderDebounce);
         pendingMermaidTask = null;
         await renderPendingMermaidItems(task.pendingWrappers, task.isNotebook, task.isDark);
+      }
+    }
+
+    async function flushHiddenPreviewDeferredWork() {
+      if (!isReaderVisible()) return;
+      constrainOverflowingInlineMath();
+      const needsMermaidFlush = hasDeferredMermaidRender ||
+        !!pendingMermaidTask ||
+        Array.from(readerOutput.querySelectorAll('.inktex-mermaid-wrap[data-mermaid-idx]')).some(wrap => {
+          const svg = wrap.querySelector('svg');
+          if (!svg) return true;
+          const r = svg.getBoundingClientRect();
+          return r.width <= 0 || r.height <= 0;
+        });
+      if (needsMermaidFlush && mermaidQueue.length > 0 && window.InkTeX.isPluginEnabled('mermaid')) {
+        hasDeferredMermaidRender = false;
+        await runPostRenderPlugins();
+        await flushPendingMermaid();
       }
     }
 
@@ -4906,25 +5159,32 @@ flowchart TD
       // 3. Outline Drawer (lazy — skipped while drawer is closed, rebuilt immediately on open)
       renderOutlineDrawer(false);
 
-      // 4. Mermaid v11 Diagrams (lazy-loaded strictly on-demand when mermaid blocks exist, cached for flicker-free typing)
+      // 3b. Constrain ultra-wide indivisible inline KaTeX atoms when preview is visible
+      constrainOverflowingInlineMath();
+
+      // 4. Mermaid v11 Diagrams (lazy-loaded strictly on-demand; deferred while preview is hidden so getBBox never caches 0x0)
       if (mermaidQueue.length > 0 && window.InkTeX.isPluginEnabled('mermaid')) {
         const isNotebook = currentTheme === 'theme-notebook';
         const isDark = currentTheme === 'theme-dark';
         const mmdThemeKey = isNotebook ? 'nb' : (isDark ? 'dark' : 'light');
         const wrappers = readerOutput.querySelectorAll('.inktex-mermaid-wrap[data-mermaid-idx]');
         const pendingWrappers = [];
+        const visibleNow = isReaderVisible();
 
         wrappers.forEach(wrap => {
           const idx = Number(wrap.getAttribute('data-mermaid-idx'));
           const diagramSrc = mermaidQueue[idx];
           if (!diagramSrc) return;
           const cacheKey = `${mmdThemeKey}|${diagramSrc}`;
-          if (wrap.getAttribute('data-mermaid-rendered-key') === cacheKey && wrap.querySelector('svg')) {
+          const existingSvg = wrap.querySelector('svg');
+          const svgVisibleOk = existingSvg && (!visibleNow || existingSvg.getBoundingClientRect().width > 0);
+          if (wrap.getAttribute('data-mermaid-rendered-key') === cacheKey && svgVisibleOk) {
             return;
           }
           if (mermaidSvgCache.has(cacheKey)) {
             wrap.innerHTML = mermaidSvgCache.get(cacheKey);
             wrap.setAttribute('data-mermaid-rendered-key', cacheKey);
+            wrap.removeAttribute('data-mermaid-pending');
           } else {
             pendingWrappers.push({ wrap, idx, diagramSrc, cacheKey });
           }
@@ -4932,21 +5192,32 @@ flowchart TD
 
         if (pendingWrappers.length > 0) {
           clearTimeout(mermaidRenderDebounce);
-          pendingMermaidTask = { pendingWrappers, isNotebook, isDark };
-          mermaidRenderDebounce = setTimeout(async () => {
+          if (!visibleNow) {
             pendingMermaidTask = null;
-            if (!window.mermaid) {
-              try { await ensureMermaid(); } catch (e) {
-                pendingWrappers.forEach(item => {
-                  if (item.wrap.isConnected) {
-                    item.wrap.innerHTML = `<pre class="w-full text-left text-xs font-mono opacity-80 whitespace-pre-wrap p-2">${escapeHtml(item.diagramSrc)}</pre>`;
-                  }
-                });
+            hasDeferredMermaidRender = true;
+            pendingWrappers.forEach(item => item.wrap.setAttribute('data-mermaid-pending', 'true'));
+          } else {
+            hasDeferredMermaidRender = false;
+            pendingMermaidTask = { pendingWrappers, isNotebook, isDark };
+            mermaidRenderDebounce = setTimeout(async () => {
+              pendingMermaidTask = null;
+              if (!isReaderVisible()) {
+                hasDeferredMermaidRender = true;
                 return;
               }
-            }
-            await renderPendingMermaidItems(pendingWrappers, isNotebook, isDark);
-          }, 120);
+              if (!window.mermaid) {
+                try { await ensureMermaid(); } catch (e) {
+                  pendingWrappers.forEach(item => {
+                    if (item.wrap.isConnected) {
+                      item.wrap.innerHTML = `<pre class="w-full text-left text-xs font-mono opacity-80 whitespace-pre-wrap p-2">${escapeHtml(item.diagramSrc)}</pre>`;
+                    }
+                  });
+                  return;
+                }
+              }
+              await renderPendingMermaidItems(pendingWrappers, isNotebook, isDark);
+            }, 120);
+          }
         }
       }
 
@@ -4960,43 +5231,53 @@ flowchart TD
 
     const renderedBlockSourceMap = new WeakMap();
     function patchReaderOutput(nextHtml, forceFullReplace = false) {
-      const tpl = document.createElement('template');
-      tpl.innerHTML = nextHtml;
-      const incoming = Array.from(tpl.content.childNodes);
+      try {
+        const tpl = document.createElement('template');
+        tpl.innerHTML = nextHtml;
+        const incoming = Array.from(tpl.content.childNodes);
 
-      if (forceFullReplace || readerOutput.childNodes.length === 0) {
-        readerOutput.textContent = '';
-        const frag = document.createDocumentFragment();
-        for (const node of incoming) {
-          const sig = node.nodeType === 1 ? node.outerHTML : (node.textContent || '');
-          renderedBlockSourceMap.set(node, sig);
-          frag.appendChild(node);
+        if (forceFullReplace || readerOutput.childNodes.length === 0) {
+          readerOutput.textContent = '';
+          const frag = document.createDocumentFragment();
+          for (const node of incoming) {
+            const sig = node.nodeType === 1 ? node.outerHTML : (node.textContent || '');
+            renderedBlockSourceMap.set(node, sig);
+            frag.appendChild(node);
+          }
+          readerOutput.appendChild(frag);
+          return;
         }
-        readerOutput.appendChild(frag);
-        return;
-      }
 
-      const existing = Array.from(readerOutput.childNodes);
-      const maxLen = Math.max(existing.length, incoming.length);
-      for (let i = 0; i < maxLen; i++) {
-        const oldNode = existing[i];
-        const newNode = incoming[i];
-        if (!newNode) {
-          if (oldNode && oldNode.parentNode === readerOutput) readerOutput.removeChild(oldNode);
-          continue;
-        }
-        const nextSig = newNode.nodeType === 1 ? newNode.outerHTML : (newNode.textContent || '');
-        if (!oldNode) {
+        const existing = Array.from(readerOutput.childNodes);
+        const maxLen = Math.max(existing.length, incoming.length);
+        for (let i = 0; i < maxLen; i++) {
+          const oldNode = existing[i];
+          const newNode = incoming[i];
+          if (!newNode) {
+            if (oldNode && oldNode.parentNode === readerOutput) readerOutput.removeChild(oldNode);
+            continue;
+          }
+          const nextSig = newNode.nodeType === 1 ? newNode.outerHTML : (newNode.textContent || '');
+          if (!oldNode) {
+            renderedBlockSourceMap.set(newNode, nextSig);
+            readerOutput.appendChild(newNode);
+            continue;
+          }
+          const prevSig = renderedBlockSourceMap.get(oldNode);
+          if (prevSig === nextSig && oldNode.nodeType === newNode.nodeType) {
+            continue; // Keep untouched block mounted (preserves Active Recall state, scroll stability, SVGs & focus)
+          }
           renderedBlockSourceMap.set(newNode, nextSig);
-          readerOutput.appendChild(newNode);
-          continue;
+          readerOutput.replaceChild(newNode, oldNode);
         }
-        const prevSig = renderedBlockSourceMap.get(oldNode);
-        if (prevSig === nextSig && oldNode.nodeType === newNode.nodeType) {
-          continue; // Keep untouched block mounted (preserves Active Recall state, scroll stability, SVGs & focus)
+      } catch (patchErr) {
+        console.error('InkTeX patchReaderOutput error:', patchErr);
+        try {
+          readerOutput.innerHTML = nextHtml;
+        } catch (fallbackErr) {
+          console.error('InkTeX fallback innerHTML error:', fallbackErr);
+          readerOutput.textContent = sanitizePastedText(rawInput?.value || '');
         }
-        renderedBlockSourceMap.set(newNode, nextSig);
-        readerOutput.replaceChild(newNode, oldNode);
       }
     }
 
@@ -5006,6 +5287,7 @@ flowchart TD
     let lastRenderThemeSig = null;
     function updateReader(recordHistory = true, immediateSave = !recordHistory) {
       clearTimeout(readerInputDebounce);
+      readerInputDebounce = null;
       const nextHtml = renderMarkdownAndLatex(rawInput.value);
       const themeSig = `${currentTheme}|${window.InkTeX.isPluginEnabled('code-highlight') ? 1 : 0}`;
       const stateSig = `${themeSig}|${activeRecallMode ? 1 : 0}`;
@@ -5015,7 +5297,7 @@ flowchart TD
         lastRenderStateSig = stateSig;
         lastRenderThemeSig = themeSig;
         patchReaderOutput(nextHtml, forceFull);
-        runPostRenderPlugins();
+        runPostRenderPlugins().catch(err => console.error('InkTeX postRender error:', err));
       }
       if (immediateSave) {
         clearTimeout(storageSaveDebounce);
@@ -5075,6 +5357,37 @@ flowchart TD
       }, delay);
     });
 
+    // Instant iOS / iPadOS Paste Sanitization & Next-Tick Render
+    rawInput.addEventListener('paste', () => {
+      clearTimeout(historyDebounce);
+      pushHistoryState();
+      resetSavedSelectionState();
+      clearTimeout(readerInputDebounce);
+      readerInputDebounce = null;
+      setTimeout(() => {
+        const val = rawInput.value;
+        if (DIRTY_PASTE_CHAR_RE.test(val)) {
+          const prevScroll = rawInput.scrollTop;
+          const selStart = rawInput.selectionStart || 0;
+          const selEnd = rawInput.selectionEnd || selStart;
+          const cleanStart = sanitizePastedText(val.slice(0, selStart)).length;
+          const cleanEnd = sanitizePastedText(val.slice(0, selEnd)).length;
+          rawInput.value = sanitizePastedText(val);
+          if (document.activeElement === rawInput && typeof rawInput.setSelectionRange === 'function') {
+            rawInput.setSelectionRange(cleanStart, cleanEnd);
+          }
+          rawInput.scrollTop = prevScroll;
+        }
+        updateCursorLineCol();
+        clearTimeout(readerInputDebounce);
+        readerInputDebounce = null;
+        updateReader(true, false);
+        if (currentTheme === 'theme-notebook' && typeof scheduleDockActiveSync === 'function') {
+          scheduleDockActiveSync();
+        }
+      }, 0);
+    });
+
     // Tab indentation in textarea (undoable via native Ctrl+Z)
     rawInput.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
@@ -5116,7 +5429,7 @@ flowchart TD
     function loadImportedFile(file) {
       const reader = new FileReader();
       reader.onload = () => {
-        const importedText = String(reader.result || '');
+        const importedText = sanitizePastedText(String(reader.result || ''));
         replaceEditorRange(0, rawInput.value.length, importedText, 0, 0, false);
         resetSavedSelectionState();
         if (exportFilename) {
@@ -5435,9 +5748,10 @@ flowchart TD
       }
 
       const btnToggleLayoutEl = document.getElementById('btnToggleLayout');
+      const wasReaderHidden = readerContainer.classList.contains('hidden');
       if (normalizedView === 'reader') {
         editorContainer.classList.add('hidden');
-        editorContainer.classList.remove('h-[calc(100dvh-140px)]', 'min-h-[280px]');
+        editorContainer.classList.remove('editor-solo-height', 'min-h-[280px]');
         editorContainer.classList.add('h-[300px]', 'sm:h-[380px]');
         if (splitResizer) splitResizer.classList.add('lg:hidden');
         readerContainer.classList.remove('hidden');
@@ -5446,14 +5760,14 @@ flowchart TD
         btnToggleLayoutEl?.setAttribute('aria-pressed', 'true');
       } else if (normalizedView === 'editor') {
         editorContainer.classList.remove('hidden', 'h-[300px]', 'sm:h-[380px]');
-        editorContainer.classList.add('h-[calc(100dvh-140px)]', 'min-h-[280px]');
+        editorContainer.classList.add('editor-solo-height', 'min-h-[280px]');
         if (splitResizer) splitResizer.classList.remove('lg:hidden');
         readerContainer.classList.add('hidden');
         if (layoutBtnText) layoutBtnText.textContent = 'Plein écran';
         btnToggleLayoutEl?.classList.remove('v2-btn-active');
         btnToggleLayoutEl?.setAttribute('aria-pressed', 'false');
       } else {
-        editorContainer.classList.remove('hidden', 'h-[calc(100dvh-140px)]', 'min-h-[280px]');
+        editorContainer.classList.remove('hidden', 'editor-solo-height', 'min-h-[280px]');
         editorContainer.classList.add('h-[300px]', 'sm:h-[380px]');
         if (splitResizer) splitResizer.classList.remove('lg:hidden');
         readerContainer.classList.remove('hidden');
@@ -5469,8 +5783,22 @@ flowchart TD
           ? 'mob-view-btn v2-seg-btn v2-seg-active py-2 px-3 rounded-xl text-xs font-medium transition cursor-pointer truncate'
           : 'mob-view-btn v2-seg-btn py-2 px-3 rounded-xl text-xs font-medium text-[#8b91a0] hover:text-[#e6e8ee] transition cursor-pointer truncate';
       });
+
+      if (normalizedView !== 'editor') {
+        if (readerInputDebounce) {
+          updateReader(true, false);
+        }
+        if (wasReaderHidden || hasDeferredMermaidRender || pendingMermaidTask) {
+          requestAnimationFrame(() => {
+            flushHiddenPreviewDeferredWork().catch(err => console.error('InkTeX reveal flush error:', err));
+          });
+        } else {
+          requestAnimationFrame(() => constrainOverflowingInlineMath());
+        }
+      }
     }
 
+    let resizeMathDebounce = null;
     window.addEventListener('resize', () => {
       if (window.innerWidth >= 1024 && currentWorkspaceView === 'editor') {
         setWorkspaceView('split');
@@ -5481,6 +5809,10 @@ flowchart TD
       if (typeof closeV2Popovers === 'function') {
         closeV2Popovers();
       }
+      clearTimeout(resizeMathDebounce);
+      resizeMathDebounce = setTimeout(() => {
+        constrainOverflowingInlineMath();
+      }, 120);
     });
 
     document.getElementById('btnToggleLayout').addEventListener('click', () => {
@@ -6196,7 +6528,7 @@ flowchart TD
         }
         const searchSnippet = savedSelectionState.previewText || savedSelectionState.lastBlockText;
         if (searchSnippet) {
-          const lines = rawInput.value.split(/\r?\n/);
+          const lines = rawInput.value.split(/\r\n?|\n|\u2028|\u2029/);
           const probe = searchSnippet.slice(0, Math.min(28, searchSnippet.length)).trim();
           const stripSyntax = (s) => s
             .replace(/^\s*(?:[-*•]|\\item|\d+\.|#{1,6}|>\s*)\s+/, '')
@@ -6402,13 +6734,14 @@ flowchart TD
     document.getElementById('btnPasteClipboard').addEventListener('click', async () => {
       try {
         if (navigator.clipboard?.readText) {
-          const text = await navigator.clipboard.readText();
+          const rawClipboard = await navigator.clipboard.readText();
+          const text = sanitizePastedText(rawClipboard);
           if (text) {
             const trimmedCurrent = rawInput.value.trim();
             const shouldReplaceAll = !trimmedCurrent || trimmedCurrent === DEFAULT_SHOWCASE_TEXT.trim();
+            resetSavedSelectionState();
             if (shouldReplaceAll) {
               replaceEditorRange(0, rawInput.value.length, text, text.length, text.length, false);
-              resetSavedSelectionState();
               updateReader(false);
               pushHistoryState();
               showToast('Texte collé (Ctrl+Z pour annuler)');
@@ -7019,7 +7352,6 @@ flowchart TD
       } else if (baseFontSelect) {
         await ensureFontLoaded(baseFontSelect.value);
       }
-      await flushPendingMermaid();
       if (document.fonts && document.fonts.ready) {
         try { await document.fonts.ready; } catch (e) {}
       }
@@ -7083,6 +7415,9 @@ flowchart TD
       if (wasReaderHidden || targetWidthPx > 0 || !includeHeader || forPdf || hadNotebookSpacing) {
         await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       }
+      // Flush pending or previously hidden Mermaid diagrams now that readerContainer has real layout geometry
+      await flushHiddenPreviewDeferredWork();
+      await flushPendingMermaid();
 
       const bgColor = !includeBg
         ? '#ffffff'
@@ -7697,7 +8032,7 @@ ${hasCodeBlocks ? '  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/a
 
     // 6. Clean Markdown Export (.md)
     document.getElementById('btnExportMd').addEventListener('click', () => {
-      let mdContent = normalizeDoubleEscapedDelimiters(rawInput.value);
+      let mdContent = normalizeDoubleEscapedDelimiters(sanitizePastedText(rawInput.value));
 
       if (exportCleanTags && exportCleanTags.checked) {
         const stripRegex = new RegExp(`\\{(?:${ALL_CUSTOM_TAG_NAMES}|size:\\d+(?:\\.\\d+)?)\\}([\\s\\S]*?)\\{\\/(?:${ALL_CUSTOM_TAG_NAMES}|size)\\}`, 'gi');
@@ -7705,7 +8040,7 @@ ${hasCodeBlocks ? '  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/a
         do { prev = mdContent; mdContent = mdContent.replace(stripRegex, '$1'); } while (mdContent !== prev);
         mdContent = mdContent.replace(/^\{align:(left|center|right)\}\s*/gim, '');
       }
-      mdContent = normalizeTableLines(mdContent.split(/\r?\n/)).join('\n');
+      mdContent = normalizeTableLines(mdContent.split('\n')).join('\n');
       triggerBlobDownload(new Blob([mdContent], { type: 'text/markdown;charset=utf-8' }), getSafeExportFilename('md'));
       showToast('Fichier Markdown (.md) téléchargé !');
     });
@@ -7713,9 +8048,9 @@ ${hasCodeBlocks ? '  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/a
     // 7. Compilable LaTeX Export (.tex) with math-safe escaping, mhchem, hyperref, tables, callouts, checklists & code support
     function convertMarkdownToTex(rawSrc, customMacrosMap = {}) {
       const extraCmdNames = Object.keys(customMacrosMap).map(k => k.replace(/^\\/, ''));
-      const src = normalizeDoubleEscapedDelimiters(rawSrc);
+      const src = normalizeDoubleEscapedDelimiters(sanitizePastedText(rawSrc));
 
-      const lines = normalizeTableLines(src.split(/\r?\n/));
+      const lines = normalizeTableLines(src.split('\n'));
       const texLines = [];
       let activeListEnv = null; // 'itemize' | 'enumerate'
       let inDisplayMath = false;
@@ -8087,8 +8422,8 @@ ${texLines.join('\n')}
 
     function positionFixedPopover(triggerEl, popoverEl, alignRight = false) {
       if (!triggerEl || !popoverEl) return;
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
+      const vw = window.visualViewport?.width || window.innerWidth;
+      const vh = window.visualViewport?.height || window.innerHeight;
       const pad = 12;
       const rect = triggerEl.getBoundingClientRect();
       // Reset mobile Tailwind inset helpers before measuring
@@ -8292,11 +8627,27 @@ ${texLines.join('\n')}
       badgeObserver.observe(document.body, { childList: true, subtree: false });
     });
 
-    // Retry deferred Lucide icons once assets finish loading
+    // Re-render cleanly if an early paste or initial paint ran before deferred KaTeX / mhchem / DOMPurify finished loading
+    function retryRenderAfterDeferredLibs() {
+      const katexNowReady = renderedWithoutKatex && !!window.katex;
+      const mhchemNowReady = renderedWithoutMhchem && isMhchemReady();
+      const purifyNowReady = renderedWithoutPurify && !!window.DOMPurify;
+      if (katexNowReady || mhchemNowReady || purifyNowReady) {
+        lastRenderedHtml = null;
+        updateReader(false, false);
+      }
+    }
+
+    ['katexCoreScript', 'katexMhchemScript', 'dompurifyScript'].forEach((id) => {
+      document.getElementById(id)?.addEventListener('load', retryRenderAfterDeferredLibs);
+    });
+
+    // Retry deferred Lucide icons and KaTeX/mhchem/DOMPurify once all assets finish loading
     window.addEventListener('load', () => {
       if (window.lucide && document.querySelector('i[data-lucide]')) {
         lucide.createIcons();
       }
+      retryRenderAfterDeferredLibs();
     });
   </script>
 </body>
