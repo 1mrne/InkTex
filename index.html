@@ -97,6 +97,11 @@
     }
     #statusToast {
       top: calc(62px + env(safe-area-inset-top, 0px));
+      pointer-events: none;
+    }
+    button,
+    label.v2-icon-btn {
+      touch-action: manipulation;
     }
     @media (min-width: 1024px) {
       #editorContainer {
@@ -973,6 +978,18 @@
       }
       body.notebook-ribbon-open #activeRecallBar {
         bottom: calc(8.4rem + env(safe-area-inset-bottom, 0px)) !important;
+      }
+      #statusToast {
+        top: auto;
+        right: auto;
+        left: 50%;
+        bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+        transform: translateX(-50%);
+        width: max-content;
+        max-width: calc(100vw - 1.5rem);
+      }
+      body.notebook-ribbon-open #statusToast {
+        bottom: calc(8.4rem + env(safe-area-inset-bottom, 0px));
       }
     }
 
@@ -2384,8 +2401,8 @@
     </div>
   </div>
 
-  <!-- Global Non-blocking Toast (Top-right below 52px bar so it never collides with Floating Dock, Pen FAB, or Mobile Bar) -->
-  <div id="statusToast" role="status" aria-live="polite" class="no-print hidden fixed top-[62px] right-4 px-3.5 py-2 rounded-xl bg-[#161923]/95 backdrop-blur-xl text-[#e6e8ee] text-xs font-medium shadow-2xl border border-white/[0.1] flex items-center gap-2 z-[85] max-w-[calc(100vw-2rem)]">
+  <!-- Global Non-blocking Toast (Bottom-center above mobile bar on < 1024px so it never covers editor/header buttons; top-right on desktop) -->
+  <div id="statusToast" role="status" aria-live="polite" class="no-print pointer-events-none hidden fixed top-[62px] right-4 px-3.5 py-2 rounded-xl bg-[#161923]/95 backdrop-blur-xl text-[#e6e8ee] text-xs font-medium shadow-2xl border border-white/[0.1] flex items-center gap-2 z-[85] max-w-[calc(100vw-2rem)]">
     <span class="w-2 h-2 rounded-full bg-sky-400 flex-shrink-0" aria-hidden="true"></span>
     <span id="statusToastText">Action effectuée</span>
   </div>
