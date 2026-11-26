@@ -5458,7 +5458,15 @@ flowchart TD
             const block = codeStash[Number(codeMatch[1])];
             if (block.lang === 'mermaid' && window.InkTeX.isPluginEnabled('mermaid')) {
               const mIdx = localMermaidQueue.length;
-              localMermaidQueue.push(block.code);
+              // Normalize iOS Smart Punctuation dashes inside Mermaid arrows (e.g. `—>` -> `-->`) while preserving prose labels
+              const normalizedMermaid = block.code
+                .replace(/<[\u2013\u2014]>/g, '<-->')
+                .replace(/\.[\u2013\u2014]>/g, '.->')
+                .replace(/[\u2013\u2014]>/g, '-->')
+                .replace(/[\u2013\u2014]-/g, '---')
+                .replace(/[\u2013\u2014]\|/g, '--|')
+                .replace(/\|[\u2013\u2014]/g, '|--');
+              localMermaidQueue.push(normalizedMermaid);
               blockHtml.push(`<div class="inktex-mermaid-wrap" data-mermaid-idx="${mIdx}"><span class="text-xs opacity-60">Rendu du schéma Mermaid...</span></div>`);
             } else {
               const langLabel = block.lang ? escapeHtml(block.lang) : 'code';
@@ -5884,16 +5892,18 @@ flowchart TD
       });
     }
 
+    let mermaidRenderEpoch = 0;
     async function renderPendingMermaidItems(pendingWrappers, isNotebook, isDark) {
       if (!pendingWrappers || pendingWrappers.length === 0) return;
       if (!isReaderVisible()) {
         hasDeferredMermaidRender = true;
         return;
       }
+      const epoch = ++mermaidRenderEpoch;
       if (!window.mermaid) {
         try { await ensureMermaid(); } catch (e) { return; }
       }
-      if (!window.mermaid) return;
+      if (!window.mermaid || epoch !== mermaidRenderEpoch) return;
       if (!isReaderVisible()) {
         hasDeferredMermaidRender = true;
         return;
@@ -5907,6 +5917,7 @@ flowchart TD
           theme: isNotebook ? 'neutral' : (isDark ? 'dark' : 'default')
         });
         for (let idxItem = 0; idxItem < pendingWrappers.length; idxItem++) {
+          if (epoch !== mermaidRenderEpoch) return;
           const item = pendingWrappers[idxItem];
           if (!item.wrap.isConnected) continue;
           if (item.wrap.getAttribute('data-mermaid-rendered-key') === item.cacheKey && item.wrap.querySelector('svg')) continue;
@@ -5915,6 +5926,7 @@ flowchart TD
             return;
           }
           if (idxItem > 0) await yieldToMain();
+          if (epoch !== mermaidRenderEpoch) return;
           if (mermaidSvgCache.has(item.cacheKey)) {
             item.wrap.innerHTML = mermaidSvgCache.get(item.cacheKey);
             item.wrap.setAttribute('data-mermaid-rendered-key', item.cacheKey);
@@ -5924,7 +5936,7 @@ flowchart TD
           const renderId = `inktex-mmd-${Date.now()}-${item.idx}`;
           try {
             const { svg } = await window.mermaid.render(renderId, item.diagramSrc);
-            if (!item.wrap.isConnected) continue;
+            if (epoch !== mermaidRenderEpoch || !item.wrap.isConnected) continue;
             if (!isReaderVisible()) {
               hasDeferredMermaidRender = true;
               return;
@@ -5972,6 +5984,10 @@ flowchart TD
               hasDeferredMermaidRender = true;
             }
           } catch (err) {
+            document.getElementById('d' + renderId)?.remove();
+            document.getElementById(renderId)?.remove();
+            if (epoch !== mermaidRenderEpoch || !item.wrap.isConnected) continue;
+            item.wrap.removeAttribute('data-mermaid-rendered-key');
             item.wrap.innerHTML = `<div class="text-xs text-rose-400 font-mono p-2">Erreur de syntaxe Mermaid : ${escapeHtml(err.message || String(err))}</div>`;
           }
         }
@@ -6119,6 +6135,10 @@ flowchart TD
             }, 120);
           }
         }
+      } else {
+        clearTimeout(mermaidRenderDebounce);
+        pendingMermaidTask = null;
+        hasDeferredMermaidRender = false;
       }
 
       // 5. External Plugins afterRender
@@ -6189,8 +6209,9 @@ flowchart TD
       clearTimeout(readerInputDebounce);
       readerInputDebounce = null;
       const nextHtml = renderMarkdownAndLatex(rawInput.value);
+      const mermaidSig = mermaidQueue.length > 0 ? mermaidQueue.join('\u0000') : '';
       const themeSig = `${currentTheme}|${window.InkTeX.isPluginEnabled('code-highlight') ? 1 : 0}`;
-      const stateSig = `${themeSig}|${activeRecallMode ? 1 : 0}`;
+      const stateSig = `${themeSig}|${activeRecallMode ? 1 : 0}|${mermaidSig}`;
       if (nextHtml !== lastRenderedHtml || stateSig !== lastRenderStateSig) {
         const forceFull = themeSig !== lastRenderThemeSig;
         lastRenderedHtml = nextHtml;
@@ -6551,11 +6572,23 @@ flowchart TD
       'task': '\n- [ ] Point à réviser\n'
     };
 
-    function insertAtEditorCursor(text, cursorBackOffset = 0) {
+    function insertAtEditorCursor(text, cursorBackOffset = 0, selectPlaceholder = null) {
       const start = rawInput.selectionStart || 0;
       const end = rawInput.selectionEnd || 0;
-      const pos = start + text.length - cursorBackOffset;
-      replaceEditorRange(start, end, text, pos, pos, false);
+      let insertText = text;
+      if (insertText.startsWith('\n') && (start === 0 || rawInput.value[start - 1] === '\n')) {
+        insertText = insertText.slice(1);
+      }
+      let selStart = start + insertText.length - cursorBackOffset;
+      let selEnd = selStart;
+      if (selectPlaceholder) {
+        const phIdx = insertText.indexOf(selectPlaceholder);
+        if (phIdx !== -1) {
+          selStart = start + phIdx;
+          selEnd = selStart + selectPlaceholder.length;
+        }
+      }
+      replaceEditorRange(start, end, insertText, selStart, selEnd, false);
       updateReader(true);
     }
 
@@ -6565,7 +6598,11 @@ flowchart TD
         const txt = SNIPPETS[key];
         if (!txt) return;
         const offset = key === 'math-inline' ? 3 : (key === 'math-block' ? 4 : 0);
-        insertAtEditorCursor(txt, offset);
+        const placeholder = key === 'mermaid' ? 'Stimulus' : null;
+        insertAtEditorCursor(txt, offset, placeholder);
+        if (key === 'mermaid' && !window.InkTeX.isPluginEnabled('mermaid')) {
+          showToast('Activez le plugin Schémas Mermaid dans Plugins pour le rendu graphique');
+        }
       });
     });
 
