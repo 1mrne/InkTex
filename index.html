@@ -3734,7 +3734,7 @@ flowchart TD
       'infty|partial|nabla|Delta|Gamma|Lambda|Omega|Theta|Phi|Psi|Pi|Sigma|Upsilon|Xi|' +
       'alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|vartheta|iota|kappa|lambda|mu|nu|xi|pi|varpi|rho|varrho|sigma|varsigma|tau|upsilon|phi|varphi|chi|psi|omega|' +
       'pm|mp|times|div|cdot|cdots|ldots|vdots|ddots|quad|qquad|enspace|thinspace|hspace|vspace|' +
-      'Rightarrow|Leftarrow|Leftrightarrow|Longrightarrow|Longleftarrow|Longleftrightarrow|rightarrow|leftarrow|leftrightarrow|longrightarrow|longleftarrow|longleftrightarrow|to|mapsto|implies|iff|' +
+      'Rightarrow|Leftarrow|Leftrightarrow|Longrightarrow|Longleftarrow|Longleftrightarrow|rightarrow|leftarrow|leftrightarrow|longrightarrow|longleftarrow|longleftrightarrow|rightleftharpoons|leftrightharpoons|to|mapsto|implies|iff|' +
       'approx|simeq|cong|equiv|neq|ne|leq|le|geq|ge|ll|gg|propto|sim|subset|supset|subseteq|supseteq|in|notin|ni|cup|cap|setminus|emptyset|varnothing|' +
       'forall|exists|nexists|neg|lnot|land|lor|wedge|vee|perp|parallel|angle|triangle|circ|degree|' +
       'log|ln|lg|exp|sin|cos|tan|cot|sec|csc|arcsin|arccos|arctan|sinh|cosh|tanh|coth|' +
@@ -4065,10 +4065,10 @@ flowchart TD
       'infty|partial|nabla|Delta|Gamma|Lambda|Omega|Theta|Phi|Psi|Pi|Sigma|Upsilon|Xi|' +
       'alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|vartheta|iota|kappa|lambda|mu|nu|xi|pi|varpi|rho|varrho|sigma|varsigma|tau|upsilon|phi|varphi|chi|psi|omega|' +
       'pm|mp|times|div|cdot|cdots|ldots|quad|qquad|' +
-      'Rightarrow|Leftarrow|Leftrightarrow|Longrightarrow|Longleftarrow|Longleftrightarrow|rightarrow|leftarrow|leftrightarrow|longrightarrow|longleftarrow|longleftrightarrow|to|mapsto|implies|iff|' +
+      'Rightarrow|Leftarrow|Leftrightarrow|Longrightarrow|Longleftarrow|Longleftrightarrow|rightarrow|leftarrow|leftrightarrow|longrightarrow|longleftarrow|longleftrightarrow|rightleftharpoons|leftrightharpoons|to|mapsto|implies|iff|' +
       'approx|simeq|cong|equiv|neq|ne|leq|le|geq|ge|propto|sim|subset|supset|subseteq|supseteq|in|notin|cup|cap|forall|exists|neg|wedge|vee|perp|parallel|angle|triangle|circ|degree|' +
       'log|ln|exp|sin|cos|tan|cot|sec|csc|arcsin|arccos|arctan|sinh|cosh|tanh|' +
-      'mathrm|mathbf|mathit|mathcal|mathbb|hat|bar|vec|overrightarrow|tilde|dot|ddot|overline|overbrace|underbrace|left|right|ce|pu';
+      'text|mathrm|mathbf|mathit|mathcal|mathbb|hat|bar|vec|overrightarrow|tilde|dot|ddot|overline|overbrace|underbrace|boxed|cancel|left|right|ce|pu';
     const AI_MATH_CMD_RE = new RegExp('\\\\(?:' + AI_MATH_CMD_NAMES + ')\\b');
 
     /**
@@ -4121,6 +4121,552 @@ flowchart TD
         re.lastIndex = endPos;
       }
       return lastIdx === 0 ? str : (out + str.slice(lastIdx));
+    }
+
+    const BARE_LATEX_PROSE_CMDS = new Set([
+      'textbf', 'textit', 'emph', 'underline', 'texttt', 'textcolor',
+      'section', 'subsection', 'subsubsection', 'paragraph', 'subparagraph',
+      'item', 'begin', 'end', 'url', 'href', 'label', 'ref', 'eqref'
+    ]);
+    const BARE_LATEX_MATH_CMD_SET = new Set(
+      LATEX_KNOWN_CMD_NAMES.split('|').filter(c => c && !BARE_LATEX_PROSE_CMDS.has(c))
+    );
+    const BARE_LATEX_TWO_ARG_CMDS = new Set([
+      'frac', 'dfrac', 'tfrac', 'cfrac', 'binom', 'overset', 'underset', 'stackrel', 'color', 'colorbox'
+    ]);
+    const BARE_LATEX_ONE_ARG_CMDS = new Set([
+      'text', 'textrm', 'textsf', 'mathrm', 'mathbf', 'mathit', 'mathcal', 'mathbb',
+      'mathfrak', 'mathsf', 'mathtt', 'boldsymbol', 'bm', 'sqrt', 'hat', 'widehat',
+      'bar', 'vec', 'overrightarrow', 'tilde', 'widetilde', 'dot', 'ddot', 'overline',
+      'overbrace', 'underbrace', 'boxed', 'fbox', 'cancel', 'bcancel', 'xcancel',
+      'sout', 'operatorname', 'ce', 'pu', 'phantom', 'hphantom', 'vphantom'
+    ]);
+    const BARE_LATEX_OP_CMDS = new Set([
+      'le', 'leq', 'ge', 'geq', 'neq', 'ne', 'approx', 'simeq', 'cong', 'equiv', 'propto', 'sim', 'll', 'gg',
+      'pm', 'mp', 'times', 'div', 'cdot', 'cdots', 'ldots',
+      'rightarrow', 'leftarrow', 'leftrightarrow', 'longrightarrow', 'longleftarrow', 'longleftrightarrow',
+      'Rightarrow', 'Leftarrow', 'Leftrightarrow', 'Longrightarrow', 'Longleftarrow', 'Longleftrightarrow',
+      'rightleftharpoons', 'leftrightharpoons', 'to', 'mapsto', 'implies', 'iff',
+      'in', 'notin', 'subset', 'supset', 'subseteq', 'supseteq', 'cup', 'cap', 'wedge', 'vee', 'perp', 'parallel'
+    ]);
+    const BARE_LATEX_PREFIX_CMDS = new Set([
+      'log', 'ln', 'lg', 'exp', 'sin', 'cos', 'tan', 'cot', 'sec', 'csc',
+      'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'coth',
+      'lim', 'limsup', 'liminf', 'sup', 'inf', 'max', 'min', 'arg', 'det', 'dim', 'gcd',
+      'sum', 'prod', 'coprod', 'int', 'iint', 'iiint', 'oint',
+      'neg', 'lnot', 'forall', 'exists', 'nexists', 'partial', 'nabla', 'Delta', 'not'
+    ]);
+    const BARE_MATH_SHORT_WORDS = new Set([
+      'pH', 'pOH', 'pKa', 'pKb', 'pKe', 'Ka', 'Kb', 'Ke', 'Kw',
+      'mol', 'atm', 'mmHg', 'kPa', 'kcal', 'kJ', 'mL',
+      'HA', 'HO', 'OH', 'H2O', 'CO2', 'O2', 'N2', 'H2', 'NaCl', 'HCl', 'NaOH'
+    ]);
+    const BARE_CUSTOM_TAG_RE = new RegExp(`\\{\\/?(?:${ALL_CUSTOM_TAG_NAMES}|size(?::\\d+(?:\\.\\d+)?)?|align:(?:left|center|right))\\}`, 'gi');
+
+    function readBalancedGroup(str, openIdx, openCh, closeCh) {
+      if (openIdx < 0 || openIdx >= str.length || str[openIdx] !== openCh) return -1;
+      let depth = 1;
+      let i = openIdx + 1;
+      while (i < str.length && depth > 0) {
+        if (str[i] === '\\' && i + 1 < str.length) { i += 2; continue; }
+        if (str[i] === openCh) depth++;
+        else if (str[i] === closeCh) depth--;
+        i++;
+      }
+      return depth === 0 ? i : -1;
+    }
+
+    /**
+     * Detects and extracts bare, un-delimited LaTeX math pasted from iOS Gemini / ChatGPT / Apple Notes
+     * (e.g. [H_3O^+], H^+, \text{pH} = -\log([H_3O^+]), 10^{-7}\text{ mol}\cdot\text{L}^{-1}, 25\,^\circ\text{C})
+     * without disturbing Markdown syntax, URLs, prose, snake_case, or LaTeX text commands.
+     * Uses linear cursor scanning (zero regex lookbehinds, full Safari/WebKit compatibility).
+     */
+    function extractBareAiMath(text, storeMathFn, tokSeed, extraMacroNames = []) {
+      if (!text || (!text.includes('\\') && !text.includes('^') && !text.includes('_') && !text.includes('{,}'))) {
+        return text;
+      }
+      const extraCmdSet = Array.isArray(extraMacroNames) && extraMacroNames.length > 0
+        ? new Set(extraMacroNames.filter(n => n && !BARE_LATEX_PROSE_CMDS.has(n)))
+        : null;
+      const isMathCmd = (name) => BARE_LATEX_MATH_CMD_SET.has(name) || !!(extraCmdSet && extraCmdSet.has(name));
+      const tokenRe = new RegExp(`@@${tokSeed}[A-Z]+(?:-\\d+)?@@`, 'g');
+      const codeOnlyRe = new RegExp(`^@@${tokSeed}CB-\\d+@@$`);
+
+      function readScriptChain(str, startPos, baseText) {
+        let p = startPos;
+        let consumed = false;
+        const allowBareDigitSub = !/^[a-z]{3,}$/.test(baseText);
+        const allowBareAlphaSub = /^(?:p?K|P|C|V|E|G|H|S|T|R|Q|n|m|v|x|y|z|a|b|c|[A-Z])$/.test(baseText);
+        let guard = 0;
+
+        while (p < str.length && guard < 16) {
+          guard++;
+          const ch = str[p];
+          if (ch === '^') {
+            if (str[p + 1] === '{') {
+              const endBrace = readBalancedGroup(str, p + 1, '{', '}');
+              if (endBrace === -1) break;
+              p = endBrace;
+              consumed = true;
+              continue;
+            }
+            if (str[p + 1] === '\\') {
+              const cm = str.slice(p + 2).match(/^([a-zA-Z]+)/);
+              if (cm && isMathCmd(cm[1])) {
+                p += 2 + cm[1].length;
+                consumed = true;
+                continue;
+              }
+              break;
+            }
+            const supM = str.slice(p + 1).match(/^(?:[+-]|\d+[+-]?|[a-zA-Z])(?![\^A-Za-z0-9_])/);
+            if (supM) {
+              // Avoid eating Markdown superscript ^word^
+              if (str[p + 1 + supM[0].length] === '^') break;
+              p += 1 + supM[0].length;
+              consumed = true;
+              continue;
+            }
+            break;
+          }
+          if (ch === '_') {
+            if (str[p + 1] === '{') {
+              const endBrace = readBalancedGroup(str, p + 1, '{', '}');
+              if (endBrace === -1) break;
+              p = endBrace;
+              consumed = true;
+              continue;
+            }
+            if (str[p + 1] === '\\') {
+              const cm = str.slice(p + 2).match(/^([a-zA-Z]+)/);
+              if (cm && isMathCmd(cm[1])) {
+                p += 2 + cm[1].length;
+                consumed = true;
+                continue;
+              }
+              break;
+            }
+            if (allowBareDigitSub && /^\d/.test(str[p + 1] || '')) {
+              const dm = str.slice(p + 1).match(/^\d+/);
+              if (dm) {
+                const afterDig = p + 1 + dm[0].length;
+                if (str[afterDig] === '_') break;
+                p = afterDig;
+                consumed = true;
+                // Chemical formula continuation after subscript digit (e.g. H_3O^+, H_2SO_4, HCO_3^-, CH_3COOH)
+                const chemCont = str.slice(p).match(/^[A-Z][A-Za-z0-9]*/);
+                if (chemCont) {
+                  p += chemCont[0].length;
+                }
+                continue;
+              }
+            }
+            if (allowBareAlphaSub && /^[a-zA-Z](?![A-Za-z0-9_])/.test(str.slice(p + 1))) {
+              p += 2;
+              consumed = true;
+              continue;
+            }
+            break;
+          }
+          break;
+        }
+        return consumed ? p : -1;
+      }
+
+      function readNextAtom(str, pos) {
+        const ch = str[pos];
+        if (!ch) return null;
+
+        // 1. LaTeX command or spacing command
+        if (ch === '\\') {
+          const next = str[pos + 1] || '';
+          if (next === ',' || next === ';' || next === ':' || next === '!') {
+            let end = pos + 2;
+            const scriptEnd = readScriptChain(str, end, '');
+            if (scriptEnd !== -1) {
+              return { start: pos, end: scriptEnd, kind: 'cmd', isTrigger: true, isOp: false, isPrefixOp: false };
+            }
+            return { start: pos, end, kind: 'spacing', isTrigger: false, isOp: false, isPrefixOp: false };
+          }
+          if (next === '{' || next === '}' || next === '|' || next === '%') {
+            return { start: pos, end: pos + 2, kind: 'delim', isTrigger: false, isOp: false, isPrefixOp: false };
+          }
+          const cmdMatch = str.slice(pos + 1).match(/^([a-zA-Z]+)/);
+          if (!cmdMatch) return null;
+          const cmdName = cmdMatch[1];
+          if (BARE_LATEX_PROSE_CMDS.has(cmdName) || !isMathCmd(cmdName)) return null;
+
+          let end = pos + 1 + cmdName.length;
+          if (cmdName === 'left' || cmdName === 'right' || cmdName === 'big' || cmdName === 'Big' || cmdName === 'bigg' || cmdName === 'Bigg') {
+            let q = end;
+            while (q < str.length && str[q] === ' ') q++;
+            if (str[q] === '\\') {
+              const dMatch = str.slice(q + 1).match(/^(?:[{}|]|[a-zA-Z]+)/);
+              if (dMatch) end = q + 1 + dMatch[0].length;
+            } else if (q < str.length && '()[]|.'.includes(str[q])) {
+              end = q + 1;
+            }
+          } else {
+            // Optional [...] arg (e.g. \sqrt[3]{x})
+            if (str[end] === '[') {
+              const optEnd = readBalancedGroup(str, end, '[', ']');
+              if (optEnd !== -1) end = optEnd;
+            }
+            const reqArgs = BARE_LATEX_TWO_ARG_CMDS.has(cmdName) ? 2 : (BARE_LATEX_ONE_ARG_CMDS.has(cmdName) ? 1 : 0);
+            for (let a = 0; a < reqArgs; a++) {
+              let q = end;
+              while (q < str.length && str[q] === ' ') q++;
+              if (str[q] === '{') {
+                const argEnd = readBalancedGroup(str, q, '{', '}');
+                if (argEnd !== -1) { end = argEnd; continue; }
+              }
+              break;
+            }
+            // Also consume one braced arg on any other math command if directly attached (e.g., \log_{10}, \mathrm{...})
+            if (reqArgs === 0 && str[end] === '{') {
+              const argEnd = readBalancedGroup(str, end, '{', '}');
+              if (argEnd !== -1) end = argEnd;
+            }
+          }
+          const scriptEnd = readScriptChain(str, end, cmdName);
+          if (scriptEnd !== -1) end = scriptEnd;
+
+          return {
+            start: pos,
+            end,
+            kind: 'cmd',
+            isTrigger: true,
+            isOp: BARE_LATEX_OP_CMDS.has(cmdName),
+            isPrefixOp: BARE_LATEX_PREFIX_CMDS.has(cmdName)
+          };
+        }
+
+        // 2. Bracketed concentration / ion ([H_3O^+], [HO^-], [A^-], [HA])
+        if (ch === '[') {
+          const endBracket = readBalancedGroup(str, pos, '[', ']');
+          if (endBracket === -1) return null;
+          // Reject Markdown links [label](url), citations [1], callouts [!CLINICAL], checkboxes [ ]/[x]
+          if (str[endBracket] === '(') return null;
+          const inner = str.slice(pos + 1, endBracket - 1);
+          if (!inner || inner.startsWith('!') || /^\d{1,3}$/.test(inner) || /^[ xX]$/.test(inner)) return null;
+          let end = endBracket;
+          const scriptEnd = readScriptChain(str, end, ']');
+          if (scriptEnd !== -1) end = scriptEnd;
+          const hasLatexCue = /[_^\\]/.test(inner) || scriptEnd !== -1;
+          if (hasLatexCue) {
+            // Avoid accidentally eating multi-word prose brackets with a lone _
+            if ((inner.match(/\s+/g) || []).length > 3 && !inner.includes('\\')) return null;
+            return { start: pos, end, kind: 'bracket', isTrigger: true, isOp: false, isPrefixOp: false };
+          }
+          if (/^[A-Z][A-Za-z0-9+\-]{0,5}$/.test(inner)) {
+            return { start: pos, end, kind: 'bracket', isTrigger: false, isOp: false, isPrefixOp: false };
+          }
+          return null;
+        }
+
+        // 3. Numbers & LaTeX decimal commas (0{,}1, 10^{-7}, 25)
+        if (ch >= '0' && ch <= '9') {
+          const latexNumM = str.slice(pos).match(/^\d+\{,\}\d+/);
+          if (latexNumM) {
+            let end = pos + latexNumM[0].length;
+            const scriptEnd = readScriptChain(str, end, latexNumM[0]);
+            if (scriptEnd !== -1) end = scriptEnd;
+            return { start: pos, end, kind: 'latex_num', isTrigger: true, isOp: false, isPrefixOp: false };
+          }
+          const numM = str.slice(pos).match(/^\d+(?:[.,]\d+)?/);
+          if (numM) {
+            let end = pos + numM[0].length;
+            const scriptEnd = readScriptChain(str, end, numM[0]);
+            if (scriptEnd !== -1) {
+              return { start: pos, end: scriptEnd, kind: 'scripted', isTrigger: true, isOp: false, isPrefixOp: false };
+            }
+            return { start: pos, end, kind: 'num', isTrigger: false, isOp: false, isPrefixOp: false };
+          }
+        }
+
+        // 4. Identifiers / chemical symbols / scripted tokens (H^+, H_3O^+, pK_a, x^2, T)
+        if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) {
+          // Skip if preceded immediately by an accented letter (part of French word)
+          if (pos > 0 && /[À-ÖØ-öø-ÿ]/.test(str[pos - 1])) return null;
+          const idM = str.slice(pos).match(/^[A-Za-z][A-Za-z0-9]*/);
+          if (idM) {
+            const word = idM[0];
+            const afterWord = pos + word.length;
+            // If immediately followed by an accented letter, it's a French word (e.g. "échelle")
+            if (afterWord < str.length && /[À-ÖØ-öø-ÿ]/.test(str[afterWord])) return null;
+            const scriptEnd = readScriptChain(str, afterWord, word);
+            if (scriptEnd !== -1) {
+              return { start: pos, end: scriptEnd, kind: 'scripted', isTrigger: true, isOp: false, isPrefixOp: false };
+            }
+            if (word.length === 1) {
+              return { start: pos, end: afterWord, kind: 'ident', isTrigger: false, isOp: false, isPrefixOp: false };
+            }
+            if (BARE_MATH_SHORT_WORDS.has(word)) {
+              return { start: pos, end: afterWord, kind: 'ident', isTrigger: false, isOp: false, isPrefixOp: false };
+            }
+            return null;
+          }
+        }
+
+        // 5. Operators & relations (avoid Markdown **, ==, ~~)
+        if (ch === '*' && str[pos + 1] === '*') return null;
+        if (ch === '=' && str[pos + 1] === '=') return null;
+        if (ch === '~' && str[pos + 1] === '~') return null;
+        const twoOp = str.slice(pos, pos + 2);
+        if (twoOp === '<=' || twoOp === '>=' || twoOp === '!=') {
+          return { start: pos, end: pos + 2, kind: 'op', isTrigger: false, isOp: true, isPrefixOp: false };
+        }
+        if ('=<>+-*/±×÷≤≥≠≈→←↔⇌⇒⇔'.includes(ch)) {
+          return { start: pos, end: pos + 1, kind: 'op', isTrigger: false, isOp: true, isPrefixOp: false };
+        }
+
+        // 6. Parentheses & commas
+        if (ch === '(') return { start: pos, end: pos + 1, kind: 'paren_open', isTrigger: false, isOp: false, isPrefixOp: false };
+        if (ch === ')') return { start: pos, end: pos + 1, kind: 'paren_close', isTrigger: false, isOp: false, isPrefixOp: false };
+        if (ch === ',') return { start: pos, end: pos + 1, kind: 'comma', isTrigger: false, isOp: false, isPrefixOp: false };
+
+        return null;
+      }
+
+      function processPlainSlice(seg, fullLineTrimmed) {
+        if (!seg || (!seg.includes('\\') && !seg.includes('^') && !seg.includes('_') && !seg.includes('{,}'))) {
+          return seg;
+        }
+
+        const emittedSpans = [];
+        let buf = [];
+        let parenDepth = 0;
+
+        function flushBuffer() {
+          if (buf.length === 0) return;
+
+          // Trim leading non-operands (commas, stray non-unary ops, spacing, unmatched closing parens)
+          while (buf.length > 0) {
+            const first = buf[0];
+            if (first.kind === 'comma' || first.kind === 'spacing' || first.kind === 'paren_close') {
+              buf.shift();
+              continue;
+            }
+            if (first.kind === 'op' && !first.isTrigger) {
+              const rawOp = seg.slice(first.start, first.end);
+              // Keep unary +/- only when immediately followed by an operand
+              if ((rawOp === '-' || rawOp === '+' || rawOp === '±') && buf.length > 1 && !buf[1].isOp) {
+                break;
+              }
+              buf.shift();
+              continue;
+            }
+            break;
+          }
+
+          // Trim trailing commas, spacing, and bare operators
+          while (buf.length > 0) {
+            const last = buf[buf.length - 1];
+            if (last.kind === 'comma' || last.kind === 'spacing' || last.kind === 'paren_open' || (last.kind === 'op' && !last.isTrigger)) {
+              buf.pop();
+              continue;
+            }
+            break;
+          }
+
+          // Balance outer parentheses cleanly
+          let openCount = 0;
+          let closeCount = 0;
+          for (const t of buf) {
+            if (t.kind === 'paren_open') openCount++;
+            else if (t.kind === 'paren_close') closeCount++;
+          }
+          while (openCount > closeCount && buf.length > 0 && buf[0].kind === 'paren_open') {
+            buf.shift();
+            openCount--;
+          }
+          while (closeCount > openCount && buf.length > 0 && buf[buf.length - 1].kind === 'paren_close') {
+            buf.pop();
+            closeCount--;
+          }
+
+          // Strip matching outer prose parentheses e.g. (\text{pH} < 7) -> ( + \text{pH} < 7 + )
+          while (buf.length >= 2 && buf[0].kind === 'paren_open' && buf[buf.length - 1].kind === 'paren_close') {
+            let d = 0;
+            let closesBeforeEnd = false;
+            for (let k = 0; k < buf.length; k++) {
+              if (buf[k].kind === 'paren_open') d++;
+              else if (buf[k].kind === 'paren_close') d--;
+              if (d === 0 && k < buf.length - 1) { closesBeforeEnd = true; break; }
+            }
+            if (closesBeforeEnd || d !== 0) break;
+            buf.shift();
+            buf.pop();
+          }
+
+          // Re-trim trailing non-trigger ops after stripping parens
+          while (buf.length > 0 && (buf[buf.length - 1].kind === 'comma' || (buf[buf.length - 1].kind === 'op' && !buf[buf.length - 1].isTrigger))) {
+            buf.pop();
+          }
+
+          // Require at least one unambiguous LaTeX trigger in the final span
+          const hasTrigger = buf.some(t => t.isTrigger);
+          if (hasTrigger && buf.length > 0) {
+            const spanStart = buf[0].start;
+            const spanEnd = buf[buf.length - 1].end;
+            const expr = seg.slice(spanStart, spanEnd).trim();
+            if (expr) {
+              emittedSpans.push({ start: spanStart, end: spanEnd, expr });
+            }
+          }
+          buf = [];
+          parenDepth = 0;
+        }
+
+        let pos = 0;
+        while (pos < seg.length) {
+          // Measure whitespace before next token
+          const wsStart = pos;
+          while (pos < seg.length && (seg[pos] === ' ' || seg[pos] === '\t')) pos++;
+          const hadSpace = pos > wsStart;
+          if (pos >= seg.length) break;
+
+          const atom = readNextAtom(seg, pos);
+          if (!atom) {
+            flushBuffer();
+            // Advance past one non-math character or plain word
+            if (/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(seg[pos])) {
+              while (pos < seg.length && /[A-Za-zÀ-ÖØ-öø-ÿ0-9'’]/.test(seg[pos])) pos++;
+            } else {
+              pos++;
+            }
+            continue;
+          }
+
+          if (atom.kind === 'paren_close' && parenDepth === 0) {
+            flushBuffer();
+            pos = atom.end;
+            continue;
+          }
+          if (atom.kind === 'comma' && parenDepth === 0) {
+            flushBuffer();
+            pos = atom.end;
+            continue;
+          }
+
+          if (buf.length > 0 && hadSpace) {
+            const prev = buf[buf.length - 1];
+            const prevExpectsOperand = prev.isOp || prev.isPrefixOp || prev.kind === 'paren_open' || prev.kind === 'comma' || prev.kind === 'spacing';
+            const nextContinues = atom.isOp || atom.kind === 'paren_close' || atom.kind === 'comma' || atom.kind === 'spacing' || atom.kind === 'cmd';
+            if (!prevExpectsOperand && !nextContinues) {
+              // Do not join two space-separated non-operator tokens (e.g. "a [H_3O^+]" or "[H_3O^+] 2")
+              flushBuffer();
+            }
+          }
+
+          if (atom.kind === 'paren_open') parenDepth++;
+          else if (atom.kind === 'paren_close') parenDepth = Math.max(0, parenDepth - 1);
+
+          buf.push(atom);
+          pos = atom.end;
+        }
+        flushBuffer();
+
+        if (emittedSpans.length === 0) return seg;
+
+        // Render standalone bare equation lines as centered display math when appropriate
+        const isWholeLineSingleEq = emittedSpans.length === 1 &&
+          seg.slice(emittedSpans[0].start, emittedSpans[0].end).trim() === fullLineTrimmed &&
+          (/\\(?:frac|dfrac|sum|int|prod|rightleftharpoons|Rightarrow|left)\b/.test(emittedSpans[0].expr) ||
+            (emittedSpans[0].expr.length >= 18 && /[=<>]|\\(?:le|leq|ge|geq|approx)\b/.test(emittedSpans[0].expr)));
+
+        let rebuilt = '';
+        let cursor = 0;
+        for (const sp of emittedSpans) {
+          rebuilt += seg.slice(cursor, sp.start);
+          rebuilt += storeMathFn(sp.expr, isWholeLineSingleEq);
+          cursor = sp.end;
+        }
+        rebuilt += seg.slice(cursor);
+        return rebuilt;
+      }
+
+      const lines = text.split('\n');
+      for (let li = 0; li < lines.length; li++) {
+        const line = lines[li];
+        const trimmed = line.trim();
+        if (!trimmed || codeOnlyRe.test(trimmed) || isTableSeparator(trimmed) || /^[-*_]{3,}$/.test(trimmed)) {
+          continue;
+        }
+        if (!line.includes('\\') && !line.includes('^') && !line.includes('_') && !line.includes('{,}')) {
+          continue;
+        }
+
+        // Collect protected spans on this line (tokens, URLs, links, paths, InkTeX tags, LaTeX prose commands, table pipes, line prefix)
+        const protectedRanges = [];
+        const addRange = (s, e) => { if (e > s) protectedRanges.push([s, e]); };
+
+        // Leading Markdown structural prefix (blockquote, callout header, heading, bullet, checkbox, numbered list, \item)
+        const prefixM = line.match(/^(\s*(?:>\s*)*(?:\[![A-Z]+\]\s*|#{1,6}\s+|[-*•]\s+(?:\[[ xX]\]\s+)?|\d+\.\s+|\\item\s+)?)/i);
+        if (prefixM && prefixM[1].length > 0) addRange(0, prefixM[1].length);
+
+        const scanReList = [
+          tokenRe,
+          /!?\[[^\]]*\]\(https?:\/\/(?:[^\s()]+|\([^\s()]*\))+\)/g,
+          /https?:\/\/[^\s)<>]+/g,
+          /[A-Za-z]:\\[^\s]+/g,
+          BARE_CUSTOM_TAG_RE,
+          /\*\*\*|\*\*|==|~~|\|/g
+        ];
+        for (const re of scanReList) {
+          re.lastIndex = 0;
+          let m;
+          while ((m = re.exec(line)) !== null) {
+            addRange(m.index, m.index + m[0].length);
+          }
+        }
+
+        // Protect LaTeX prose commands (\textbf{...}, \textcolor{red}{...}, \section{...}, etc.)
+        const proseCmdRe = /\\(textbf|textit|emph|underline|texttt|textcolor|section\*?|subsection\*?|subsubsection\*?|paragraph\*?|subparagraph\*?)\{/g;
+        let pm;
+        while ((pm = proseCmdRe.exec(line)) !== null) {
+          const arg1End = readBalancedGroup(line, pm.index + pm[0].length - 1, '{', '}');
+          if (arg1End !== -1) {
+            let finalEnd = arg1End;
+            if (pm[1] === 'textcolor') {
+              let q = arg1End;
+              while (q < line.length && line[q] === ' ') q++;
+              const arg2End = readBalancedGroup(line, q, '{', '}');
+              if (arg2End !== -1) finalEnd = arg2End;
+            }
+            addRange(pm.index, finalEnd);
+            proseCmdRe.lastIndex = finalEnd;
+          }
+        }
+
+        // Merge overlapping protected ranges
+        protectedRanges.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
+        const merged = [];
+        for (const r of protectedRanges) {
+          if (merged.length === 0 || r[0] > merged[merged.length - 1][1]) {
+            merged.push([r[0], r[1]]);
+          } else if (r[1] > merged[merged.length - 1][1]) {
+            merged[merged.length - 1][1] = r[1];
+          }
+        }
+
+        let lineOut = '';
+        let cur = 0;
+        for (const [ps, pe] of merged) {
+          if (ps > cur) {
+            lineOut += processPlainSlice(line.slice(cur, ps), trimmed);
+          }
+          lineOut += line.slice(ps, pe);
+          cur = pe;
+        }
+        if (cur < line.length) {
+          lineOut += processPlainSlice(line.slice(cur), trimmed);
+        }
+        lines[li] = lineOut;
+      }
+
+      return lines.join('\n');
     }
 
     // =====================================================
@@ -4390,7 +4936,13 @@ flowchart TD
         }
       );
 
-      // Auto-render bare \ce{...} / \pu{...} at arbitrary brace nesting depth outside math delimiters
+      // Auto-detect bare, un-delimited LaTeX pasted from iOS Gemini / ChatGPT / Apple Notes
+      // (runs BEFORE standalone \ce/\pu extraction so compound equations stay intact)
+      if (window.InkTeX.isPluginEnabled('ai-fixer')) {
+        normalized = extractBareAiMath(normalized, storeMath, tokSeed, macroBundle.names);
+      }
+
+      // Auto-render any remaining standalone bare \ce{...} / \pu{...} at arbitrary brace nesting depth
       if (useMhchem && window.InkTeX.isPluginEnabled('ai-fixer')) {
         normalized = replaceBalancedCmd(normalized, 'ce|pu', (full) => storeMath(full, false));
       }
@@ -5357,13 +5909,146 @@ flowchart TD
       }, delay);
     });
 
-    // Instant iOS / iPadOS Paste Sanitization & Next-Tick Render
-    rawInput.addEventListener('paste', () => {
+    // Extract clean Markdown + $...$/$$...$$ when pasting rendered KaTeX/MathML HTML from Safari / Gemini / ChatGPT Web
+    function extractMarkdownFromMathClipboardHtml(html) {
+      if (!html || !/(?:application\/x-tex|data-math|class=["'][^"']*(?:katex|math-))/i.test(html)) {
+        return null;
+      }
+      try {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        if (!doc || !doc.body) return null;
+        let extractedMathCount = 0;
+
+        const readTexAttr = (el) => {
+          const direct = el.getAttribute('data-math') || el.getAttribute('data-tex') || el.getAttribute('data-latex');
+          if (direct && direct.trim()) return direct.trim();
+          const ann = el.querySelector('annotation[encoding="application/x-tex"], annotation');
+          if (ann && ann.textContent && ann.textContent.trim()) return ann.textContent.trim();
+          return '';
+        };
+
+        // Block math first
+        doc.body.querySelectorAll('.katex-display, .math-block, [data-math-display="true"], math[display="block"]').forEach((el) => {
+          if (!el.isConnected) return;
+          const tex = readTexAttr(el);
+          if (!tex) return;
+          extractedMathCount++;
+          el.replaceWith(doc.createTextNode(`\n$$\n${tex}\n$$\n`));
+        });
+
+        // Inline math
+        doc.body.querySelectorAll('.katex, .math-inline, [data-math], math').forEach((el) => {
+          if (!el.isConnected) return;
+          const tex = readTexAttr(el);
+          if (!tex) return;
+          extractedMathCount++;
+          el.replaceWith(doc.createTextNode(`$${tex}$`));
+        });
+
+        if (extractedMathCount === 0) return null;
+
+        const walkNode = (node, listDepth = 0) => {
+          if (node.nodeType === 3) return node.nodeValue || '';
+          if (node.nodeType !== 1) return '';
+          const tag = node.tagName.toUpperCase();
+          if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT' || tag === 'BUTTON') return '';
+          if (tag === 'BR') return '\n';
+          if (tag === 'HR') return '\n---\n';
+          if (tag === 'PRE') {
+            const codeEl = node.querySelector('code');
+            const langM = (codeEl?.className || '').match(/language-([a-zA-Z0-9_-]+)/);
+            const lang = langM ? langM[1] : '';
+            const codeText = (codeEl ? codeEl.textContent : node.textContent) || '';
+            return `\n\`\`\`${lang}\n${codeText.replace(/\n$/, '')}\n\`\`\`\n`;
+          }
+          if (tag === 'CODE') return `\`${node.textContent || ''}\``;
+          const childrenText = () => Array.from(node.childNodes).map(c => walkNode(c, listDepth)).join('');
+          if (tag === 'STRONG' || tag === 'B') {
+            const t = childrenText().trim();
+            return t ? `**${t}**` : '';
+          }
+          if (tag === 'EM' || tag === 'I') {
+            const t = childrenText().trim();
+            return t ? `*${t}*` : '';
+          }
+          if (/^H[1-6]$/.test(tag)) {
+            const lvl = Number(tag[1]);
+            const t = childrenText().trim();
+            return t ? `\n${'#'.repeat(lvl)} ${t}\n\n` : '';
+          }
+          if (tag === 'UL' || tag === 'OL') {
+            const items = Array.from(node.children).filter(c => c.tagName.toUpperCase() === 'LI');
+            const out = items.map((li, idx) => {
+              const indent = '  '.repeat(listDepth);
+              const marker = tag === 'OL' ? `${idx + 1}. ` : '- ';
+              const liParts = Array.from(li.childNodes).map(c => {
+                if (c.nodeType === 1 && (c.tagName.toUpperCase() === 'UL' || c.tagName.toUpperCase() === 'OL')) {
+                  return '\n' + walkNode(c, listDepth + 1).replace(/^\n+|\n+$/g, '');
+                }
+                return walkNode(c, listDepth + 1);
+              }).join('').trim();
+              return `${indent}${marker}${liParts}`;
+            }).join('\n');
+            return listDepth === 0 ? `\n${out}\n\n` : out;
+          }
+          if (tag === 'P' || tag === 'DIV' || tag === 'SECTION' || tag === 'ARTICLE') {
+            const t = childrenText().trim();
+            return t ? `${t}\n\n` : '';
+          }
+          if (tag === 'BLOCKQUOTE') {
+            const t = childrenText().trim();
+            return t ? `\n${t.split('\n').map(l => `> ${l}`).join('\n')}\n\n` : '';
+          }
+          if (tag === 'TABLE') {
+            const rows = Array.from(node.querySelectorAll('tr')).map(tr =>
+              Array.from(tr.querySelectorAll('th, td')).map(cell => walkNode(cell, 0).replace(/\s*\n\s*/g, ' ').trim())
+            ).filter(r => r.length > 0);
+            if (rows.length === 0) return '';
+            const cols = Math.max(...rows.map(r => r.length));
+            const padRow = r => `| ${Array.from({ length: cols }, (_, i) => r[i] || '').join(' | ')} |`;
+            const sep = `| ${Array.from({ length: cols }, () => '---').join(' | ')} |`;
+            return `\n${padRow(rows[0])}\n${sep}\n${rows.slice(1).map(padRow).join('\n')}\n\n`;
+          }
+          return childrenText();
+        };
+
+        const md = sanitizePastedText(walkNode(doc.body, 0))
+          .replace(/\n{3,}/g, '\n\n')
+          .trim();
+        return md || null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // Instant iOS / iPadOS Paste Sanitization, HTML-Math Extraction & Next-Tick Render
+    rawInput.addEventListener('paste', (e) => {
       clearTimeout(historyDebounce);
       pushHistoryState();
       resetSavedSelectionState();
       clearTimeout(readerInputDebounce);
       readerInputDebounce = null;
+
+      // If Safari / Gemini Web / ChatGPT Web provides HTML containing KaTeX/MathML annotations
+      // while plain text lost its $ / \( delimiters, recover clean Markdown + delimited LaTeX directly
+      if (window.InkTeX.isPluginEnabled('ai-fixer') && e.clipboardData) {
+        const htmlClip = e.clipboardData.getData('text/html') || '';
+        const plainClip = e.clipboardData.getData('text/plain') || '';
+        const plainHasDelimitedMath = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$\n]+?\$/.test(plainClip);
+        if (htmlClip && !plainHasDelimitedMath) {
+          const recoveredMd = extractMarkdownFromMathClipboardHtml(htmlClip);
+          if (recoveredMd) {
+            e.preventDefault();
+            const start = rawInput.selectionStart || 0;
+            const end = rawInput.selectionEnd || 0;
+            replaceEditorRange(start, end, recoveredMd, start + recoveredMd.length, start + recoveredMd.length, false);
+            updateReader(true, false);
+            pushHistoryState();
+            return;
+          }
+        }
+      }
+
       setTimeout(() => {
         const val = rawInput.value;
         if (DIRTY_PASTE_CHAR_RE.test(val)) {
