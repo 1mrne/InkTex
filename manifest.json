@@ -1,0 +1,23 @@
+{
+  "id": "./",
+  "name": "InkTeX Studio",
+  "short_name": "InkTeX",
+  "description": "Convertisseur Markdown, LaTeX, chimie mhchem et schémas Mermaid vers cahier manuscrit & fiches de révision.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0b0e",
+  "theme_color": "#0a0b0e",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

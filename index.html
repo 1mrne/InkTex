@@ -6,6 +6,11 @@
   <title>InkTeX Studio</title>
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#0a0b0e" />
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="InkTeX" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlYTVlOSIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNGY0NmU1Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOTMzM2VhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTgiIGZpbGw9InVybCgjZykiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNCAxNCkgc2NhbGUoMS41KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuMTUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIxVjciLz48cGF0aCBkPSJtMTYgMTIgMiAyIDQtNCIvPjxwYXRoIGQ9Ik0yMiA2VjRhMSAxIDAgMCAwLTEtMWgtNWE0IDQgMCAwIDAtNCA0IDQgNCAwIDAgMC00LTRIM2ExIDEgMCAwIDAtMSAxdjEzYTEgMSAwIDAgMCAxIDFoNmEzIDMgMCAwIDEgMyAzIDMgMyAwIDAgMSAzLTNoNmExIDEgMCAwIDAgMS0xdi0xLjMiLz48L2c+PC9zdmc+" />
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlYTVlOSIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNGY0NmU1Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOTMzM2VhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTgiIGZpbGw9InVybCgjZykiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNCAxNCkgc2NhbGUoMS41KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuMTUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIxVjciLz48cGF0aCBkPSJtMTYgMTIgMiAyIDQtNCIvPjxwYXRoIGQ9Ik0yMiA2VjRhMSAxIDAgMCAwLTEtMWgtNWE0IDQgMCAwIDAtNCA0IDQgNCAwIDAgMC00LTRIM2ExIDEgMCAwIDAtMSAxdjEzYTEgMSAwIDAgMCAxIDFoNmEzIDMgMCAwIDEgMyAzIDMgMyAwIDAgMSAzLTNoNmExIDEgMCAwIDAgMS0xdi0xLjMiLz48L2c+PC9zdmc+" />
 
@@ -16,22 +21,22 @@
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://unpkg.com">
 
-  <!-- Tailwind CSS v3 -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CSS v3.4.17 Pre-Compiled Base / Preflight (Static Production Build — Zero Runtime CDN) -->
+  <style id="tailwindBaseStyles">*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}</style>
 
   <!-- Core UI & Editor Fonts ONLY (12 Handwriting Fonts + SF Pro load on-demand!) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" crossorigin="anonymous">
 
-  <!-- KaTeX 0.16.11 + mhchem (Chimie) + copy-tex (deferred: never blocks HTML parsing) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
-  <script defer id="katexCoreScript" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer id="katexMhchemScript" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/mhchem.min.js" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" crossorigin="anonymous"></script>
+  <!-- KaTeX 0.19.1 + mhchem (Chimie) + copy-tex (deferred: never blocks HTML parsing) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css" crossorigin="anonymous">
+  <script defer id="katexCoreScript" src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer id="katexMhchemScript" src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/contrib/mhchem.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/contrib/copy-tex.min.js" crossorigin="anonymous"></script>
 
   <!-- DOMPurify 3.5.0 (XSS Protection — deferred) -->
   <script defer id="dompurifyScript" src="https://cdn.jsdelivr.net/npm/dompurify@3.5.0/dist/purify.min.js" crossorigin="anonymous"></script>
 
-  <!-- Lucide Icons 1.79.0 (deferred; Highlight.js, Mermaid, html2canvas & jsPDF lazy-load strictly on-demand!) -->
+  <!-- Lucide Icons 1.79.0 (deferred; Highlight.js, Mermaid, modern-screenshot, html2canvas & jsPDF lazy-load strictly on-demand!) -->
   <script defer id="lucideScript" src="https://unpkg.com/lucide@1.79.0/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
 
   <style id="inktexCoreStyles">
@@ -1430,6 +1435,8 @@
     }
 
     .reader-content .katex .frac-line,
+    .reader-content .katex .katex-hline,
+    .reader-content .katex .katex-hdashline,
     .reader-content .katex .hline,
     .reader-content .katex .overline-line,
     .reader-content .katex .underline-line,
@@ -1662,6 +1669,44 @@
       pointer-events: none !important;
     }
 
+    /* 2-Column "Fiche de Révision" Layout (>= 768px, Print & Desktop Exports; auto 1-col on narrow phones) */
+    @media (min-width: 768px) {
+      .reader-card.fiche-two-col .reader-content {
+        column-count: 2;
+        column-gap: 2rem;
+        column-rule: 1px solid var(--border-divider);
+      }
+      .reader-card.fiche-two-col .reader-content h1,
+      .reader-card.fiche-two-col .reader-content > hr {
+        column-span: all;
+      }
+      .reader-card.fiche-two-col .reader-content h2,
+      .reader-card.fiche-two-col .reader-content h3,
+      .reader-card.fiche-two-col .reader-content h4 {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+      .reader-card.fiche-two-col .reader-content .inktex-callout,
+      .reader-card.fiche-two-col .reader-content .inktex-table-wrap,
+      .reader-card.fiche-two-col .reader-content .inktex-code-wrap,
+      .reader-card.fiche-two-col .reader-content .inktex-mermaid-wrap,
+      .reader-card.fiche-two-col .reader-content .katex-display,
+      .reader-card.fiche-two-col .reader-content .math-block,
+      .reader-card.fiche-two-col .reader-content blockquote,
+      .reader-card.fiche-two-col .reader-content img.inktex-img {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        -webkit-column-break-inside: avoid;
+      }
+      #workspaceGrid.full-reader #readerCard.fiche-two-col {
+        max-width: 1120px;
+      }
+    }
+    .reader-card.fiche-two-col.export-single-col .reader-content {
+      column-count: 1 !important;
+      column-rule: none !important;
+    }
+
     /* Reduced Motion Support */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -1672,6 +1717,15 @@
 
     /* Print / Save PDF Styling */
     @media print {
+      .reader-card.fiche-two-col .reader-content {
+        column-count: 2;
+        column-gap: 1.75rem;
+        column-rule: 1px solid var(--border-divider);
+      }
+      .reader-card.fiche-two-col .reader-content h1,
+      .reader-card.fiche-two-col .reader-content > hr {
+        column-span: all;
+      }
       body {
         background: #ffffff !important;
         color: #000000 !important;
@@ -1783,6 +1837,8 @@
       }
     }
   </style>
+  <!-- Tailwind CSS v3.4.17 Pre-Compiled Utilities (After Core Styles for Exact Cascade Parity) -->
+  <style id="tailwindUtilityStyles">.container{width:100%}@media (min-width:640px){.container{max-width:640px}}@media (min-width:768px){.container{max-width:768px}}@media (min-width:1024px){.container{max-width:1024px}}@media (min-width:1280px){.container{max-width:1280px}}@media (min-width:1536px){.container{max-width:1536px}}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.visible{visibility:visible}.invisible{visibility:hidden}.fixed{position:fixed}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0}.inset-x-0{left:0;right:0}.bottom-0{bottom:0}.bottom-5{bottom:1.25rem}.left-1\/2{left:50%}.left-3{left:.75rem}.right-3{right:.75rem}.right-4{right:1rem}.right-5{right:1.25rem}.top-0{top:0}.top-14{top:3.5rem}.top-\[60px\]{top:60px}.top-\[62px\]{top:62px}.top-\[64px\]{top:64px}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.z-\[45\]{z-index:45}.z-\[70\]{z-index:70}.z-\[75\]{z-index:75}.z-\[85\]{z-index:85}.\!mx-1{margin-left:.25rem!important;margin-right:.25rem!important}.mx-0\.5{margin-left:.125rem;margin-right:.125rem}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:.25rem}.mt-0\.5{margin-top:.125rem}.mt-2{margin-top:.5rem}.\!block{display:block!important}.block{display:block}.inline-block{display:inline-block}.inline{display:inline}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.grid{display:grid}.hidden{display:none}.\!h-4{height:1rem!important}.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-2{height:.5rem}.h-24{height:6rem}.h-3{height:.75rem}.h-3\.5{height:.875rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-7{height:1.75rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-\[300px\]{height:300px}.h-auto{height:auto}.max-h-80{max-height:20rem}.max-h-\[68dvh\]{max-height:68dvh}.max-h-\[70dvh\]{max-height:70dvh}.max-h-\[86dvh\]{max-height:86dvh}.max-h-\[88dvh\]{max-height:88dvh}.max-h-\[90dvh\]{max-height:90dvh}.max-h-\[calc\(100dvh-72px\)\]{max-height:calc(100dvh - 72px)}.\!min-h-\[24px\]{min-height:24px!important}.\!min-h-\[26px\]{min-height:26px!important}.\!min-h-\[28px\]{min-height:28px!important}.min-h-0{min-height:0}.min-h-\[280px\]{min-height:280px}.min-h-\[52px\]{min-height:52px}.min-h-screen{min-height:100vh}.\!w-4{width:1rem!important}.w-1\.5{width:.375rem}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-2{width:.5rem}.w-24{width:6rem}.w-3{width:.75rem}.w-3\.5{width:.875rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-7{width:1.75rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-\[calc\(100\%-1\.5rem\)\]{width:calc(100% - 1.5rem)}.w-\[min\(92vw\2c 264px\)\]{width:min(92vw,264px)}.w-\[min\(92vw\2c 320px\)\]{width:min(92vw,320px)}.w-auto{width:auto}.w-full{width:100%}.w-px{width:1px}.\!min-w-\[24px\]{min-width:24px!important}.\!min-w-\[26px\]{min-width:26px!important}.min-w-0{min-width:0}.min-w-\[110px\]{min-width:110px}.min-w-\[140px\]{min-width:140px}.min-w-\[155px\]{min-width:155px}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-\[130px\]{max-width:130px}.max-w-\[145px\]{max-width:145px}.max-w-\[1680px\]{max-width:1680px}.max-w-\[880px\]{max-width:880px}.max-w-\[calc\(100vw-1rem\)\]{max-width:calc(100vw - 1rem)}.max-w-\[calc\(100vw-2rem\)\]{max-width:calc(100vw - 2rem)}.max-w-full{max-width:100%}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%}.-translate-x-1\/2,.rotate-180{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.rotate-180{--tw-rotate:180deg}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(.4,0,.6,1) infinite}@keyframes spin{to{transform:rotate(1turn)}}.animate-spin{animation:spin 1s linear infinite}.cursor-col-resize{cursor:col-resize}.cursor-pointer{cursor:pointer}.touch-none{touch-action:none}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.resize-none{resize:none}.resize{resize:both}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-8{grid-template-columns:repeat(8,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.flex-nowrap{flex-wrap:nowrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-start{justify-content:flex-start}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-0\.5{gap:.125rem}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-2\.5{gap:.625rem}.gap-3{gap:.75rem}.gap-x-4{-moz-column-gap:1rem;column-gap:1rem}.gap-y-2{row-gap:.5rem}.space-y-0\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.125rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.125rem*var(--tw-space-y-reverse))}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-2\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.625rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.625rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-3\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.875rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.875rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.self-stretch{align-self:stretch}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis}.truncate,.whitespace-nowrap{white-space:nowrap}.whitespace-pre-wrap{white-space:pre-wrap}.\!rounded-full{border-radius:9999px!important}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-\[10px\]{border-radius:10px}.rounded-\[18px\]{border-radius:18px}.rounded-\[20px\]{border-radius:20px}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-md{border-radius:.375rem}.rounded-xl{border-radius:.75rem}.rounded-b-\[18px\]{border-bottom-right-radius:18px;border-bottom-left-radius:18px}.rounded-t-\[18px\]{border-top-left-radius:18px;border-top-right-radius:18px}.border{border-width:1px}.border-0{border-width:0}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-amber-400\/30{border-color:rgba(251,191,36,.3)}.border-amber-500\/40{border-color:rgba(245,158,11,.4)}.border-emerald-400\/30{border-color:rgba(52,211,153,.3)}.border-sky-400\/20{border-color:rgba(56,189,248,.2)}.border-sky-400\/25{border-color:rgba(56,189,248,.25)}.border-sky-400\/30{border-color:rgba(56,189,248,.3)}.border-white\/\[0\.055\]{border-color:hsla(0,0%,100%,.055)}.border-white\/\[0\.05\]{border-color:hsla(0,0%,100%,.05)}.border-white\/\[0\.065\]{border-color:hsla(0,0%,100%,.065)}.border-white\/\[0\.06\]{border-color:hsla(0,0%,100%,.06)}.border-white\/\[0\.07\]{border-color:hsla(0,0%,100%,.07)}.border-white\/\[0\.085\]{border-color:hsla(0,0%,100%,.085)}.border-white\/\[0\.08\]{border-color:hsla(0,0%,100%,.08)}.border-white\/\[0\.09\]{border-color:hsla(0,0%,100%,.09)}.border-white\/\[0\.11\]{border-color:hsla(0,0%,100%,.11)}.border-white\/\[0\.1\]{border-color:hsla(0,0%,100%,.1)}.bg-\[\#090a0d\]{--tw-bg-opacity:1;background-color:rgb(9 10 13/var(--tw-bg-opacity,1))}.bg-\[\#0a0b0f\]{--tw-bg-opacity:1;background-color:rgb(10 11 15/var(--tw-bg-opacity,1))}.bg-\[\#0b0c10\]\/90{background-color:rgba(11,12,16,.9)}.bg-\[\#0b0d12\]{--tw-bg-opacity:1;background-color:rgb(11 13 18/var(--tw-bg-opacity,1))}.bg-\[\#0b0d12\]\/\[0\.97\]{background-color:rgba(11,13,18,.97)}.bg-\[\#0c0e13\]{--tw-bg-opacity:1;background-color:rgb(12 14 19/var(--tw-bg-opacity,1))}.bg-\[\#0d0f14\]{--tw-bg-opacity:1;background-color:rgb(13 15 20/var(--tw-bg-opacity,1))}.bg-\[\#0e1015\]{--tw-bg-opacity:1;background-color:rgb(14 16 21/var(--tw-bg-opacity,1))}.bg-\[\#0e1016\]{--tw-bg-opacity:1;background-color:rgb(14 16 22/var(--tw-bg-opacity,1))}.bg-\[\#0f1117\]{--tw-bg-opacity:1;background-color:rgb(15 17 23/var(--tw-bg-opacity,1))}.bg-\[\#101218\]{--tw-bg-opacity:1;background-color:rgb(16 18 24/var(--tw-bg-opacity,1))}.bg-\[\#12141a\]{--tw-bg-opacity:1;background-color:rgb(18 20 26/var(--tw-bg-opacity,1))}.bg-\[\#12141a\]\/95{background-color:rgba(18,20,26,.95)}.bg-\[\#13151d\]{--tw-bg-opacity:1;background-color:rgb(19 21 29/var(--tw-bg-opacity,1))}.bg-\[\#141720\]{--tw-bg-opacity:1;background-color:rgb(20 23 32/var(--tw-bg-opacity,1))}.bg-\[\#151821\]{--tw-bg-opacity:1;background-color:rgb(21 24 33/var(--tw-bg-opacity,1))}.bg-\[\#151822\]{--tw-bg-opacity:1;background-color:rgb(21 24 34/var(--tw-bg-opacity,1))}.bg-\[\#161923\]{--tw-bg-opacity:1;background-color:rgb(22 25 35/var(--tw-bg-opacity,1))}.bg-\[\#161923\]\/95{background-color:rgba(22,25,35,.95)}.bg-\[\#171a23\]{--tw-bg-opacity:1;background-color:rgb(23 26 35/var(--tw-bg-opacity,1))}.bg-\[\#171b24\]{--tw-bg-opacity:1;background-color:rgb(23 27 36/var(--tw-bg-opacity,1))}.bg-\[\#181b24\]{--tw-bg-opacity:1;background-color:rgb(24 27 36/var(--tw-bg-opacity,1))}.bg-\[\#1b1f2b\]{--tw-bg-opacity:1;background-color:rgb(27 31 43/var(--tw-bg-opacity,1))}.bg-\[\#232734\]{--tw-bg-opacity:1;background-color:rgb(35 39 52/var(--tw-bg-opacity,1))}.bg-\[\#38bdf8\]{--tw-bg-opacity:1;background-color:rgb(56 189 248/var(--tw-bg-opacity,1))}.bg-\[\#8a92a4\]{--tw-bg-opacity:1;background-color:rgb(138 146 164/var(--tw-bg-opacity,1))}.bg-amber-400{--tw-bg-opacity:1;background-color:rgb(251 191 36/var(--tw-bg-opacity,1))}.bg-amber-400\/15{background-color:rgba(251,191,36,.15)}.bg-amber-500\/15{background-color:rgba(245,158,11,.15)}.bg-black\/70{background-color:rgba(0,0,0,.7)}.bg-emerald-400\/15{background-color:rgba(52,211,153,.15)}.bg-emerald-400\/85{background-color:rgba(52,211,153,.85)}.bg-sky-400{--tw-bg-opacity:1;background-color:rgb(56 189 248/var(--tw-bg-opacity,1))}.bg-sky-400\/10{background-color:rgba(56,189,248,.1)}.bg-sky-400\/15{background-color:rgba(56,189,248,.15)}.bg-sky-400\/\[0\.12\]{background-color:rgba(56,189,248,.12)}.bg-transparent{background-color:transparent}.bg-white\/\[0\.035\]{background-color:hsla(0,0%,100%,.035)}.bg-white\/\[0\.03\]{background-color:hsla(0,0%,100%,.03)}.bg-white\/\[0\.04\]{background-color:hsla(0,0%,100%,.04)}.bg-white\/\[0\.05\]{background-color:hsla(0,0%,100%,.05)}.bg-white\/\[0\.06\]{background-color:hsla(0,0%,100%,.06)}.bg-white\/\[0\.07\]{background-color:hsla(0,0%,100%,.07)}.\!p-1{padding:.25rem!important}.\!p-1\.5{padding:.375rem!important}.p-0{padding:0}.p-1{padding:.25rem}.p-2{padding:.5rem}.p-2\.5{padding:.625rem}.p-3{padding:.75rem}.p-3\.5{padding:.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-\[3px\]{padding:3px}.\!px-1\.5{padding-left:.375rem!important;padding-right:.375rem!important}.\!px-2{padding-left:.5rem!important;padding-right:.5rem!important}.\!px-2\.5{padding-left:.625rem!important;padding-right:.625rem!important}.\!py-0\.5{padding-top:.125rem!important;padding-bottom:.125rem!important}.\!py-1{padding-top:.25rem!important;padding-bottom:.25rem!important}.\!py-2{padding-top:.5rem!important;padding-bottom:.5rem!important}.px-1{padding-left:.25rem;padding-right:.25rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-3\.5{padding-left:.875rem;padding-right:.875rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3\.5{padding-top:.875rem;padding-bottom:.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-1{padding-bottom:.25rem}.pb-2\.5{padding-bottom:.625rem}.pb-20{padding-bottom:5rem}.pb-24{padding-bottom:6rem}.pb-3{padding-bottom:.75rem}.pb-6{padding-bottom:1.5rem}.pl-10{padding-left:2.5rem}.pl-12{padding-left:3rem}.pl-2\.5{padding-left:.625rem}.pl-4{padding-left:1rem}.pl-6{padding-left:1.5rem}.pl-8{padding-left:2rem}.pr-2\.5{padding-right:.625rem}.pt-1{padding-top:.25rem}.pt-2{padding-top:.5rem}.pt-2\.5{padding-top:.625rem}.pt-3{padding-top:.75rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}.font-serif{font-family:ui-serif,Georgia,Cambria,Times New Roman,Times,serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10\.5px\]{font-size:10.5px}.text-\[10px\]{font-size:10px}.text-\[11\.5px\]{font-size:11.5px}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[8\.5px\]{font-size:8.5px}.text-\[9\.5px\]{font-size:9.5px}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.lowercase{text-transform:lowercase}.italic{font-style:italic}.tabular-nums{--tw-numeric-spacing:tabular-nums;font-variant-numeric:var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.tracking-\[0\.25em\]{letter-spacing:.25em}.tracking-tight{letter-spacing:-.025em}.tracking-wider{letter-spacing:.05em}.text-\[\#080a0f\]{--tw-text-opacity:1;color:rgb(8 10 15/var(--tw-text-opacity,1))}.text-\[\#8a92a4\]{--tw-text-opacity:1;color:rgb(138 146 164/var(--tw-text-opacity,1))}.text-\[\#8b91a0\]{--tw-text-opacity:1;color:rgb(139 145 160/var(--tw-text-opacity,1))}.text-\[\#949bad\]{--tw-text-opacity:1;color:rgb(148 155 173/var(--tw-text-opacity,1))}.text-\[\#a4abbb\]{--tw-text-opacity:1;color:rgb(164 171 187/var(--tw-text-opacity,1))}.text-\[\#a9b0be\]{--tw-text-opacity:1;color:rgb(169 176 190/var(--tw-text-opacity,1))}.text-\[\#c7ccd8\]{--tw-text-opacity:1;color:rgb(199 204 216/var(--tw-text-opacity,1))}.text-\[\#d6dae4\]{--tw-text-opacity:1;color:rgb(214 218 228/var(--tw-text-opacity,1))}.text-\[\#dce0ea\]{--tw-text-opacity:1;color:rgb(220 224 234/var(--tw-text-opacity,1))}.text-\[\#e6e8ee\]{--tw-text-opacity:1;color:rgb(230 232 238/var(--tw-text-opacity,1))}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.text-amber-300\/90{color:rgba(252,211,77,.9)}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183/var(--tw-text-opacity,1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153/var(--tw-text-opacity,1))}.text-rose-200{--tw-text-opacity:1;color:rgb(254 205 211/var(--tw-text-opacity,1))}.text-rose-300{--tw-text-opacity:1;color:rgb(253 164 175/var(--tw-text-opacity,1))}.text-rose-300\/90{color:rgba(253,164,175,.9)}.text-rose-400{--tw-text-opacity:1;color:rgb(251 113 133/var(--tw-text-opacity,1))}.text-sky-300{--tw-text-opacity:1;color:rgb(125 211 252/var(--tw-text-opacity,1))}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.overline{text-decoration-line:overline}.line-through{text-decoration-line:line-through}.decoration-wavy{text-decoration-style:wavy}.placeholder-\[\#7e8698\]::-moz-placeholder{--tw-placeholder-opacity:1;color:rgb(126 134 152/var(--tw-placeholder-opacity,1))}.placeholder-\[\#7e8698\]::placeholder{--tw-placeholder-opacity:1;color:rgb(126 134 152/var(--tw-placeholder-opacity,1))}.placeholder-\[\#8a92a4\]::-moz-placeholder{--tw-placeholder-opacity:1;color:rgb(138 146 164/var(--tw-placeholder-opacity,1))}.placeholder-\[\#8a92a4\]::placeholder{--tw-placeholder-opacity:1;color:rgb(138 146 164/var(--tw-placeholder-opacity,1))}.accent-sky-400{accent-color:#38bdf8}.opacity-0{opacity:0}.opacity-25{opacity:.25}.opacity-50{opacity:.5}.opacity-60{opacity:.6}.opacity-80{opacity:.8}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-2xl,.shadow-\[0_14px_38px_rgba\(0\2c 0\2c 0\2c 0\.65\)\]{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-\[0_14px_38px_rgba\(0\2c 0\2c 0\2c 0\.65\)\]{--tw-shadow:0 14px 38px rgba(0,0,0,.65);--tw-shadow-colored:0 14px 38px var(--tw-shadow-color)}.shadow-\[0_14px_44px_rgba\(0\2c 0\2c 0\2c 0\.42\)\]{--tw-shadow:0 14px 44px rgba(0,0,0,.42);--tw-shadow-colored:0 14px 44px var(--tw-shadow-color)}.shadow-\[0_14px_44px_rgba\(0\2c 0\2c 0\2c 0\.42\)\],.shadow-\[0_28px_80px_rgba\(0\2c 0\2c 0\2c 0\.75\)\]{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-\[0_28px_80px_rgba\(0\2c 0\2c 0\2c 0\.75\)\]{--tw-shadow:0 28px 80px rgba(0,0,0,.75);--tw-shadow-colored:0 28px 80px var(--tw-shadow-color)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-lg,.shadow-sm{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-rose-500{--tw-ring-opacity:1;--tw-ring-color:rgb(244 63 94/var(--tw-ring-opacity,1))}.ring-sky-500{--tw-ring-opacity:1;--tw-ring-color:rgb(14 165 233/var(--tw-ring-opacity,1))}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px)}.backdrop-blur-md,.backdrop-blur-xl{-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(.4,0,.2,1)}.duration-150,.transition-transform{transition-duration:.15s}.duration-200{transition-duration:.2s}.\[a-zA-Z0-9_\:-\]{a-z-a--z0-9_:-}.selection\:bg-sky-500\/30 ::-moz-selection{background-color:rgba(14,165,233,.3)}.selection\:bg-sky-500\/30 ::selection{background-color:rgba(14,165,233,.3)}.selection\:text-\[\#e6e8ee\] ::-moz-selection{--tw-text-opacity:1;color:rgb(230 232 238/var(--tw-text-opacity,1))}.selection\:text-\[\#e6e8ee\] ::selection{--tw-text-opacity:1;color:rgb(230 232 238/var(--tw-text-opacity,1))}.selection\:bg-sky-500\/30::-moz-selection{background-color:rgba(14,165,233,.3)}.selection\:bg-sky-500\/30::selection{background-color:rgba(14,165,233,.3)}.selection\:text-\[\#e6e8ee\]::-moz-selection{--tw-text-opacity:1;color:rgb(230 232 238/var(--tw-text-opacity,1))}.selection\:text-\[\#e6e8ee\]::selection{--tw-text-opacity:1;color:rgb(230 232 238/var(--tw-text-opacity,1))}.after\:absolute:after{content:var(--tw-content);position:absolute}.after\:left-\[2px\]:after{content:var(--tw-content);left:2px}.after\:top-\[2px\]:after{content:var(--tw-content);top:2px}.after\:h-4:after{content:var(--tw-content);height:1rem}.after\:w-4:after{content:var(--tw-content);width:1rem}.after\:rounded-full:after{content:var(--tw-content);border-radius:9999px}.after\:bg-\[\#e6e8ee\]:after{content:var(--tw-content);--tw-bg-opacity:1;background-color:rgb(230 232 238/var(--tw-bg-opacity,1))}.after\:transition-all:after{content:var(--tw-content);transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.after\:content-\[\'\'\]:after{--tw-content:"";content:var(--tw-content)}.focus-within\:ring-2:focus-within{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.focus-within\:ring-sky-400:focus-within{--tw-ring-opacity:1;--tw-ring-color:rgb(56 189 248/var(--tw-ring-opacity,1))}.hover\:border-sky-400\/35:hover{border-color:rgba(56,189,248,.35)}.hover\:border-sky-400\/40:hover{border-color:rgba(56,189,248,.4)}.hover\:border-sky-400\/45:hover{border-color:rgba(56,189,248,.45)}.hover\:border-white\/\[0\.15\]:hover{border-color:hsla(0,0%,100%,.15)}.hover\:bg-\[\#171b24\]:hover{--tw-bg-opacity:1;background-color:rgb(23 27 36/var(--tw-bg-opacity,1))}.hover\:bg-\[\#191d27\]:hover{--tw-bg-opacity:1;background-color:rgb(25 29 39/var(--tw-bg-opacity,1))}.hover\:bg-\[\#1d2130\]:hover{--tw-bg-opacity:1;background-color:rgb(29 33 48/var(--tw-bg-opacity,1))}.hover\:bg-\[\#1e2230\]:hover{--tw-bg-opacity:1;background-color:rgb(30 34 48/var(--tw-bg-opacity,1))}.hover\:bg-\[\#1f2431\]:hover{--tw-bg-opacity:1;background-color:rgb(31 36 49/var(--tw-bg-opacity,1))}.hover\:bg-\[\#232838\]:hover{--tw-bg-opacity:1;background-color:rgb(35 40 56/var(--tw-bg-opacity,1))}.hover\:bg-\[\#5ccbfa\]:hover{--tw-bg-opacity:1;background-color:rgb(92 203 250/var(--tw-bg-opacity,1))}.hover\:bg-sky-400\/25:hover{background-color:rgba(56,189,248,.25)}.hover\:bg-white\/\[0\.06\]:hover{background-color:hsla(0,0%,100%,.06)}.hover\:bg-white\/\[0\.08\]:hover{background-color:hsla(0,0%,100%,.08)}.hover\:bg-white\/\[0\.12\]:hover{background-color:hsla(0,0%,100%,.12)}.hover\:bg-white\/\[0\.1\]:hover{background-color:hsla(0,0%,100%,.1)}.hover\:\!text-rose-300:hover{--tw-text-opacity:1!important;color:rgb(253 164 175/var(--tw-text-opacity,1))!important}.hover\:text-\[\#e6e8ee\]:hover{--tw-text-opacity:1;color:rgb(230 232 238/var(--tw-text-opacity,1))}.hover\:text-sky-300:hover{--tw-text-opacity:1;color:rgb(125 211 252/var(--tw-text-opacity,1))}.focus\:border-sky-400\/60:focus{border-color:rgba(56,189,248,.6)}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.disabled\:cursor-not-allowed:disabled{cursor:not-allowed}.disabled\:opacity-35:disabled{opacity:.35}.group:hover .group-hover\:w-\[2px\]{width:2px}.group:hover .group-hover\:bg-sky-400\/70{background-color:rgba(56,189,248,.7)}.group:hover .group-hover\:text-sky-300{--tw-text-opacity:1;color:rgb(125 211 252/var(--tw-text-opacity,1))}.group:hover .group-hover\:text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248/var(--tw-text-opacity,1))}.group:focus-visible .group-focus-visible\:bg-sky-400{--tw-bg-opacity:1;background-color:rgb(56 189 248/var(--tw-bg-opacity,1))}.peer:checked~.peer-checked\:bg-sky-400{--tw-bg-opacity:1;background-color:rgb(56 189 248/var(--tw-bg-opacity,1))}.peer:checked~.peer-checked\:after\:translate-x-full:after{content:var(--tw-content);--tw-translate-x:100%;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.peer:focus~.peer-focus\:outline-none{outline:2px solid transparent;outline-offset:2px}@media (min-width:640px){.sm\:absolute{position:absolute}.sm\:left-4{left:1rem}.sm\:left-auto{left:auto}.sm\:right-0{right:0}.sm\:right-4{right:1rem}.sm\:right-auto{right:auto}.sm\:top-auto{top:auto}.sm\:col-span-2{grid-column:span 2/span 2}.sm\:block{display:block}.sm\:inline-block{display:inline-block}.sm\:inline{display:inline}.sm\:inline-flex{display:inline-flex}.sm\:hidden{display:none}.sm\:h-\[380px\]{height:380px}.sm\:w-28{width:7rem}.sm\:w-52{width:13rem}.sm\:w-64{width:16rem}.sm\:w-72{width:18rem}.sm\:w-\[276px\]{width:276px}.sm\:w-auto{width:auto}.sm\:max-w-\[155px\]{max-width:155px}.sm\:max-w-none{max-width:none}.sm\:flex-none{flex:none}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:flex-wrap{flex-wrap:wrap}.sm\:gap-1\.5{gap:.375rem}.sm\:gap-3{gap:.75rem}.sm\:p-5{padding:1.25rem}.sm\:p-7{padding:1.75rem}.sm\:\!px-2{padding-left:.5rem!important;padding-right:.5rem!important}.sm\:px-2\.5{padding-left:.625rem;padding-right:.625rem}.sm\:px-3{padding-left:.75rem;padding-right:.75rem}.sm\:px-5{padding-left:1.25rem;padding-right:1.25rem}.sm\:pt-5{padding-top:1.25rem}.sm\:text-xs{font-size:.75rem;line-height:1rem}}@media (min-width:768px){.md\:flex{display:flex}.md\:hidden{display:none}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:p-8{padding:2rem}}@media (min-width:1024px){.lg\:sticky{position:sticky}.lg\:top-\[68px\]{top:68px}.lg\:inline{display:inline}.lg\:flex{display:flex}.lg\:inline-flex{display:inline-flex}.lg\:hidden{display:none}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:px-3{padding-left:.75rem;padding-right:.75rem}.lg\:pb-6{padding-bottom:1.5rem}.lg\:pb-8{padding-bottom:2rem}}@media (min-width:1280px){.xl\:inline{display:inline}.xl\:p-12{padding:3rem}}@media (min-width:1536px){.\32xl\:inline{display:inline}}</style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-sky-500/30 selection:text-[#e6e8ee]">
 
@@ -1889,24 +1945,40 @@
               <input id="lineHeightSlider" type="range" min="1.4" max="2.4" step="0.05" value="1.78" class="w-full accent-sky-400 cursor-pointer" />
             </div>
 
+            <div class="pt-2.5 border-t border-white/[0.065] flex items-center justify-between gap-2">
+              <div class="min-w-0">
+                <div class="text-[11px] font-medium text-[#e6e8ee]">Fiche de révision</div>
+                <div class="text-[10.5px] text-[#949bad]">Mise en page 2 colonnes</div>
+              </div>
+              <button id="btnToggleTwoCol" type="button" aria-pressed="false" class="v2-surface-btn !min-h-[28px] !py-1 !px-2.5 text-[11px] flex-shrink-0" title="Activer la mise en page 2 colonnes (Fiche de révision)">
+                <span>2 col.</span>
+              </button>
+            </div>
+
             <!-- Mobile-accessible Study & Reference Tools (< md) -->
-            <div class="md:hidden pt-2.5 border-t border-white/[0.065] grid grid-cols-2 gap-1.5">
-              <button id="btnMobOutline" type="button" aria-pressed="false" class="v2-surface-btn text-[11px]">
-                <i data-lucide="list-tree" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                <span>Sommaire</span>
-              </button>
-              <button id="btnMobRecall" type="button" aria-pressed="false" class="v2-surface-btn text-[11px]">
-                <i data-lucide="eye-off" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                <span>Révision</span>
-              </button>
-              <button id="btnMobPomodoro" type="button" aria-expanded="false" aria-controls="pomodoroPopover" class="v2-surface-btn text-[11px] font-mono">
-                <span id="mobPomoStatusDot" class="w-1.5 h-1.5 rounded-full bg-[#8a92a4]"></span>
-                <i data-lucide="timer" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                <span id="mobPomodoroDisplay" class="tabular-nums">25:00</span>
-              </button>
-              <button id="btnMobShortcuts" type="button" class="v2-surface-btn text-[11px]">
-                <i data-lucide="help-circle" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                <span>Raccourcis</span>
+            <div class="md:hidden pt-2.5 border-t border-white/[0.065] space-y-1.5">
+              <div class="grid grid-cols-2 gap-1.5">
+                <button id="btnMobOutline" type="button" aria-pressed="false" class="v2-surface-btn text-[11px]">
+                  <i data-lucide="list-tree" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                  <span>Sommaire</span>
+                </button>
+                <button id="btnMobRecall" type="button" aria-pressed="false" class="v2-surface-btn text-[11px]">
+                  <i data-lucide="eye-off" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                  <span>Révision</span>
+                </button>
+                <button id="btnMobPomodoro" type="button" aria-expanded="false" aria-controls="pomodoroPopover" class="v2-surface-btn text-[11px] font-mono">
+                  <span id="mobPomoStatusDot" class="w-1.5 h-1.5 rounded-full bg-[#8a92a4]"></span>
+                  <i data-lucide="timer" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                  <span id="mobPomodoroDisplay" class="tabular-nums">25:00</span>
+                </button>
+                <button id="btnMobShortcuts" type="button" class="v2-surface-btn text-[11px]">
+                  <i data-lucide="help-circle" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                  <span>Raccourcis</span>
+                </button>
+              </div>
+              <button id="btnMobShare" type="button" class="sm:hidden w-full v2-surface-btn text-[11px]">
+                <i data-lucide="share-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                <span>Partager le lien</span>
               </button>
             </div>
           </div>
@@ -1928,6 +2000,12 @@
         <!-- Keyboard Shortcuts -->
         <button id="btnOpenShortcuts" type="button" aria-label="Guide syntaxe et raccourcis clavier" class="hidden sm:inline-flex v2-icon-btn !px-2 font-semibold" title="Raccourcis clavier & syntaxe">
           ?
+        </button>
+
+        <!-- 1-Click Shareable Link (Zero Backend; mobile uses Apparence popover & Export modal so 390px header never clips) -->
+        <button id="btnShareLink" type="button" aria-label="Partager un lien vers cette note" class="hidden sm:inline-flex v2-icon-btn !px-1.5 sm:!px-2" title="Copier un lien de partage compressé (sans serveur)">
+          <i data-lucide="share-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
+          <span class="hidden xl:inline">Partager</span>
         </button>
 
         <!-- Primary CTA: Exporter -->
@@ -2309,9 +2387,9 @@
             <i data-lucide="link-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
           </button>
 
-          <label class="v2-icon-btn !px-1.5 focus-within:ring-2 focus-within:ring-sky-400" title="Importer un fichier (.md, .tex, .txt)">
+          <label class="v2-icon-btn !px-1.5 focus-within:ring-2 focus-within:ring-sky-400" title="Importer un fichier (.md, .tex, .txt) ou une image (.png, .jpg, .webp, .gif)">
             <i data-lucide="file-up" class="w-3.5 h-3.5" aria-hidden="true"></i>
-            <input id="fileImportInput" type="file" aria-label="Importer un fichier Markdown, LaTeX ou texte" accept=".md,.markdown,.tex,.txt" class="sr-only" />
+            <input id="fileImportInput" type="file" aria-label="Importer un fichier Markdown, LaTeX, texte ou image" accept=".md,.markdown,.tex,.txt,image/png,image/jpeg,image/webp,image/gif" class="sr-only" />
           </label>
 
           <button id="btnPasteClipboard" type="button" aria-label="Coller depuis le presse-papier" class="v2-icon-btn !px-1.5" title="Coller depuis le presse-papier">
@@ -2715,6 +2793,10 @@
               <input id="exportCleanTags" type="checkbox" checked class="accent-sky-400 rounded cursor-pointer" />
               <span>Nettoyer les balises dans .MD</span>
             </label>
+            <label class="inline-flex items-center gap-2 text-[#c7ccd8] cursor-pointer select-none sm:col-span-2">
+              <input id="exportTwoCol" type="checkbox" class="accent-sky-400 rounded cursor-pointer" />
+              <span>Fiche de révision 2 colonnes (≥ 768 px &amp; impression)</span>
+            </label>
           </div>
         </div>
 
@@ -2731,6 +2813,10 @@
           <button id="btnCopyHtml" type="button" class="flex-1 min-w-[155px] v2-surface-btn !py-2">
             <i data-lucide="copy" class="w-3.5 h-3.5 text-[#8b91a0]" aria-hidden="true"></i>
             <span>Copier Texte Enrichi</span>
+          </button>
+          <button id="btnModalShareLink" type="button" class="flex-1 min-w-[140px] v2-surface-btn !py-2">
+            <i data-lucide="share-2" class="w-3.5 h-3.5 text-[#8b91a0]" aria-hidden="true"></i>
+            <span>Lien de partage</span>
           </button>
         </div>
 
@@ -2878,6 +2964,10 @@
     const nbInkPresetSelect = document.getElementById('nbInkPresetSelect');
     const btnToggleMargin = document.getElementById('btnToggleMargin');
     const btnSnapLines = document.getElementById('btnSnapLines');
+    const btnToggleTwoCol = document.getElementById('btnToggleTwoCol');
+    const exportTwoCol = document.getElementById('exportTwoCol');
+    const btnShareLink = document.getElementById('btnShareLink');
+    const btnModalShareLink = document.getElementById('btnModalShareLink');
     const phraseSizeSelect = document.getElementById('phraseSizeSelect');
     const btnUndo = document.getElementById('btnUndo');
     const btnRedo = document.getElementById('btnRedo');
@@ -2923,6 +3013,8 @@
     let currentTheme = 'theme-dark';
     let noRedMargin = false;
     let snapLinesEnabled = false;
+    let ficheTwoColEnabled = false;
+    let isViewingSharedNote = false;
     let syncScrollEnabled = false;
     let activeRecallMode = false;
 
@@ -3002,7 +3094,7 @@ flowchart TD
       {
         id: 'mhchem',
         name: 'Chimie & Unités (mhchem)',
-        version: '0.16',
+        version: '0.19',
         category: 'Sciences & Médecine',
         icon: 'flask-conical',
         description: 'Active \\ce{H2O <=> H+ + OH-} et \\pu{120 mmHg} nativement dans KaTeX.',
@@ -3240,10 +3332,22 @@ flowchart TD
       loadStylesheetOnce('hljs-css', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css'),
       loadScriptOnce('hljs-js', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js', () => !!window.hljs)
     ]);
+    const ensureModernScreenshot = () => loadScriptOnce('modern-screenshot', 'https://cdn.jsdelivr.net/npm/modern-screenshot@4.7.0/dist/index.js', () => !!(window.modernScreenshot && typeof window.modernScreenshot.domToCanvas === 'function'));
     const ensureHtml2Canvas = () => loadScriptOnce('html2canvas', 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js', () => !!window.html2canvas);
+    const ensureCaptureEngine = async () => {
+      try {
+        await ensureModernScreenshot();
+        if (window.modernScreenshot && typeof window.modernScreenshot.domToCanvas === 'function') return 'modern-screenshot';
+      } catch (e) {}
+      try {
+        await ensureHtml2Canvas();
+        if (window.html2canvas) return 'html2canvas';
+      } catch (e) {}
+      return null;
+    };
     const ensureJsPdf = () => loadScriptOnce('jspdf', 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', () => !!window.jspdf);
     const warmExportLibraries = () => {
-      ensureHtml2Canvas().catch(() => {});
+      ensureModernScreenshot().catch(() => { ensureHtml2Canvas().catch(() => {}); });
       ensureJsPdf().catch(() => {});
     };
 
@@ -3500,7 +3604,18 @@ flowchart TD
     // =====================================================
     // AUTO-SAUVEGARDE ANTI-CRASH (LOCAL STORAGE)
     // =====================================================
+    function exitSharedReadOnlyMode() {
+      if (!isViewingSharedNote) return;
+      isViewingSharedNote = false;
+      if (window.location.hash && window.location.hash.startsWith('#share=')) {
+        try {
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        } catch (e) {}
+      }
+    }
+
     function saveToLocalStorage() {
+      if (isViewingSharedNote) return;
       try {
         const rootStyle = document.documentElement.style;
         const payload = {
@@ -3512,6 +3627,7 @@ flowchart TD
           nbPreset: nbInkPresetSelect ? nbInkPresetSelect.value : 'bic4',
           noRedMargin: noRedMargin,
           snapLines: snapLinesEnabled,
+          twoCol: ficheTwoColEnabled,
           ribbonPinned: typeof isRibbonPinned === 'boolean' ? isRibbonPinned : true,
           fontSize: fontSizeSlider ? fontSizeSlider.value : '16.5',
           lineHeight: lineHeightSlider ? lineHeightSlider.value : '1.78',
@@ -3594,6 +3710,9 @@ flowchart TD
             btnSnapLines.classList.toggle('v2-btn-active', snapLinesEnabled);
             btnSnapLines.setAttribute('aria-pressed', String(snapLinesEnabled));
           }
+        }
+        if (typeof data.twoCol === 'boolean') {
+          setFicheTwoCol(data.twoCol, false);
         }
         if (data.nbPreset && nbInkPresetSelect) {
           nbInkPresetSelect.value = data.nbPreset;
@@ -4635,8 +4754,9 @@ flowchart TD
 
         const scanReList = [
           tokenRe,
-          /!?\[[^\]]*\]\(https?:\/\/(?:[^\s()]+|\([^\s()]*\))+\)/g,
+          /!?\[[^\]]*\]\((?:https?:\/\/|inktex-img:\/\/)(?:[^\s()]+|\([^\s()]*\))+\)/g,
           /https?:\/\/[^\s)<>]+/g,
+          /inktex-img:\/\/\d+/g,
           /[A-Za-z]:\\[^\s]+/g,
           BARE_CUSTOM_TAG_RE,
           /\*\*\*|\*\*|==|~~|\|/g
@@ -4694,6 +4814,126 @@ flowchart TD
       }
 
       return lines.join('\n');
+    }
+
+    // Local Pasted / Dropped Image Registry (short inktex-img://N tokens -> compressed data URLs)
+    const localImageStore = new Map();
+    let localImageSeq = 0;
+    const SAFE_DATA_IMAGE_RE = /^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/;
+    const SUPPORTED_LOCAL_IMG_MIME_RE = /^image\/(png|jpeg|jpg|webp|gif)$/i;
+    const SUPPORTED_LOCAL_IMG_EXT_RE = /\.(png|jpe?g|webp|gif)$/i;
+
+    function isSupportedLocalImageFile(file) {
+      if (!file) return false;
+      if (file.type && SUPPORTED_LOCAL_IMG_MIME_RE.test(file.type)) return true;
+      if (file.name && SUPPORTED_LOCAL_IMG_EXT_RE.test(file.name)) return true;
+      return false;
+    }
+
+    function readBlobAsDataUrl(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ''));
+        reader.onerror = () => reject(reader.error || new Error('FileReader failed'));
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function compressAndStoreLocalImage(file) {
+      const rawDataUrl = await readBlobAsDataUrl(file);
+      const mime = (file.type || '').toLowerCase();
+      let finalDataUrl = rawDataUrl;
+
+      // Preserve animated GIFs directly when compact; downscale & compress PNG/JPG/WebP cleanly
+      if (!(mime === 'image/gif' && rawDataUrl.length <= 3_400_000)) {
+        try {
+          const img = await new Promise((resolve, reject) => {
+            const el = new Image();
+            el.onload = () => resolve(el);
+            el.onerror = () => reject(new Error('Image decode failed'));
+            el.src = rawDataUrl;
+          });
+          const maxDim = 1600;
+          const srcW = img.naturalWidth || img.width || 1;
+          const srcH = img.naturalHeight || img.height || 1;
+          const ratio = Math.min(1, maxDim / Math.max(srcW, srcH));
+          const targetW = Math.max(1, Math.round(srcW * ratio));
+          const targetH = Math.max(1, Math.round(srcH * ratio));
+
+          const offCanvas = document.createElement('canvas');
+          try {
+            offCanvas.width = targetW;
+            offCanvas.height = targetH;
+            const ctx = offCanvas.getContext('2d', { willReadFrequently: true });
+            if (ctx) {
+              ctx.drawImage(img, 0, 0, targetW, targetH);
+              let hasAlpha = false;
+              if (mime === 'image/png' || mime === 'image/webp' || mime === 'image/gif') {
+                const sample = ctx.getImageData(0, 0, targetW, targetH).data;
+                const step = Math.max(4, Math.floor((targetW * targetH) / 4000) * 4);
+                for (let i = 3; i < sample.length; i += step) {
+                  if (sample[i] < 250) { hasAlpha = true; break; }
+                }
+              }
+              if (hasAlpha) {
+                const pngUrl = offCanvas.toDataURL('image/png');
+                if (SAFE_DATA_IMAGE_RE.test(pngUrl)) finalDataUrl = pngUrl;
+              } else {
+                const jpegUrl = offCanvas.toDataURL('image/jpeg', 0.86);
+                if (mime === 'image/png' && ratio === 1 && rawDataUrl.length < jpegUrl.length && rawDataUrl.length <= 350000) {
+                  finalDataUrl = rawDataUrl;
+                } else if (SAFE_DATA_IMAGE_RE.test(jpegUrl)) {
+                  finalDataUrl = jpegUrl;
+                }
+              }
+            }
+          } finally {
+            offCanvas.width = 0;
+            offCanvas.height = 0;
+          }
+        } catch (imgErr) {
+          // Keep original validated data URL if canvas compression fails
+        }
+      }
+
+      if (!SAFE_DATA_IMAGE_RE.test(finalDataUrl)) {
+        throw new Error('Unsupported image data');
+      }
+      localImageSeq++;
+      const id = String(localImageSeq);
+      const rawName = (file.name || '').replace(/\.[^.]+$/, '').replace(/[\[\]()]/g, '').trim();
+      const alt = rawName ? rawName.slice(0, 48) : `image-${id}`;
+      localImageStore.set(id, { dataUrl: finalDataUrl, alt });
+      return { id, alt, markdown: `![${alt}](inktex-img://${id})` };
+    }
+
+    async function insertLocalImagesIntoEditor(imageFiles) {
+      const files = Array.from(imageFiles || []).filter(isSupportedLocalImageFile);
+      if (files.length === 0) return false;
+      const tokens = [];
+      for (const f of files) {
+        try {
+          const stored = await compressAndStoreLocalImage(f);
+          tokens.push(stored.markdown);
+        } catch (err) {
+          console.warn('Local image import failed:', err);
+        }
+      }
+      if (tokens.length === 0) {
+        showToast('Impossible de charger cette image');
+        return false;
+      }
+      exitSharedReadOnlyMode();
+      const s = rawInput.selectionStart || 0;
+      const en = rawInput.selectionEnd || s;
+      const needsLeadNl = s > 0 && rawInput.value[s - 1] !== '\n';
+      const needsTrailNl = en < rawInput.value.length && rawInput.value[en] !== '\n';
+      const snippet = `${needsLeadNl ? '\n' : ''}${tokens.join('\n')}${needsTrailNl ? '\n' : ''}`;
+      replaceEditorRange(s, en, snippet, s + snippet.length, s + snippet.length, false);
+      updateReader(true, false);
+      pushHistoryState();
+      showToast(tokens.length === 1 ? `Image locale ajoutée (${tokens[0].match(/inktex-img:\/\/\d+/)?.[0] || ''})` : `${tokens.length} images locales ajoutées`);
+      return true;
     }
 
     // =====================================================
@@ -4919,7 +5159,7 @@ flowchart TD
                 macros: { ...customMacros },
                 trust: (ctx) => ['\\url', '\\href'].includes(ctx.command) && ['http', 'https'].includes(ctx.protocol)
               });
-              if (!rendered.includes('katex-error')) {
+              if (!rendered.includes('katex-error') && !rendered.includes('color:#cc0000')) {
                 if (katexCache.size >= KATEX_CACHE_MAX) {
                   katexCache.delete(katexCache.keys().next().value);
                 }
@@ -5038,8 +5278,14 @@ flowchart TD
           return tok;
         });
 
-        // Safe Markdown Images ![alt](https://...) & Links [label](https://...) supporting balanced parentheses in URLs
+        // Safe Markdown Images ![alt](https://...) & local pasted/dropped ![alt](inktex-img://N) + Links [label](https://...)
         const safeUrls = [];
+        safe = safe.replace(/!\[([^\]]*)\]\(inktex-img:\/\/(\d+)\)/g, (_, alt, imgId) => {
+          if (localImageStore.has(imgId)) {
+            return `<img data-local-img-id="${imgId}" alt="${alt}" class="inktex-img" loading="lazy" />`;
+          }
+          return `<span class="inktex-code-inline">Image locale non chargée (inktex-img://${imgId})</span>`;
+        });
         safe = safe.replace(/!\[([^\]]*)\]\((https?:\/\/(?:[^\s()]+|\([^\s()]*\))+)\)/g, (_, alt, url) => {
           const urlTok = `@@${T_SAFEURL}-${safeUrls.length}@@`;
           safeUrls.push(url);
@@ -5342,15 +5588,24 @@ flowchart TD
 
       let finalHtml = parseBlockLines(normalizeTableLines(normalized.split('\n')), 0);
 
-      // Sanitize Markdown HTML via DOMPurify (or offline strict DOM fallback) BEFORE restoring KaTeX tokens
+      // Sanitize Markdown HTML via DOMPurify (or offline strict DOM fallback) BEFORE restoring KaTeX & trusted local images
       if (window.DOMPurify) {
         finalHtml = window.DOMPurify.sanitize(finalHtml, {
           USE_PROFILES: { html: true },
-          ADD_ATTR: ['style', 'class', 'tabindex', 'role', 'aria-label', 'data-pt-size', 'data-task-idx', 'data-mermaid-idx', 'data-lang', 'target', 'rel', 'type', 'checked', 'start', 'src', 'alt', 'loading', 'referrerpolicy']
+          ADD_ATTR: ['style', 'class', 'tabindex', 'role', 'aria-label', 'data-pt-size', 'data-task-idx', 'data-mermaid-idx', 'data-lang', 'data-local-img-id', 'target', 'rel', 'type', 'checked', 'start', 'src', 'alt', 'loading', 'referrerpolicy']
         });
       } else {
         if (updateGlobals) renderedWithoutPurify = true;
         finalHtml = sanitizeHtmlFallback(finalHtml);
+      }
+
+      // Resolve trusted in-memory local images AFTER DOMPurify (keeps untrusted javascript:/vbscript:/data: blocked)
+      if (localImageStore.size > 0 && finalHtml.includes('data-local-img-id=')) {
+        finalHtml = finalHtml.replace(/<img\b([^>]*?)\bdata-local-img-id="(\d+)"([^>]*?)>/gi, (full, pre, imgId, post) => {
+          const entry = localImageStore.get(imgId);
+          if (!entry || !SAFE_DATA_IMAGE_RE.test(entry.dataUrl)) return full;
+          return `<img${pre}src="${entry.dataUrl}" data-local-img-id="${imgId}"${post}>`;
+        });
       }
 
       // Restore KaTeX tokens
@@ -5550,12 +5805,19 @@ flowchart TD
       }
       const readerWidth = readerOutput.clientWidth;
       if (!readerWidth) return;
+      const csOut = window.getComputedStyle(readerOutput);
+      const parsedCols = parseInt(csOut.columnCount, 10);
+      const colGap = parseFloat(csOut.columnGap) || 32;
+      const activeCols = (!isNaN(parsedCols) && parsedCols > 1) ? parsedCols : 1;
+      const singleColWidth = activeCols > 1 ? Math.floor((readerWidth - colGap * (activeCols - 1)) / activeCols) : readerWidth;
       for (const el of inlineMaths) {
         if (el.closest('.katex-display, .inktex-table-wrap')) continue;
         const parentBox = el.closest('li, blockquote, .inktex-callout-body, p, h1, h2, h3, h4, h5, h6') || readerOutput;
-        const avail = Math.max(80, Math.min(readerWidth, parentBox.clientWidth || readerWidth) - 2);
+        const capWidth = (activeCols > 1 && parentBox.tagName === 'H1') ? readerWidth : singleColWidth;
+        const avail = Math.max(80, Math.min(capWidth, parentBox.clientWidth || capWidth) - 2);
         let widestBase = 0;
-        const bases = el.querySelectorAll(':scope > .katex-html > .base');
+        // Support both KaTeX 0.19+ (.katex-base) and legacy (.base)
+        const bases = el.querySelectorAll(':scope > .katex-html > .katex-base, :scope > .katex-html > .base');
         for (const b of bases) {
           const w = b.getBoundingClientRect().width;
           if (w > widestBase) widestBase = w;
@@ -5908,6 +6170,7 @@ flowchart TD
      * Replaces a range in #rawInput cleanly using setRangeText while keeping undo history synchronized.
      */
     function replaceEditorRange(start, end, replacement, newSelStart = null, newSelEnd = null, preserveFocus = true) {
+      exitSharedReadOnlyMode();
       clearTimeout(historyDebounce);
       pushHistoryState();
       const prevActive = document.activeElement;
@@ -5940,6 +6203,7 @@ flowchart TD
     // EVENT LISTENERS: EDITOR, TEMPLATES, SEARCH, RESIZE, SCROLL
     // =====================================================
     rawInput.addEventListener('input', () => {
+      exitSharedReadOnlyMode();
       updateCursorLineCol();
       clearTimeout(readerInputDebounce);
       const delay = rawInput.value.length > 8000 ? 220 : 110;
@@ -6086,15 +6350,39 @@ flowchart TD
       return false;
     }
 
-    // Instant iOS / iPadOS Paste Sanitization, HTML-Math Extraction & Next-Tick Render
+    // Instant iOS / iPadOS Paste Sanitization, Local Image Paste, HTML-Math Extraction & Next-Tick Render
     rawInput.addEventListener('paste', (e) => {
+      exitSharedReadOnlyMode();
       clearTimeout(historyDebounce);
       pushHistoryState();
       resetSavedSelectionState();
       clearTimeout(readerInputDebounce);
       readerInputDebounce = null;
 
-      // If Safari / Gemini Web / ChatGPT Web provides HTML containing KaTeX/MathML annotations
+      // 1. Intercept pasted screenshots / image blobs and store them cleanly as inktex-img://N
+      if (e.clipboardData) {
+        const pastedImgFiles = [];
+        if (e.clipboardData.items && e.clipboardData.items.length > 0) {
+          for (const item of Array.from(e.clipboardData.items)) {
+            if (item.kind === 'file' && SUPPORTED_LOCAL_IMG_MIME_RE.test(item.type || '')) {
+              const f = item.getAsFile();
+              if (f) pastedImgFiles.push(f);
+            }
+          }
+        }
+        if (pastedImgFiles.length === 0 && e.clipboardData.files && e.clipboardData.files.length > 0) {
+          for (const f of Array.from(e.clipboardData.files)) {
+            if (isSupportedLocalImageFile(f)) pastedImgFiles.push(f);
+          }
+        }
+        if (pastedImgFiles.length > 0) {
+          e.preventDefault();
+          insertLocalImagesIntoEditor(pastedImgFiles);
+          return;
+        }
+      }
+
+      // 2. If Safari / Gemini Web / ChatGPT Web provides HTML containing KaTeX/MathML annotations
       // while plain text lost its $ / \( delimiters, recover clean Markdown + delimited LaTeX directly
       if (window.InkTeX.isPluginEnabled('ai-fixer') && e.clipboardData) {
         const htmlClip = e.clipboardData.getData('text/html') || '';
@@ -6161,16 +6449,27 @@ flowchart TD
       editorDropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         editorDropZone.classList.remove('ring-2', 'ring-sky-500');
-        const file = e.dataTransfer?.files?.[0];
-        if (file) loadImportedFile(file);
+        const droppedFiles = Array.from(e.dataTransfer?.files || []);
+        if (droppedFiles.length === 0) return;
+        const imgFiles = droppedFiles.filter(isSupportedLocalImageFile);
+        if (imgFiles.length > 0) {
+          insertLocalImagesIntoEditor(imgFiles);
+          return;
+        }
+        loadImportedFile(droppedFiles[0]);
       });
     }
 
     const fileImportInput = document.getElementById('fileImportInput');
     if (fileImportInput) {
       fileImportInput.addEventListener('change', (e) => {
-        const file = e.target.files?.[0];
-        if (file) loadImportedFile(file);
+        const files = Array.from(e.target.files || []);
+        const imgFiles = files.filter(isSupportedLocalImageFile);
+        if (imgFiles.length > 0) {
+          insertLocalImagesIntoEditor(imgFiles);
+        } else if (files[0]) {
+          loadImportedFile(files[0]);
+        }
         fileImportInput.value = '';
       });
     }
@@ -6484,6 +6783,38 @@ flowchart TD
         btnSnapLines.setAttribute('aria-pressed', String(snapLinesEnabled));
         saveToLocalStorage();
         showToast(snapLinesEnabled ? 'Texte aligné sur les lignes du cahier' : 'Interligne libre');
+      });
+    }
+
+    function setFicheTwoCol(enabled, shouldSave = true) {
+      ficheTwoColEnabled = !!enabled;
+      if (readerCard) {
+        readerCard.classList.toggle('fiche-two-col', ficheTwoColEnabled);
+      }
+      if (btnToggleTwoCol) {
+        btnToggleTwoCol.classList.toggle('v2-btn-active', ficheTwoColEnabled);
+        btnToggleTwoCol.setAttribute('aria-pressed', String(ficheTwoColEnabled));
+      }
+      if (exportTwoCol) {
+        exportTwoCol.checked = ficheTwoColEnabled;
+      }
+      scheduleInlineMathConstrain();
+      if (shouldSave) {
+        saveToLocalStorage();
+        saveExportPrefs();
+      }
+    }
+
+    if (btnToggleTwoCol) {
+      btnToggleTwoCol.addEventListener('click', () => {
+        setFicheTwoCol(!ficheTwoColEnabled, true);
+        showToast(ficheTwoColEnabled ? 'Mode Fiche 2 colonnes activé' : 'Mise en page 1 colonne');
+      });
+    }
+
+    if (exportTwoCol) {
+      exportTwoCol.addEventListener('change', (e) => {
+        setFicheTwoCol(e.target.checked, true);
       });
     }
 
@@ -7503,6 +7834,7 @@ flowchart TD
         if (navigator.clipboard?.read) {
           try {
             const items = await navigator.clipboard.read();
+            const clipImages = [];
             for (const item of items) {
               if (!htmlClip && item.types.includes('text/html')) {
                 const htmlBlob = await item.getType('text/html');
@@ -7512,6 +7844,15 @@ flowchart TD
                 const plainBlob = await item.getType('text/plain');
                 plainClip = await plainBlob.text();
               }
+              const imgType = item.types.find(t => SUPPORTED_LOCAL_IMG_MIME_RE.test(t));
+              if (imgType) {
+                const imgBlob = await item.getType(imgType);
+                if (imgBlob) clipImages.push(imgBlob);
+              }
+            }
+            if (!htmlClip && !plainClip && clipImages.length > 0) {
+              await insertLocalImagesIntoEditor(clipImages);
+              return;
             }
           } catch (readErr) {
             // Fall through to readText() if clipboard.read() is unsupported or restricted
@@ -7984,7 +8325,8 @@ flowchart TD
           includeBg: exportIncludeBg ? exportIncludeBg.checked : true,
           smartBreaks: exportSmartBreaks ? exportSmartBreaks.checked : true,
           includeHeader: exportIncludeHeader ? exportIncludeHeader.checked : true,
-          cleanTags: exportCleanTags ? exportCleanTags.checked : true
+          cleanTags: exportCleanTags ? exportCleanTags.checked : true,
+          twoCol: ficheTwoColEnabled
         };
         localStorage.setItem(EXPORT_PREFS_KEY, JSON.stringify(prefs));
       } catch (e) {}
@@ -8005,6 +8347,7 @@ flowchart TD
         if (exportSmartBreaks && typeof p.smartBreaks === 'boolean') exportSmartBreaks.checked = p.smartBreaks;
         if (exportIncludeHeader && typeof p.includeHeader === 'boolean') exportIncludeHeader.checked = p.includeHeader;
         if (exportCleanTags && typeof p.cleanTags === 'boolean') exportCleanTags.checked = p.cleanTags;
+        if (typeof p.twoCol === 'boolean') setFicheTwoCol(p.twoCol, false);
       } catch (e) {}
     }
 
@@ -8141,7 +8484,10 @@ flowchart TD
       let domMutated = false;
 
       try {
-      await ensureHtml2Canvas();
+      const initialEngine = await ensureCaptureEngine();
+      if (!initialEngine) {
+        throw new Error('CAPTURE_ENGINE_UNAVAILABLE');
+      }
       if (currentTheme === 'theme-notebook' && nbFontSelect) {
         await ensureFontLoaded(nbFontSelect.value);
       } else if (baseFontSelect) {
@@ -8164,8 +8510,8 @@ flowchart TD
       prevContainerCss = readerContainer ? readerContainer.style.cssText : '';
       domMutated = true;
 
-      // Temporarily enforce inline-block on non-content <img> on LIVE document so html2canvas FontMetrics
-      // measures true text baselines (fixes Tailwind v3 Preflight `img { display: block }` downward text shift!)
+      // Temporarily enforce inline-block on non-content <img> on LIVE document so html2canvas fallback
+      // FontMetrics measures true text baselines (fixes Tailwind v3 Preflight `img { display: block }` shift)
       liveFixStyle = document.getElementById('inktexHtml2CanvasBaselineFix');
       if (!liveFixStyle) {
         liveFixStyle = document.createElement('style');
@@ -8190,6 +8536,9 @@ flowchart TD
         readerCard.style.width = `${targetWidthPx}px`;
         readerCard.style.minWidth = `${targetWidthPx}px`;
         readerCard.style.maxWidth = `${targetWidthPx}px`;
+        if (targetWidthPx < 700) {
+          readerCard.classList.add('export-single-col');
+        }
       }
       if (!includeHeader) {
         readerCard.classList.add('export-hide-header');
@@ -8254,7 +8603,114 @@ flowchart TD
       const cardArea = Math.max(1, cardRect.width * cardRect.height);
       const safeScale = Math.max(1, Math.min(requestedScale, Math.sqrt(maxCanvasPixels / cardArea)));
 
+      function isCanvasUsable(c) {
+        if (!c || c.width < 2 || c.height < 2) return false;
+        try {
+          const ctx = c.getContext('2d', { willReadFrequently: true });
+          if (!ctx) return false;
+          const w = c.width;
+          const h = c.height;
+          const [bgR, bgG, bgB] = hexToRgbTuple(bgColor);
+          let nonBgCount = 0;
+          const rows = 8;
+          const cols = 8;
+          for (let r = 1; r <= rows; r++) {
+            const y = Math.min(h - 1, Math.floor((h * r) / (rows + 1)));
+            const strip = ctx.getImageData(0, y, w, 1).data;
+            for (let ci = 1; ci <= cols; ci++) {
+              const x = Math.min(w - 1, Math.floor((w * ci) / (cols + 1)));
+              const p = x * 4;
+              if (strip[p + 3] > 10) {
+                const diff = Math.abs(strip[p] - bgR) + Math.abs(strip[p + 1] - bgG) + Math.abs(strip[p + 2] - bgB);
+                if (diff > 18) nonBgCount++;
+              }
+            }
+          }
+          const hasContent = (readerOutput.textContent || '').trim().length > 0 || !!readerOutput.querySelector('img, svg');
+          if (hasContent && nonBgCount === 0) return false;
+          return true;
+        } catch (taintErr) {
+          return false;
+        }
+      }
+
+      async function runModernScreenshot(scaleToUse) {
+        if (!window.modernScreenshot || typeof window.modernScreenshot.domToCanvas !== 'function') {
+          throw new Error('modern-screenshot unavailable');
+        }
+        return await window.modernScreenshot.domToCanvas(readerCard, {
+          scale: scaleToUse,
+          width: Math.ceil(cardRect.width),
+          height: Math.ceil(cardRect.height),
+          backgroundColor: bgColor,
+          maximumCanvasSize: 16384,
+          timeout: 20000,
+          features: {
+            copyScrollbar: false,
+            removeAbnormalAttributes: true,
+            removeControlCharacter: true,
+            fixSvgXmlDecode: true
+          },
+          filter: (node) => {
+            if (!node || node.nodeType !== 1) return true;
+            const cls = node.classList;
+            if (!cls) return true;
+            if (cls.contains('katex-mathml') || cls.contains('page-guide-overlay') || cls.contains('inktex-copy-code-btn')) return false;
+            if (!includeHeader && (cls.contains('notebook-meta-stamp') || cls.contains('notebook-spiral-holes'))) return false;
+            return true;
+          },
+          onCloneNode: (clonedCard) => {
+            if (!clonedCard || clonedCard.nodeType !== 1) return;
+            clonedCard.classList.remove('active-recall-on');
+            clonedCard.style.paddingBottom = '';
+            clonedCard.style.width = `${Math.ceil(cardRect.width)}px`;
+            clonedCard.style.maxWidth = `${Math.ceil(cardRect.width)}px`;
+            clonedCard.style.minHeight = 'auto';
+            clonedCard.style.height = 'auto';
+            clonedCard.style.transform = 'none';
+            clonedCard.style.boxShadow = 'none';
+            clonedCard.style.transition = 'none';
+            clonedCard.style.animation = 'none';
+
+            clonedCard.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
+
+            ['nbSubjectInput', 'nbDateInput'].forEach(inputId => {
+              const inp = clonedCard.querySelector(`#${inputId}`);
+              const liveInp = document.getElementById(inputId);
+              if (inp && liveInp) {
+                const span = document.createElement('span');
+                span.className = inp.className.replace(/\bfocus:[^\s]+/g, '');
+                span.style.display = 'inline-block';
+                span.style.lineHeight = '1.45';
+                span.style.paddingBottom = '3px';
+                span.textContent = liveInp.value || ' ';
+                inp.replaceWith(span);
+              }
+            });
+
+            clonedCard.querySelectorAll('.katex-display, .inktex-table-wrap, .inktex-code-wrap pre').forEach((el, idx) => {
+              if (liveScrollFits[idx]) {
+                el.style.overflowX = 'hidden';
+              }
+            });
+
+            clonedCard.querySelectorAll('.inktex-mermaid-wrap svg').forEach((svg, idx) => {
+              const dims = liveMermaidSizes[idx];
+              if (dims && dims.w > 0 && dims.h > 0) {
+                svg.setAttribute('width', String(dims.w));
+                svg.setAttribute('height', String(dims.h));
+                svg.style.width = `${dims.w}px`;
+                svg.style.height = `${dims.h}px`;
+                svg.style.maxWidth = 'none';
+              }
+            });
+          }
+        });
+      }
+
       async function runHtml2Canvas(scaleToUse) {
+        await ensureHtml2Canvas();
+        if (!window.html2canvas) throw new Error('html2canvas unavailable');
         return await window.html2canvas(readerCard, {
           scale: scaleToUse,
           useCORS: true,
@@ -8314,7 +8770,7 @@ flowchart TD
                 }
               });
 
-              // Lock KaTeX line-height, SVG rules & crisp horizontal bars in html2canvas clone
+              // Lock KaTeX line-height, SVG rules & crisp horizontal bars in html2canvas clone (KaTeX 0.19+ & legacy)
               const cloneView = clonedDoc.defaultView || window;
               clonedCard.querySelectorAll('.katex').forEach(k => {
                 k.style.lineHeight = '1.2';
@@ -8323,7 +8779,7 @@ flowchart TD
                 svg.style.maxWidth = 'none';
                 svg.style.verticalAlign = 'baseline';
               });
-              clonedCard.querySelectorAll('.katex .frac-line, .katex .hline, .katex .overline-line, .katex .underline-line, .katex .sqrt-line').forEach(lineEl => {
+              clonedCard.querySelectorAll('.katex .frac-line, .katex .katex-hline, .katex .katex-hdashline, .katex .hline, .katex .overline-line, .katex .underline-line, .katex .sqrt-line').forEach(lineEl => {
                 const cs = cloneView.getComputedStyle(lineEl);
                 const thick = Math.max(1.25, parseFloat(cs.borderBottomWidth) || 1.25);
                 const col = cs.borderBottomColor || cs.color || 'currentColor';
@@ -8359,19 +8815,34 @@ flowchart TD
         return c;
       }
 
+        // Primary capture engine: modern-screenshot@4.7.0 (crisp webfonts, KaTeX, SVG & local images)
+        if (window.modernScreenshot && typeof window.modernScreenshot.domToCanvas === 'function') {
+          try {
+            const msCanvas = resetCanvasTransform(await runModernScreenshot(safeScale));
+            if (isCanvasUsable(msCanvas)) {
+              return { canvas: msCanvas, appliedScale: safeScale, bgColor, includeBg, blocks: liveBlocks, engine: 'modern-screenshot' };
+            }
+            if (msCanvas) { msCanvas.width = 0; msCanvas.height = 0; }
+            console.warn('modern-screenshot returned blank/tainted canvas; falling back to html2canvas');
+          } catch (msErr) {
+            console.warn('modern-screenshot capture failed; falling back to html2canvas:', msErr);
+          }
+        }
+
+        // Clean fallback engine: html2canvas
         try {
           const canvas = resetCanvasTransform(await runHtml2Canvas(safeScale));
-          return { canvas, appliedScale: safeScale, bgColor, includeBg, blocks: liveBlocks };
+          return { canvas, appliedScale: safeScale, bgColor, includeBg, blocks: liveBlocks, engine: 'html2canvas' };
         } catch (firstErr) {
           console.warn('Retrying html2canvas at reduced scale:', firstErr);
           const fallbackScale = Math.min(1.5, safeScale);
           const canvas = resetCanvasTransform(await runHtml2Canvas(fallbackScale));
-          return { canvas, appliedScale: fallbackScale, bgColor, includeBg, blocks: liveBlocks };
+          return { canvas, appliedScale: fallbackScale, bgColor, includeBg, blocks: liveBlocks, engine: 'html2canvas' };
         }
       } finally {
         if (liveFixStyle && liveFixStyle.parentNode) liveFixStyle.remove();
         if (domMutated) {
-          readerCard.classList.remove('export-hide-header', 'export-flat-pdf');
+          readerCard.classList.remove('export-hide-header', 'export-flat-pdf', 'export-single-col');
           if (wasDarkWithoutBg) {
             readerCard.classList.remove('theme-light');
             readerCard.classList.add('theme-dark');
@@ -8534,8 +9005,8 @@ flowchart TD
         const pageSize = exportPageSize.value;
         const isPaged = pageSize !== 'auto';
         showExportProgress('Génération de l’aperçu exact avant export...');
-        await ensureHtml2Canvas();
-        if (!window.html2canvas) { hideExportProgress(); showToast('Bibliothèque image indisponible hors ligne'); return; }
+        const engineReady = await ensureCaptureEngine();
+        if (!engineReady) { hideExportProgress(); showToast('Bibliothèque image indisponible hors ligne'); return; }
         const captured = await captureReaderCanvas({ forPdf: isPaged, scaleOverride: 1.5, _lockHeld: true });
         canvas = captured.canvas;
         const { appliedScale, bgColor, blocks } = captured;
@@ -8610,8 +9081,8 @@ flowchart TD
       let sliceCanvas = null;
       try {
         showExportProgress('Génération du fichier PDF haute précision...');
-        await Promise.all([ensureHtml2Canvas(), ensureJsPdf()]);
-        if (!window.html2canvas || !window.jspdf) { hideExportProgress(); showToast('Bibliothèque PDF indisponible hors ligne'); return; }
+        const [engineReady] = await Promise.all([ensureCaptureEngine(), ensureJsPdf()]);
+        if (!engineReady || !window.jspdf) { hideExportProgress(); showToast('Bibliothèque PDF indisponible hors ligne'); return; }
         const pageSize = exportPageSize.value;
         const captured = await captureReaderCanvas({ forPdf: true, _lockHeld: true });
         canvas = captured.canvas;
@@ -8693,8 +9164,8 @@ flowchart TD
         try {
           const ext = format === 'png' ? 'png' : 'jpg';
           showExportProgress(`Rendu de l'image ${ext.toUpperCase()} (${exportScale.value}x DPI)...`);
-          await ensureHtml2Canvas();
-          if (!window.html2canvas) { hideExportProgress(); showToast('Bibliothèque image indisponible hors ligne'); return; }
+          const engineReady = await ensureCaptureEngine();
+          if (!engineReady) { hideExportProgress(); showToast('Bibliothèque image indisponible hors ligne'); return; }
           const captured = await captureReaderCanvas({ _lockHeld: true });
           canvas = captured.canvas;
           const mime = format === 'png' ? 'image/png' : 'image/jpeg';
@@ -8754,7 +9225,10 @@ flowchart TD
       let pngBlobPromise = null;
       try {
         showExportProgress('Capture PNG vers le presse-papier...');
-        pngBlobPromise = ensureHtml2Canvas().then(() => captureReaderCanvas({ _lockHeld: true })).then(({ canvas }) => new Promise((resolve, reject) => {
+        pngBlobPromise = ensureCaptureEngine().then((eng) => {
+          if (!eng) throw new Error('Capture engine unavailable');
+          return captureReaderCanvas({ _lockHeld: true });
+        }).then(({ canvas }) => new Promise((resolve, reject) => {
           canvas.toBlob((blob) => {
             canvas.width = 0;
             canvas.height = 0;
@@ -8827,7 +9301,8 @@ flowchart TD
       const maxW = EXPORT_WIDTH_MAP[widthMode] || 920;
 
       const clonedCard = readerCard.cloneNode(true);
-      clonedCard.classList.remove('active-recall-on', 'export-hide-header', 'export-flat-pdf', 'print-no-bg', 'print-no-header');
+      clonedCard.classList.remove('active-recall-on', 'export-hide-header', 'export-flat-pdf', 'export-single-col', 'print-no-bg', 'print-no-header');
+      clonedCard.querySelectorAll('img.inktex-img').forEach(img => img.removeAttribute('loading'));
       if (!includeBg) {
         if (clonedCard.classList.contains('theme-dark')) {
           clonedCard.classList.remove('theme-dark');
@@ -8863,7 +9338,7 @@ flowchart TD
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(exportFilename.value || 'Notes InkTeX')}</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-${extraFontLinks ? extraFontLinks + '\n' : ''}  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+${extraFontLinks ? extraFontLinks + '\n' : ''}  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css">
 ${hasCodeBlocks ? '  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">\n' : ''}  <style>
     *, *::before, *::after { box-sizing: border-box; }
     ${coreCss}
@@ -9458,8 +9933,182 @@ ${texLines.join('\n')}
       obs.observe(endSentinel);
     }
 
+    // =====================================================
+    // 1-CLICK SHAREABLE LINK (ZERO-BACKEND COMPRESSED #share=...)
+    // =====================================================
+    function bytesToBase64Url(bytes) {
+      let binary = '';
+      const chunkSize = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+      }
+      return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+    }
+
+    function base64UrlToBytes(b64url) {
+      const clean = String(b64url || '').replace(/-/g, '+').replace(/_/g, '/');
+      const pad = clean.length % 4 === 0 ? '' : '='.repeat(4 - (clean.length % 4));
+      const binary = atob(clean + pad);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return bytes;
+    }
+
+    async function encodeSharePayload(payloadObj) {
+      const jsonBytes = new TextEncoder().encode(JSON.stringify(payloadObj));
+      if (typeof CompressionStream === 'function') {
+        try {
+          const cs = new CompressionStream('deflate-raw');
+          const writer = cs.writable.getWriter();
+          writer.write(jsonBytes);
+          writer.close();
+          const buf = await new Response(cs.readable).arrayBuffer();
+          return { token: 'z.' + bytesToBase64Url(new Uint8Array(buf)), compressed: true };
+        } catch (e) {}
+      }
+      return { token: 'u.' + bytesToBase64Url(jsonBytes), compressed: false };
+    }
+
+    async function decodeSharePayload(token) {
+      if (!token || typeof token !== 'string') return null;
+      let mode = 'z';
+      let body = token;
+      if (token.startsWith('z.') || token.startsWith('u.')) {
+        mode = token[0];
+        body = token.slice(2);
+      }
+      const bytes = base64UrlToBytes(body);
+      let jsonBytes = bytes;
+      if (mode === 'z') {
+        if (typeof DecompressionStream !== 'function') {
+          throw new Error('DECOMPRESSION_UNSUPPORTED');
+        }
+        const ds = new DecompressionStream('deflate-raw');
+        const writer = ds.writable.getWriter();
+        writer.write(bytes);
+        writer.close();
+        const buf = await new Response(ds.readable).arrayBuffer();
+        jsonBytes = new Uint8Array(buf);
+      }
+      const decodedStr = new TextDecoder('utf-8', { fatal: true }).decode(jsonBytes);
+      const parsed = JSON.parse(decodedStr);
+      return parsed && typeof parsed === 'object' ? parsed : null;
+    }
+
+    async function copyShareableLink() {
+      try {
+        const payload = {
+          rawText: rawInput.value,
+          theme: currentTheme,
+          nbPaper: nbPaperSelect ? nbPaperSelect.value : 'paper-lignes',
+          nbFont: nbFontSelect ? nbFontSelect.value : "'Kalam', cursive",
+          twoCol: ficheTwoColEnabled
+        };
+        const { token, compressed } = await encodeSharePayload(payload);
+        const baseHref = window.location.href.split('#')[0];
+        const shareUrl = `${baseHref}#share=${token}`;
+        const hasLocalImgs = /inktex-img:\/\/\d+/.test(payload.rawText);
+
+        let copied = false;
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          try {
+            await navigator.clipboard.writeText(shareUrl);
+            copied = true;
+          } catch (clipErr) {}
+        }
+        if (!copied) {
+          const ta = document.createElement('textarea');
+          ta.value = shareUrl;
+          ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;';
+          document.body.appendChild(ta);
+          ta.select();
+          try { copied = document.execCommand('copy'); } catch (e) {}
+          ta.remove();
+        }
+
+        if (shareUrl.length > 8000) {
+          showToast(`Lien copié (${shareUrl.length} car.) — note longue pour certaines messageries, préférez .HTML ou .PDF`);
+        } else if (hasLocalImgs) {
+          showToast('Lien copié (note : les images locales ne sont pas incluses, utilisez .HTML ou .PDF)');
+        } else if (!compressed) {
+          showToast(copied ? 'Lien de partage copié (non compressé sur ce navigateur)' : 'Compression non supportée — copiez l’URL depuis la barre');
+        } else {
+          showToast(copied ? 'Lien de partage copié !' : 'Copie bloquée par le navigateur');
+        }
+        return shareUrl;
+      } catch (err) {
+        console.error('Share link error:', err);
+        showToast('Impossible de générer le lien de partage');
+        return null;
+      }
+    }
+
+    btnShareLink?.addEventListener('click', () => { copyShareableLink(); });
+    btnModalShareLink?.addEventListener('click', () => { copyShareableLink(); });
+    document.getElementById('btnMobShare')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (typeof closeV2Popovers === 'function') closeV2Popovers();
+      copyShareableLink();
+    });
+
+    async function tryLoadSharedFromHash() {
+      const hash = window.location.hash || '';
+      if (!hash.startsWith('#share=')) return false;
+      const rawToken = hash.slice('#share='.length).trim();
+      if (!rawToken) return false;
+      try {
+        const data = await decodeSharePayload(rawToken);
+        if (!data || typeof data.rawText !== 'string') return false;
+
+        // Preserve user's localStorage note untouched until they explicitly edit
+        isViewingSharedNote = true;
+        rawInput.value = sanitizePastedText(data.rawText);
+
+        if (data.nbPaper && nbPaperSelect && Array.from(nbPaperSelect.options).some(o => o.value === data.nbPaper)) {
+          nbPaperSelect.value = data.nbPaper;
+          readerCard.classList.remove('paper-lignes', 'paper-seyes', 'paper-quadrille', 'paper-pointille', 'paper-cornell', 'paper-parchemin', 'paper-vierge');
+          readerCard.classList.add(data.nbPaper);
+          if (typeof updateActivePaperLabel === 'function') updateActivePaperLabel(data.nbPaper);
+        }
+        if (data.nbFont && nbFontSelect && Array.from(nbFontSelect.options).some(o => o.value === data.nbFont)) {
+          nbFontSelect.value = data.nbFont;
+          document.documentElement.style.setProperty('--nb-font', data.nbFont);
+          if (data.theme === 'theme-notebook') ensureFontLoaded(data.nbFont);
+        }
+        if (typeof data.twoCol === 'boolean') {
+          setFicheTwoCol(data.twoCol, false);
+        }
+        if (data.theme && ['theme-dark', 'theme-light', 'theme-notebook'].includes(data.theme)) {
+          applyThemeSelection(data.theme, false);
+        }
+
+        lastRenderedHtml = null;
+        updateReader(false, false);
+        pushHistoryState();
+        updateCursorLineCol();
+        if (autoSaveLabel) {
+          autoSaveLabel.textContent = 'Note partagée (lecture)';
+        }
+        try {
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        } catch (e) {}
+        showToast('Note partagée chargée (votre note locale reste intacte)');
+        return true;
+      } catch (err) {
+        console.warn('Share link decode error:', err);
+        showToast(err && err.message === 'DECOMPRESSION_UNSUPPORTED'
+          ? 'Décompression non supportée par ce navigateur'
+          : 'Lien de partage invalide ou corrompu');
+        return false;
+      }
+    }
+
+    window.addEventListener('hashchange', () => {
+      tryLoadSharedFromHash();
+    });
+
     // Initialize on Page Load
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       if (window.lucide) lucide.createIcons();
       loadPluginSettings();
       loadExportPrefs();
@@ -9472,9 +10121,12 @@ ${texLines.join('\n')}
       if (!restored) {
         rawInput.value = DEFAULT_SHOWCASE_TEXT;
       }
-      updateReader(false);
-      pushHistoryState();
-      updateCursorLineCol();
+      const loadedShared = await tryLoadSharedFromHash();
+      if (!loadedShared) {
+        updateReader(false);
+        pushHistoryState();
+        updateCursorLineCol();
+      }
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => scheduleInlineMathConstrain()).catch(() => {});
       }
@@ -9510,13 +10162,18 @@ ${texLines.join('\n')}
       }
     });
 
-    // Retry deferred Lucide icons and KaTeX/mhchem/DOMPurify once all assets finish loading
+    // Retry deferred Lucide icons, KaTeX/mhchem/DOMPurify & register offline PWA Service Worker once loaded
     window.addEventListener('load', () => {
       if (window.lucide && document.querySelector('i[data-lucide]')) {
         lucide.createIcons();
       }
       retryRenderAfterDeferredLibs();
       scheduleInlineMathConstrain();
+      if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.protocol === 'http:')) {
+        navigator.serviceWorker.register('./sw.js', { scope: './' }).catch((err) => {
+          console.warn('Service Worker registration skipped:', err);
+        });
+      }
     });
   </script>
 </body>
